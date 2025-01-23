@@ -58,7 +58,7 @@ import InputIcon from 'primevue/inputicon';
 import MeterGroup from 'primevue/metergroup';
 import Tooltip from 'primevue/tooltip';
 import FloatLabel from 'primevue/floatlabel';
-
+import Message from 'primevue/message';
 /*STYLES */
 import "primeflex/primeflex.css";
 import "primeicons/primeicons.css";
@@ -144,6 +144,7 @@ app.component('Editor', Editor);
 app.component('IconField', IconField);
 app.component('InputIcon', InputIcon);
 app.component('MeterGroup', MeterGroup);
+app.component('Message', Message);
 
 app.directive('tooltip', Tooltip);
 app.directive('ripple', Ripple);
