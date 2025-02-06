@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('transactions', function (Blueprint $table) {
+        Schema::create('achievements', function (Blueprint $table) {
             $table->id();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->float('money');
-            $table->integer('chips');
-            $table->string('card_number');
-            $table->integer('cvv');
-            $table->date('expiration_date');
+            $table->string('name');
+            $table->string('description');
+            $table->string('image_path');
+            $table->enum('achievement_type',['games','chips','wins']);
+            $table->integer('amount');
+            $table->integer('reward_amount');
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('transactions');
+        Schema::dropIfExists('achievements');
     }
 };

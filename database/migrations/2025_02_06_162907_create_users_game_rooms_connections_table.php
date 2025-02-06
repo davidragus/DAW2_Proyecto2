@@ -11,15 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('transactions', function (Blueprint $table) {
+        Schema::create('users_game_rooms_connections', function (Blueprint $table) {
             $table->id();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->float('money');
-            $table->integer('chips');
-            $table->string('card_number');
-            $table->integer('cvv');
-            $table->date('expiration_date');
-            $table->timestamps();
+            $table->foreign('game_room_id')->references('id')->on('game_rooms')->onDelete('cascade');
+            $table->timestamp('connection_datetime');
+            $table->timestamp('disconnection_datetime');
         });
     }
 
@@ -28,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('transactions');
+        Schema::dropIfExists('users_game_rooms_connections');
     }
 };

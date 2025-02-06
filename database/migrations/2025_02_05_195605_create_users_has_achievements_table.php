@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('users_has_achievements', function (Blueprint $table) {
             $table->id();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('achievement_id')->references('id')->on('achievements')->onDelete('cascade');
+            $table->datetime('obtained_date');
             $table->timestamps();
         });
     }
