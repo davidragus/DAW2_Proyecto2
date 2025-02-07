@@ -11,15 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users_has_achievements', function (Blueprint $table) {
+        Schema::create('users_game_rooms_plays', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('achievement_id');
-            $table->datetime('obtained_date');
+            $table->unsignedBigInteger('game_room_id');
+            $table->decimal('bet_amount', 10, 2);
+            $table->decimal('win_amount', 10, 2)->nullable();
+            $table->enum('result', ['win', 'lose']);
             $table->timestamps();
             
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('achievement_id')->references('id')->on('achievements')->onDelete('cascade');
+            $table->foreign('game_room_id')->references('id')->on('game_rooms')->onDelete('cascade');
         });
     }
 
@@ -28,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users_has_achievements');
+        Schema::dropIfExists('users_game_rooms_plays');
     }
 };

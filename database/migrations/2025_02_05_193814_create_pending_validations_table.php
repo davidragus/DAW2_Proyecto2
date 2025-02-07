@@ -13,10 +13,12 @@ return new class extends Migration
     {
         Schema::create('pending_validations', function (Blueprint $table) {
             $table->id();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('user_id');
             $table->enum('status', ['PENDING', 'DENIED', 'ACCEPTED'])->default('PENDING');
             $table->string('image_url');
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

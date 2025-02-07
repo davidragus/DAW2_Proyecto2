@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('users_game_rooms_connections', function (Blueprint $table) {
             $table->id();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('user_id');
             $table->foreign('game_room_id')->references('id')->on('game_rooms')->onDelete('cascade');
             $table->timestamp('connection_datetime');
             $table->timestamp('disconnection_datetime');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
