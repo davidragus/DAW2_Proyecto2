@@ -26,7 +26,6 @@ return new class extends Migration
             $table->string('password');
             $table->string('birthdate');
             $table->timestamp('validated')->nullable();
-            $table->string('password');
             $table->rememberToken();
             $table->timestamps();
         });
