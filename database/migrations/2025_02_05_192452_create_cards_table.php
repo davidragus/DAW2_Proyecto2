@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->string('card_number');
-            $table->int('cvv');
+            $table->integer('cvv');
             $table->date('expiration_date');
             $table->timestamps();
 
