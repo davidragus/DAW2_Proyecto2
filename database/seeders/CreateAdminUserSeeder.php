@@ -20,9 +20,9 @@ class CreateAdminUserSeeder extends Seeder
     {
         $user = User::create([
             'id' => 1,
-            'name' => 'David',
-            'surname1' => 'Herrera',
-            'username' => 'dherrera',
+            'name' => 'Admin',
+            'surname1' => 'Demo',
+            'username' => 'Demo',
             'email' => 'admin@demo.com',
             'dni' => '12345678A',
             'gender' => 'M',
