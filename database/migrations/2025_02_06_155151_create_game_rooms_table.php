@@ -11,12 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('category_post', function (Blueprint $table) {
+        Schema::create('game_rooms', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('game_id');
             $table->unsignedBigInteger('category_id');
-            $table->unsignedBigInteger('post_id');
+            $table->string('max_users');
+            $table->integer('connected_users');
+            $table->timestamps();
+
+            $table->foreign('game_id')->references('id')->on('games')->onDelete('cascade');
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
-            $table->foreign('post_id')->references('id')->on('posts')->onDelete('cascade');
-            $table->primary(['category_id', 'post_id']);
         });
     }
 
@@ -25,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('category_post');
+        Schema::dropIfExists('game_rooms');
     }
 };

@@ -8,27 +8,26 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
-        Schema::create('posts', function (Blueprint $table) {
+        Schema::create('cards', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
             $table->unsignedBigInteger('user_id');
-            $table->longText('content');
+            $table->string('card_number');
+            $table->integer('cvv');
+            $table->date('expiration_date');
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
-        Schema::dropIfExists('posts');
+        Schema::dropIfExists('cards');
     }
 };
