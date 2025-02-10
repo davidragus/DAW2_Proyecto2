@@ -64,6 +64,7 @@
 import useAuth from "@/composables/auth";
 import LocaleSwitcher from "../components/LocaleSwitcher.vue";
 import LoginPrueba from "../components/LoginDialog.vue";
+import RegisterPrueba from "../components/RegisterDialog.vue";
 import SideBarButton from "../components/SideBarButton.vue";
 import Button from "../components/Button.vue";
 import WebsiteLogo from "../components/WebsiteLogo.vue";
