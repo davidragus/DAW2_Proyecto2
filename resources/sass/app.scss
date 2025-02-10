@@ -8,31 +8,47 @@
 @import 'bootstrap/scss/bootstrap';
 @import 'styles';
 
+// --------------DEFINITION OF THE FONTS--------------
+
+@font-face {
+	font-family: "Inter";
+	src: url('../fonts/Inter-VariableFont_opsz\,wght.ttf');
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Inter";
+	src: url('../fonts/Inter-Italic-VariableFont_opsz\,wght.ttf');
+	font-style: italic;
+}
+
+// -----------END OF DEFINITION OF THE FONTS----------
 
 html {
-    font-size: 14px;
+	font-size: 14px;
 }
 
 body {
-    //background-color: #f0f2fc !important;
-    font-family: var(--font-family);
-    font-weight: normal;
-    // background: var(--surface-ground);
-    //color: var(--text-color);
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+	//background-color: #f0f2fc !important;
+	font-family: var(--font-family);
+	font-weight: normal;
+	// background: var(--surface-ground);
+	//color: var(--text-color);
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
 
 a {
-    text-decoration: none !important;
+	text-decoration: none !important;
 }
 
 
 p {
-    line-height: 1.75;
+	line-height: 1.75;
 }
 
-ol,ul{
-    margin: 0px;
-    padding-left: 0.5rem;
+ol,
+ul {
+	margin: 0px;
+	padding-left: 0.5rem;
 }
