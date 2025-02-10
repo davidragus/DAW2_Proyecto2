@@ -41,6 +41,7 @@
                 </ul>
             </div>
         </div>
+        <LoginPrueba></LoginPrueba>
     </nav>
 </template>
 
@@ -48,6 +49,7 @@
 
 import useAuth from "@/composables/auth";
 import LocaleSwitcher from "../components/LocaleSwitcher.vue";
+import LoginPrueba from "../components/LoginDialog.vue";
 import { authStore } from "../store/auth";
 
 const { processing, logout } = useAuth();
