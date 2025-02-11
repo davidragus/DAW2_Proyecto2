@@ -25,6 +25,7 @@ button {
 	text-rendering: optimizeLegibility;
 	border: none;
 	border-radius: 20px;
+	line-height: 18px;
 }
 
 .red-filled {
