@@ -1,7 +1,7 @@
 <template>
   <div>
-    <Button label="Sign Up" @click="visible = true" class="p-button-primary" />
-    <Dialog v-model:visible="visible" modal header="Sign Up" :style="{ width: '400px' }">
+    <Button @click="visible = true" class="mx-3" buttonColor="yellow" buttonStyle="outlined" buttonSize="normal">REGISTER</Button>
+    <Dialog v-model:visible="visible" modal header="Sign Up" :style="{ width: '400px' }" @update:visible="onDialogClose">
       <div class="signup-container p-4">
         <form @submit.prevent="submitRegister">
           <div class="mb-3">
@@ -49,43 +49,49 @@
             <label class="form-check-label">I confirm that I am over the majority age of my country and that I accept the Terms and Conditions and the Privacy Policy</label>
           </div>
           
-          <Button type="submit" label="SIGN UP" class="w-100 p-button-primary" :disabled="processing" />
+          <PrimeButton type="submit" label="SIGN UP" class="w-100 p-button-primary" :disabled="processing" />
           
-          <p class="text-center mt-3">Are you already registered? <a href="#" @click.prevent="visible = false">Log in</a></p>
+          <p class="text-center mt-3">Are you already registered? <a href="#" @click.prevent="openLoginDialog">Log in</a></p>
         </form>
       </div>
     </Dialog>
   </div>
 </template>
 
-<script>
-import { ref } from 'vue';
+<script setup>
+import { ref, defineEmits, watch } from 'vue';
 import Dropdown from 'primevue/dropdown';
-import Button from 'primevue/button';
+import Button from '../components/Button.vue';
+import PrimeButton from 'primevue/button';
 import Dialog from 'primevue/dialog';
 import useAuth from '@/composables/auth';
 
-export default {
-  components: { Dropdown, Button, Dialog },
-  setup() {
-    const { registerForm, validationErrors, processing, submitRegister } = useAuth();
-    const visible = ref(false);
-    const countries = ref(['Spain', 'USA', 'UK', 'France', 'Mexico', 'Peru']);
+const props = defineProps(['visible']);
+const visible = ref(props.visible);
 
-    const handleFileUpload = (event) => {
-      registerForm.idImage = event.target.files[0];
-    };
+watch(() => props.visible, (newVal) => {
+  visible.value = newVal;
+});
 
-    return {
-      visible,
-      registerForm,
-      validationErrors,
-      processing,
-      submitRegister,
-      countries,
-      handleFileUpload
-    };
+const onDialogClose = (newValue) => {
+  if (!newValue) {
+    visible.value = false;
+    emit('update:visible', false);
   }
+};
+
+const { registerForm, validationErrors, processing, submitRegister } = useAuth();
+const countries = ref(['Spain', 'USA', 'UK', 'France', 'Mexico', 'Peru']);
+const emit = defineEmits(['open-login-dialog', 'update:visible']);
+
+const handleFileUpload = (event) => {
+  registerForm.idImage = event.target.files[0];
+};
+
+const openLoginDialog = () => {
+  visible.value = false;
+  emit('update:visible', false);
+  emit('open-login-dialog');
 };
 </script>
 

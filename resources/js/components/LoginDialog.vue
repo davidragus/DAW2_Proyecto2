@@ -1,8 +1,8 @@
 <template>
   <div>
-    <Button label="Open Login" @click="visible = true" class="p-button-primary" />
+    <Button @click="visible = true" class="mx-3" buttonColor="red" buttonStyle="filled" buttonSize="normal">LOG IN</Button>
     
-    <Dialog v-model:visible="visible" modal header="LOG IN" :style="{ width: '400px' }" class="login-dialog">
+    <Dialog v-model:visible="visible" modal header="LOG IN" :style="{ width: '400px' }" class="login-dialog" @update:visible="onDialogClose">
       <div class="login-container">
         <form @submit.prevent="submitLogin">
           <input v-model="loginForm.email" type="email" class="form-control mb-2" placeholder="Email" required />
@@ -24,36 +24,44 @@
 
           <a href="#" class="forgot-password">Forgot your password?</a>
 
-          <Button type="submit" label="LOG IN" class="w-100 p-button-primary mt-3" :disabled="processing" />
+          <PrimeButton type="submit" label="LOG IN" class="w-100 p-button-primary mt-3" :disabled="processing" />
         </form>
         <p class="text-center mt-3 d-flex justify-content-center">
-          You don’t have an account? <a href="#" class="create-account ms-2">Create one</a>
+          You don’t have an account? <a href="#" class="create-account ms-2" @click.prevent="openRegisterDialog">Create one</a>
         </p>
       </div>
     </Dialog>
   </div>
 </template>
 
-<script>
-import { ref } from 'vue';
-import Button from 'primevue/button';
+<script setup>
+import { ref, defineEmits, watch } from 'vue';
+import Button from "../components/Button.vue";
+import PrimeButton from 'primevue/button';
 import Dialog from 'primevue/dialog';
 import useAuth from '@/composables/auth';
 
-export default {
-  components: { Button, Dialog },
-  setup() {
-    const { loginForm, validationErrors, processing, submitLogin } = useAuth();
-    const visible = ref(false);
+const props = defineProps(['visible']);
+const visible = ref(props.visible);
 
-    return {
-      visible,
-      loginForm,
-      validationErrors,
-      processing,
-      submitLogin
-    };
+watch(() => props.visible, (newVal) => {
+  visible.value = newVal;
+});
+
+const onDialogClose = (newValue) => {
+  if (!newValue) {
+    visible.value = false;
+    emit('update:visible', false);
   }
+};
+
+const { loginForm, validationErrors, processing, submitLogin } = useAuth();
+const emit = defineEmits(['open-register-dialog', 'update:visible']);
+
+const openRegisterDialog = () => {
+  visible.value = false;
+  emit('update:visible', false);
+  emit('open-register-dialog');
 };
 </script>
 
