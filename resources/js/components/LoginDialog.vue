@@ -1,152 +1,98 @@
 <template>
   <div>
-    <Button label="Sign Up" @click="visible = true" class="p-button-primary" />
-    <Dialog v-model:visible="visible" modal header="Sign Up" :style="{ width: '400px' }">
-      <div class="signup-container p-4">
-        <form @submit.prevent="submitForm">
-          <div class="mb-3">
-            <Dropdown v-model="form.country" :options="countries" placeholder="Country of residence" class="w-100" />
+    <Button @click="visible = true" class="mx-3" buttonColor="red" buttonStyle="filled" buttonSize="normal">LOG IN</Button>
+    
+    <Dialog v-model:visible="visible" modal header="LOG IN" :style="{ width: '400px' }" class="login-dialog" @update:visible="onDialogClose">
+      <div class="login-container">
+        <form @submit.prevent="submitLogin">
+          <input v-model="loginForm.email" type="email" class="form-control mb-2" placeholder="Email" required />
+          <div v-if="validationErrors.email" class="text-danger">
+            <div v-for="message in validationErrors.email" :key="message">{{ message }}</div>
           </div>
-          <input v-model="form.nationalId" type="text" class="form-control mb-3" placeholder="National Identity Card Number" required />
-          
-          <div class="mb-3">
-            <input type="file" @change="handleFileUpload" class="form-control" required />
+
+          <input v-model="loginForm.password" type="password" class="form-control mb-2" placeholder="Password" required />
+          <div v-if="validationErrors.password" class="text-danger">
+            <div v-for="message in validationErrors.password" :key="message">{{ message }}</div>
           </div>
-          <div class="border rounded">
-            <input v-model="form.name" type="text" class="form-control first-name-rounded border-0 border-bottom" placeholder="Name" required />
-            <input v-model="form.surname" type="text" class="form-control rounded-0 border-0 border-bottom" placeholder="Surname" required />
-            <input v-model="form.secondSurname" type="text" class="form-control border-0" placeholder="Second surname (optional)" />
+
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" v-model="loginForm.remember" id="flexCheckIndeterminate">
+            <label class="form-check-label" for="flexCheckIndeterminate">
+              Remember me
+            </label>
           </div>
-          <div class="d-flex justify-content-center rounded border my-3">
-            <div class="gender-option left-gender" @click="form.gender = 'male'" :class="{ active: form.gender === 'male' }">
-              ♂
-            </div>
-            <div class="gender-option" @click="form.gender = 'female'" :class="{ active: form.gender === 'female' }">
-              ♀
-            </div>
-            <div class="gender-option right-gender" @click="form.gender = 'other'" :class="{ active: form.gender === 'other' }">
-              ⚧
-            </div>
-          </div>
-          
-          <div class="d-flex mb-3">
-            <input v-model="form.day" type="text" class="form-control me-1" placeholder="Day (dd)" required />
-            <input v-model="form.month" type="text" class="form-control mx-1" placeholder="Month (mm)" required />
-            <input v-model="form.year" type="text" class="form-control ms-1" placeholder="Year (yyyy)" required />
-          </div>
-          
-          <input v-model="form.phone" type="text" class="form-control mb-3" placeholder="Phone number" required />
-          <input v-model="form.email" type="email" class="form-control mb-3" placeholder="Email" required />
-          <input v-model="form.username" type="text" class="form-control mb-3" placeholder="Username" required />
-          
-          <div class="d-flex mb-3">
-            <input v-model="form.password" type="password" class="form-control me-1" placeholder="Password" required />
-            <input v-model="form.confirmPassword" type="password" class="form-control ms-1" placeholder="Confirm password" required />
-          </div>
-          
-          <div class="form-check mb-3">
-            <input v-model="form.terms" type="checkbox" class="form-check-input" required />
-            <label class="form-check-label">I confirm that I am over the majority age of my country and that I accept the Terms and Conditions and the Privacy Policy</label>
-          </div>
-          
-          <Button type="submit" label="SIGN UP" class="w-100 p-button-primary" />
-          
-          <p class="text-center mt-3">Are you already registered? <a href="#" @click.prevent="visible = false">Log in</a></p>
+
+          <a href="#" class="forgot-password">Forgot your password?</a>
+
+          <PrimeButton type="submit" label="LOG IN" class="w-100 p-button-primary mt-3" :disabled="processing" />
         </form>
+        <p class="text-center mt-3 d-flex justify-content-center">
+          You don’t have an account? <a href="#" class="create-account ms-2" @click.prevent="openRegisterDialog">Create one</a>
+        </p>
       </div>
     </Dialog>
   </div>
 </template>
 
-<script>
-import { ref } from 'vue';
-import Dropdown from 'primevue/dropdown';
-import Button from 'primevue/button';
+<script setup>
+import { ref, defineEmits, watch } from 'vue';
+import Button from "../components/Button.vue";
+import PrimeButton from 'primevue/button';
 import Dialog from 'primevue/dialog';
+import useAuth from '@/composables/auth';
 
-export default {
-  components: { Dropdown, Button, Dialog },
-  setup() {
-    const visible = ref(false);
-    const form = ref({
-      country: '',
-      nationalId: '',
-      name: '',
-      surname: '',
-      secondSurname: '',
-      gender: '',
-      day: '',
-      month: '',
-      year: '',
-      phone: '',
-      email: '',
-      username: '',
-      password: '',
-      confirmPassword: '',
-      terms: false,
-      idImage: null,
-    });
-    
-    const countries = ref(['Spain', 'USA', 'UK', 'France', 'Mexico', 'Peru']);
-    
-    const handleFileUpload = (event) => {
-      form.value.idImage = event.target.files[0];
-    };
-    
-    const submitForm = () => {
-      if (!form.value.idImage) {
-        alert("Please upload your National Identity Card image.");
-        return;
-      }
-      if (form.value.password !== form.value.confirmPassword) {
-        alert("Passwords do not match");
-        return;
-      }
-      alert("Form submitted successfully!");
-      visible.value = false;
-    };
-    
-    return { visible, form, countries, handleFileUpload, submitForm };
-  },
+const props = defineProps(['visible']);
+const visible = ref(props.visible);
+
+watch(() => props.visible, (newVal) => {
+  visible.value = newVal;
+});
+
+const onDialogClose = (newValue) => {
+  if (!newValue) {
+    visible.value = false;
+    emit('update:visible', false);
+  }
+};
+
+const { loginForm, validationErrors, processing, submitLogin } = useAuth();
+const emit = defineEmits(['open-register-dialog', 'update:visible']);
+
+const openRegisterDialog = () => {
+  visible.value = false;
+  emit('update:visible', false);
+  emit('open-register-dialog');
 };
 </script>
 
 <style scoped>
-.signup-container {
+.login-container {
   padding: 20px;
-}
-.gender-option {
-  background-color: #ffff;
-  flex: 1;
   text-align: center;
-  cursor: pointer;
-  padding: 0px;
-  margin: 0;
-  font-size: 20px;
-  border: 1px solid transparent;
-}
-.gender-option.active {
-  background-color: #ff0000;
-  color: white;
-  border: 1px solid #ff0000;
-}
-.left-gender {
-  border-radius: 0.375rem 0 0 0.375rem;
-  border-right: 1px solid  #dee2e6;
-}
-.right-gender {
-  border-radius: 0 0.375rem 0.375rem 0;
-  border-left: 1px solid  #dee2e6;
-}
-.border-bottom {
-  border-bottom: 1px solid  #dee2e6 !important;
-}
-.first-name-rounded{
-  border-radius: 0.375rem 0.375rem 0 0 ;
-}
-.form-control:focus{
-  box-shadow: none;
-  border-color: #ced4da;
 }
 
+.form-control {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.text-danger {
+  color: red;
+  font-size: 12px;
+}
+
+.forgot-password,
+.create-account {
+  display: block;
+  font-size: 14px;
+  color: blue;
+  text-decoration: none;
+}
+
+.forgot-password:hover,
+.create-account:hover {
+  text-decoration: underline;
+}
 </style>
