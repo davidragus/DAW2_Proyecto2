@@ -38,10 +38,22 @@ export default function useAuth() {
 
     const registerForm = reactive({
         name: '',
+        surname: '',
+        secondSurname: '',
         email: '',
+        username: '',
+        dni: '',
+        gender: '',
+        phone: '',
         password: '',
-        password_confirmation: ''
-    })
+        password_confirmation: '',
+        day: '',
+        month: '',
+        year: '',
+        terms: false,
+        idImage: null,
+        country: ''
+    });
 
     const submitLogin = async () => {
         if (processing.value) return

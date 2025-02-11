@@ -49,11 +49,6 @@ class User extends Authenticatable implements HasMedia
         $this->notify(new UserResetPasswordNotification($token));
     }
 
-    public function assignaments()
-    {
-        return $this->hasMany(UserAssignment::class,'user_id');
-    }
-
 
     public function registerMediaCollections(): void
     {
