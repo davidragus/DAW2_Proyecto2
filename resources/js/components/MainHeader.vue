@@ -6,15 +6,14 @@
 			<WebsiteLogo />
 		</div>
 		<div>
-			<Button class="mx-3" buttonColor="red" buttonStyle="filled" buttonSize="normal">LOG IN</Button>
-			<Button class="mx-3" buttonColor="yellow" buttonStyle="outlined" buttonSize="normal">REGISTER</Button>
+			<LoginAndRegister />
 		</div>
 	</nav>
 </template>
 
 <script setup>
 import SideBarButton from "../components/SideBarButton.vue";
-import Button from "../components/Button.vue";
+import LoginAndRegister from "../components/LoginAndRegister.vue";
 import WebsiteLogo from "../components/WebsiteLogo.vue";
 
 </script>
