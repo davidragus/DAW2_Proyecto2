@@ -1,15 +1,15 @@
 <template>
 
-	<nav class="navbar bg-dark border-bottom border-body">
-		<div class="d-flex">
+	<nav class="navbar py-0 bg-dark border-bottom border-body">
+		<div class="d-flex align-items-center">
 			<SideBarButton />
+			<div class="vertical-separator"></div>
 			<WebsiteLogo />
 		</div>
 		<div>
 			<LoginAndRegister />
 		</div>
 	</nav>
-
 
 	<!-- No eliminar hasta haber creado el header deseado -->
 	<!-- <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
@@ -70,5 +70,16 @@ import { authStore } from "../store/auth";
 
 const { processing, logout } = useAuth();
 </script>
+<style scoped>
+nav {
+	position: sticky;
+	top: 0;
+	height: 70px;
+}
 
-<style scoped></style>
+.vertical-separator {
+	height: 24px;
+	border-right: 1px solid #353535;
+	margin-right: 30px;
+}
+</style>

@@ -16,19 +16,15 @@
 	</button>
 </template>
 
-<script>
-export default {
-	name: 'SideBarButton',
-	data() {
-		return {
-			isRotated: false,
-		};
-	},
-	methods: {
-		rotateIcon() {
-			this.isRotated = !this.isRotated; // Cambia el estado de rotación
-		},
-	}
+<script setup>
+import { ref } from "vue";
+
+let isRotated = ref(false);
+const emit = defineEmits(['toggle-sidebar']);
+
+function rotateIcon() {
+	isRotated.value = !isRotated.value;
+	emit('toggle-sidebar');
 }
 </script>
 

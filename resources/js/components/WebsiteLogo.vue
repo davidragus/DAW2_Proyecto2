@@ -29,7 +29,7 @@
 
 <style scoped>
 svg {
-	width: 120px;
+	height: 56px;
 }
 
 .cls-1 {
