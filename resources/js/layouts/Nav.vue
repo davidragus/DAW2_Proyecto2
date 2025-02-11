@@ -11,7 +11,6 @@
 		</div>
 	</nav>
 
-
 	<!-- No eliminar hasta haber creado el header deseado -->
 	<!-- <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
 		<div class="container">
@@ -73,6 +72,8 @@ const { processing, logout } = useAuth();
 </script>
 <style scoped>
 nav {
+	position: sticky;
+	top: 0;
 	height: 70px;
 }
 
