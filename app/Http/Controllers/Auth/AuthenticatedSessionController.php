@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
+use App\Models\PendingValidation;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Contracts\Foundation\Application;
@@ -97,6 +98,15 @@ class AuthenticatedSessionController extends Controller
             'country' => $request['country'],
             'validated' => 0,
         ]);
+
+        $pendingValidation = PendingValidation::create([
+            'user_id' => $user->id,
+            'status' => 'PENDING',
+        ]);
+
+        if ($request->hasFile('idImage')) {
+            $pendingValidation->addMedia($request->file('idImage'))->toMediaCollection('pending_validation');
+        }
 
         return $this->successResponse($user, 'Registration Successfully');
     }

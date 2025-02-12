@@ -56,6 +56,11 @@ class User extends Authenticatable implements HasMedia
         $this->notify(new UserResetPasswordNotification($token));
     }
 
+    public function pendingValidations()
+    {
+        return $this->hasMany(PendingValidation::class);
+    }
+
 
     public function registerMediaCollections(): void
     {
