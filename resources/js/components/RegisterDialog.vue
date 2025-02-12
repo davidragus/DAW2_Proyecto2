@@ -7,15 +7,15 @@
           <div class="mb-3">
             <Dropdown v-model="registerForm.country" :options="countries" placeholder="Country of residence" class="w-100" />
           </div>
-          <input v-model="registerForm.nationalId" type="text" class="form-control mb-3" placeholder="National Identity Card Number" required />
+          <input v-model="registerForm.dni" type="text" class="form-control mb-3" placeholder="National Identity Card Number" required />
           
           <div class="mb-3">
             <input type="file" @change="handleFileUpload" class="form-control" required />
           </div>
           <div class="border rounded">
             <input v-model="registerForm.name" type="text" class="form-control first-name-rounded border-0 border-bottom" placeholder="Name" required />
-            <input v-model="registerForm.surname" type="text" class="form-control rounded-0 border-0 border-bottom" placeholder="Surname" required />
-            <input v-model="registerForm.secondSurname" type="text" class="form-control border-0" placeholder="Second surname (optional)" />
+            <input v-model="registerForm.surname1" type="text" class="form-control rounded-0 border-0 border-bottom" placeholder="Surname" required />
+            <input v-model="registerForm.surname2" type="text" class="form-control border-0" placeholder="Second surname (optional)" />
           </div>
           <div class="d-flex justify-content-center rounded border my-3">
             <div class="gender-option left-gender" @click="registerForm.gender = 'M'" :class="{ active: registerForm.gender === 'M' }">
@@ -35,7 +35,7 @@
             <input v-model="registerForm.year" type="text" class="form-control ms-1" placeholder="Year (yyyy)" required />
           </div>
           
-          <input v-model="registerForm.phone" type="text" class="form-control mb-3" placeholder="Phone number" required />
+          <input v-model="registerForm.phone_number" type="text" class="form-control mb-3" placeholder="Phone number" required />
           <input v-model="registerForm.email" type="email" class="form-control mb-3" placeholder="Email" required />
           <input v-model="registerForm.username" type="text" class="form-control mb-3" placeholder="Username" required />
           

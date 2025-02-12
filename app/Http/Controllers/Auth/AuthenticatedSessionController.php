@@ -84,9 +84,18 @@ class AuthenticatedSessionController extends Controller
         }
 
         $user = User::create([
-            'email' => $request['email'],
-            'password' => Hash::make($request['password']),
+            'username' => $request['username'],
             'name' => $request['name'],
+            'surname1' => $request['surname1'],
+            'surname2' => $request['surname2'],
+            'email' => $request['email'],
+            'dni' => $request['dni'],
+            'gender' => $request['gender'],
+            'phone_number' => $request['phone_number'],
+            'password' => Hash::make($request['password']),
+            'birthdate' => $request['year'] . '-' . $request['month'] . '-' . $request['day'],
+            'country' => $request['country'],
+            'validated' => 0,
         ]);
 
         return $this->successResponse($user, 'Registration Successfully');

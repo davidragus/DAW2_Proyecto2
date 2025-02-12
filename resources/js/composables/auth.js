@@ -37,19 +37,21 @@ export default function useAuth() {
     })
 
     const registerForm = reactive({
-        name: '',
-        surname: '',
-        secondSurname: '',
-        email: '',
         username: '',
+        name: '',
+        surname1: '',
+        surname2: '',
+        email: '',
         dni: '',
         gender: '',
-        phone: '',
+        phone_number: '',
         password: '',
         password_confirmation: '',
         day: '',
         month: '',
         year: '',
+        country: '',
+        validated: false,
         terms: false,
         idImage: null,
         country: ''
