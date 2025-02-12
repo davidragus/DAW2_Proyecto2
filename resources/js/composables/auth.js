@@ -63,10 +63,10 @@ export default function useAuth() {
 
         await axios.post('/login', loginForm)
             .then(async response => {
-                console.log('await auth.getUser()');
+                // console.log('await auth.getUser()');
                 await auth.getUser()
-                console.log('uth.user.value');
-                console.log(auth.user.value);
+                // console.log('uth.user.value');
+                // console.log(auth.user.value);
                 //await store.dispatch('auth/getUser')
                 await loginUser()
                 swal({
@@ -161,8 +161,8 @@ export default function useAuth() {
 
     const loginUser = () => {
         //const auth = authStore(); //TODO test
-        console.log('loginUser auth Compostable ' + auth.user)
-        console.log(auth.user)
+        // console.log('loginUser auth Compostable ' + auth.user)
+        // console.log(auth.user)
         user = auth.user
         //user = store.state.auth.user
         // Cookies.set('loggedIn', true)
@@ -171,12 +171,12 @@ export default function useAuth() {
 
     const getUser = async () => {
         const auth = authStore();
-        console.log('getUser')
+        // console.log('getUser')
 
         if (auth.authenticated) {
             await auth.getUser()
-            console.log(auth.user.value)
-            console.log(auth.authenticated)
+            // console.log(auth.user.value)
+            // console.log(auth.authenticated)
             await loginUser()
         }
     }
