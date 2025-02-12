@@ -101,6 +101,7 @@ class AuthenticatedSessionController extends Controller
 
         $pendingValidation = PendingValidation::create([
             'user_id' => $user->id,
+            'image_url' => '',
             'status' => 'PENDING',
         ]);
 

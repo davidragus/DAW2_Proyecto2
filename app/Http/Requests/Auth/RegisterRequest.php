@@ -34,7 +34,6 @@ class RegisterRequest extends FormRequest
             'phone_number' => ['required', 'string', 'max:255'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'country' => ['required', 'string', 'max:255'],
-            'validated' => ['required', 'integer', 'in:0'],
         ];
     }
 }
