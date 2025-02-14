@@ -60,6 +60,7 @@
 
 <script setup>
 import { ref, defineEmits, watch } from 'vue';
+import * as yup from 'yup';
 import Dropdown from 'primevue/dropdown';
 import Button from '../components/Button.vue';
 import PrimeButton from 'primevue/button';
@@ -88,11 +89,37 @@ const handleFileUpload = (event) => {
   registerForm.idImage = event.target.files[0];
 };
 
+const register = async () => {
+  try {
+    await submitRegister();
+    visible.value = false;
+    emit('update:visible', false);
+    emit('open-login-dialog');
+  } catch (error) {
+    console.error('Error during registration:', error);
+  }
+};
+
 const openLoginDialog = () => {
   visible.value = false;
   emit('update:visible', false);
   emit('open-login-dialog');
 };
+const schema = yup.object({
+  username: yup.string().required('Username is required').max(255),
+  name: yup.string().required('Name is required').max(255),
+  surname1: yup.string().required('First surname is required').max(255),
+  surname2: yup.string().nullable().max(255),
+  email: yup.string().required('Email is required').email('Email must be valid').max(255),
+  dni: yup.string().required('DNI is required').max(255),
+  gender: yup.string().required('Gender is required').oneOf(['N', 'M', 'F']),
+  phone_number: yup.string().required('Phone number is required').max(255),
+  password: yup.string().required('Password is required').min(8, 'Password must be at least 8 characters'),
+  password_confirmation: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match'),
+  country: yup.string().required('Country is required').max(255),
+});
+
+
 </script>
 
 <style scoped>

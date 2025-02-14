@@ -27,7 +27,7 @@ class RegisterRequest extends FormRequest
             'username' => ['required', 'string', 'max:255', 'unique:users'],
             'name' => ['required', 'string', 'max:255'],
             'surname1' => ['required', 'string', 'max:255'],
-            'surname2' => ['required', 'string', 'max:255'],
+            'surname2' => ['nullable', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'dni' => ['required', 'string', 'max:255', 'unique:users'],
             'gender' => ['required', 'string', 'in:N,M,F', 'max:1'],
