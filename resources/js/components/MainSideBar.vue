@@ -1,11 +1,11 @@
 <template>
 	<nav id="sideBar" class="d-flex flex-column justify-content-between align-items-center">
 		<ul class="mt-5 w-75">
-			<li><a href="">HOME</a></li>
+			<li><a href="" class="d-block container-fluid">icono<span :class="{ 'd-none': !visible }">HOME</span></a></li>
 			<hr>
-			<li><a href="">ROULETTE</a></li>
-			<li><a href="">BINGO</a></li>
-			<li><a href="">BLACKJACK</a></li>
+			<li><a href="" class="d-flex container-fluid align-items-center"><iRoulette mode="dark" class="icon"></iRoulette><span :class="{ 'd-none': !visible }">ROULETTE</span></a></li>
+			<li><a href="" class="d-block container-fluid">icono<span :class="{ 'd-none': !visible }">BINGO</span></a></li>
+			<li><a href="" class="d-flex container-fluid align-items-center"><iBlackJack class="icon"></iBlackJack><span :class="{ 'd-none': !visible }">BLACKJACK</span></a></li>
 		</ul>
 		<div>
 
@@ -14,6 +14,11 @@
 </template>
 
 <script setup>
+import iRoulette from './iRoulette.vue';
+import iBlackJack from './iBlackJack.vue';
+defineProps({
+  visible: Boolean
+});
 </script>
 
 <style scoped>
@@ -43,4 +48,9 @@ a:hover {
 img {
 	color: white;
 }
+.icon {
+	width: 24px;
+	height: 24px;
+}
+
 </style>

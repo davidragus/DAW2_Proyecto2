@@ -1,6 +1,6 @@
 <template>
 	<MainHeader @toggle-sidebar="toggleSideBar" />
-	<MainSideBar />
+	<MainSideBar :visible="isToggled"/>
 </template>
 
 <script setup>
