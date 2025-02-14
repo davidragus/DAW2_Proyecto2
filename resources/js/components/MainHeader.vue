@@ -5,9 +5,9 @@
 			<div class="vertical-separator"></div>
 			<WebsiteLogo />
 		</div>
-		<div>
+		<template v-if="!authStore().user?.name">
 			<LoginAndRegister />
-		</div>
+		</template>
 	</nav>
 </template>
 
@@ -15,6 +15,8 @@
 import SideBarButton from "../components/SideBarButton.vue";
 import LoginAndRegister from "../components/LoginAndRegister.vue";
 import WebsiteLogo from "../components/WebsiteLogo.vue";
+import useAuth from "@/composables/auth";
+import { authStore } from "../store/auth";
 
 </script>
 
