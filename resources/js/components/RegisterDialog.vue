@@ -7,15 +7,15 @@
           <div class="mb-3">
             <Dropdown v-model="registerForm.country" :options="countries" placeholder="Country of residence" class="w-100" />
           </div>
-          <input v-model="registerForm.nationalId" type="text" class="form-control mb-3" placeholder="National Identity Card Number" required />
+          <input v-model="registerForm.dni" type="text" class="form-control mb-3" placeholder="National Identity Card Number" required />
           
           <div class="mb-3">
             <input type="file" @change="handleFileUpload" class="form-control" required />
           </div>
           <div class="border rounded">
             <input v-model="registerForm.name" type="text" class="form-control first-name-rounded border-0 border-bottom" placeholder="Name" required />
-            <input v-model="registerForm.surname" type="text" class="form-control rounded-0 border-0 border-bottom" placeholder="Surname" required />
-            <input v-model="registerForm.secondSurname" type="text" class="form-control border-0" placeholder="Second surname (optional)" />
+            <input v-model="registerForm.surname1" type="text" class="form-control rounded-0 border-0 border-bottom" placeholder="Surname" required />
+            <input v-model="registerForm.surname2" type="text" class="form-control border-0" placeholder="Second surname (optional)" />
           </div>
           <div class="d-flex justify-content-center rounded border my-3">
             <div class="gender-option left-gender" @click="registerForm.gender = 'M'" :class="{ active: registerForm.gender === 'M' }">
@@ -35,7 +35,7 @@
             <input v-model="registerForm.year" type="text" class="form-control ms-1" placeholder="Year (yyyy)" required />
           </div>
           
-          <input v-model="registerForm.phone" type="text" class="form-control mb-3" placeholder="Phone number" required />
+          <input v-model="registerForm.phone_number" type="text" class="form-control mb-3" placeholder="Phone number" required />
           <input v-model="registerForm.email" type="email" class="form-control mb-3" placeholder="Email" required />
           <input v-model="registerForm.username" type="text" class="form-control mb-3" placeholder="Username" required />
           
@@ -60,6 +60,7 @@
 
 <script setup>
 import { ref, defineEmits, watch } from 'vue';
+import * as yup from 'yup';
 import Dropdown from 'primevue/dropdown';
 import Button from '../components/Button.vue';
 import PrimeButton from 'primevue/button';
@@ -88,11 +89,37 @@ const handleFileUpload = (event) => {
   registerForm.idImage = event.target.files[0];
 };
 
+const register = async () => {
+  try {
+    await submitRegister();
+    visible.value = false;
+    emit('update:visible', false);
+    emit('open-login-dialog');
+  } catch (error) {
+    console.error('Error during registration:', error);
+  }
+};
+
 const openLoginDialog = () => {
   visible.value = false;
   emit('update:visible', false);
   emit('open-login-dialog');
 };
+const schema = yup.object({
+  username: yup.string().required('Username is required').max(255),
+  name: yup.string().required('Name is required').max(255),
+  surname1: yup.string().required('First surname is required').max(255),
+  surname2: yup.string().nullable().max(255),
+  email: yup.string().required('Email is required').email('Email must be valid').max(255),
+  dni: yup.string().required('DNI is required').max(255),
+  gender: yup.string().required('Gender is required').oneOf(['N', 'M', 'F']),
+  phone_number: yup.string().required('Phone number is required').max(255),
+  password: yup.string().required('Password is required').min(8, 'Password must be at least 8 characters'),
+  password_confirmation: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match'),
+  country: yup.string().required('Country is required').max(255),
+});
+
+
 </script>
 
 <style scoped>

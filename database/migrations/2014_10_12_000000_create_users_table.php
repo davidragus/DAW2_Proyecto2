@@ -25,7 +25,8 @@ return new class extends Migration
             $table->string('phone_number');
             $table->string('password');
             $table->string('birthdate');
-            $table->timestamp('validated')->nullable();
+            $table->string('country')->nullable();
+            $table->tinyInteger('validated')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

@@ -37,19 +37,21 @@ export default function useAuth() {
     })
 
     const registerForm = reactive({
-        name: '',
-        surname: '',
-        secondSurname: '',
-        email: '',
         username: '',
+        name: '',
+        surname1: '',
+        surname2: '',
+        email: '',
         dni: '',
         gender: '',
-        phone: '',
+        phone_number: '',
         password: '',
         password_confirmation: '',
         day: '',
         month: '',
         year: '',
+        country: '',
+        validated: false,
         terms: false,
         idImage: null,
         country: ''
@@ -63,10 +65,10 @@ export default function useAuth() {
 
         await axios.post('/login', loginForm)
             .then(async response => {
-                console.log('await auth.getUser()');
+                // console.log('await auth.getUser()');
                 await auth.getUser()
-                console.log('uth.user.value');
-                console.log(auth.user.value);
+                // console.log('uth.user.value');
+                // console.log(auth.user.value);
                 //await store.dispatch('auth/getUser')
                 await loginUser()
                 swal({
@@ -101,7 +103,7 @@ export default function useAuth() {
                     showConfirmButton: false,
                     timer: 1500
                 })
-                await router.push({ name: 'auth.login' })
+                // await router.push({ name: 'auth.login' })
             })
             .catch(error => {
                 if (error.response?.data) {
@@ -161,8 +163,8 @@ export default function useAuth() {
 
     const loginUser = () => {
         //const auth = authStore(); //TODO test
-        console.log('loginUser auth Compostable ' + auth.user)
-        console.log(auth.user)
+        // console.log('loginUser auth Compostable ' + auth.user)
+        // console.log(auth.user)
         user = auth.user
         //user = store.state.auth.user
         // Cookies.set('loggedIn', true)
@@ -171,12 +173,12 @@ export default function useAuth() {
 
     const getUser = async () => {
         const auth = authStore();
-        console.log('getUser')
+        // console.log('getUser')
 
         if (auth.authenticated) {
             await auth.getUser()
-            console.log(auth.user.value)
-            console.log(auth.authenticated)
+            // console.log(auth.user.value)
+            // console.log(auth.authenticated)
             await loginUser()
         }
     }

@@ -18,11 +18,18 @@ class User extends Authenticatable implements HasMedia
     use HasApiTokens, HasFactory, Notifiable, HasRoles, InteractsWithMedia;
 
     protected $fillable = [
+        'username',
         'name',
-        'email',
-        'password',
         'surname1',
-        'surname2'
+        'surname2',
+        'email',
+        'dni',
+        'gender',
+        'phone_number',
+        'birthdate',
+        'password',
+        'country',
+        'validated',
     ];
 
     /**
@@ -47,6 +54,11 @@ class User extends Authenticatable implements HasMedia
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new UserResetPasswordNotification($token));
+    }
+
+    public function pendingValidations()
+    {
+        return $this->hasMany(PendingValidation::class);
     }
 
 
