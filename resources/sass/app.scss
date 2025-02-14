@@ -8,7 +8,7 @@
 @import 'bootstrap/scss/bootstrap';
 @import 'styles';
 
-// --------------DEFINITION OF THE FONTS--------------
+// ------------DEFINITION OF THE FONTS------------
 
 @font-face {
 	font-family: "Inter";
@@ -22,7 +22,11 @@
 	font-style: italic;
 }
 
-// -----------END OF DEFINITION OF THE FONTS----------
+// ------------END OF DEFINITION OF THE FONTS------------
+
+:root {
+	--main-header-height: 70px;
+}
 
 html {
 	font-size: 14px;
@@ -51,4 +55,8 @@ ol,
 ul {
 	margin: 0px;
 	padding-left: 0.5rem;
+}
+
+#mainContent {
+	padding-left: 230px;
 }
