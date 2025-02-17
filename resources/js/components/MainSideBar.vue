@@ -7,7 +7,7 @@
 			<li><a href="" class="d-block container-fluid">icono<span :class="{ 'd-none': !visible }">BINGO</span></a></li>
 			<li><a href="" class="d-flex container-fluid align-items-center"><iBlackJack class="icon"></iBlackJack><span :class="{ 'd-none': !visible }">BLACKJACK</span></a></li>
 		</ul>
-		<div>
+		<div class="w-100">
 			<button class="bottom-buton">
 				<img src="/images/england.png" alt="england" class="icon">
 				<p>ENGLISH</p>
@@ -61,6 +61,7 @@ img {
 	height: 24px;
 }
 .bottom-buton{
+	width: 49%;	
 	background-color: #212121;
 }
 </style>
