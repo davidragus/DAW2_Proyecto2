@@ -244,3 +244,8 @@ export default {
 }
 </style>
 -->
+<style scoped>
+    #mainContent {
+        background-color: #2A2A2A;
+    }
+</style>
