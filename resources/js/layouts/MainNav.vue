@@ -1,6 +1,6 @@
 <template>
 	<MainHeader @toggle-sidebar="toggleSideBar" />
-	<MainSideBar />
+	<MainSideBar :visible="isToggled"/>
 </template>
 
 <script setup>
@@ -16,9 +16,11 @@ function toggleSideBar() {
 	if (isToggled.value) {
 		sideBar.style.setProperty('width', '115px');
 		document.getElementById('mainContent').style.setProperty('padding-left', '115px');
+		document.getElementById('mainFooter').style.setProperty('padding-left', '115px');
 	} else {
 		sideBar.style.setProperty('width', '230px');
 		document.getElementById('mainContent').style.setProperty('padding-left', '230px');
+		document.getElementById('mainFooter').style.setProperty('padding-left', '230px');
 
 	}
 	isToggled.value = !isToggled.value;
