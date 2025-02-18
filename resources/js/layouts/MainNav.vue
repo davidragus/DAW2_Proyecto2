@@ -17,10 +17,12 @@ function toggleSideBar() {
 		sideBar.style.setProperty('width', '115px');
 		document.getElementById('mainContent').style.setProperty('padding-left', '115px');
 		document.getElementById('mainFooter').style.setProperty('padding-left', '115px');
+		document.getElementById('lang-container').style.setProperty('width', '95%');
 	} else {
 		sideBar.style.setProperty('width', '230px');
 		document.getElementById('mainContent').style.setProperty('padding-left', '230px');
 		document.getElementById('mainFooter').style.setProperty('padding-left', '230px');
+		document.getElementById('lang-container').style.setProperty('width', '49%');
 
 	}
 	isToggled.value = !isToggled.value;

@@ -1,5 +1,5 @@
 <template>
-    <footer id="mainFooter" class="d-flex flex-column" style="padding-left: 230px;">
+    <footer id="mainFooter" class="d-flex flex-column">
         <div class="d-flex flex-row w-100 justify-content-between p-5">
             <ul>
                 <li class="li-title"><strong>Casino games</strong></li>
@@ -50,13 +50,10 @@
     #mainFooter ul>li>a {
         color: white;
         text-decoration: none;
+        font-weight: 100;
     }
     #mainFooter {
         background-color: #000000;
-    }
-
-    #mainFooter p {
-        font-size: 14px;
     }
     .li-title{
         margin-bottom: 20px;
