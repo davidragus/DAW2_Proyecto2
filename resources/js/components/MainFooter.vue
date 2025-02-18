@@ -1,5 +1,5 @@
 <template>
-    <footer id="mainFooter" class="d-flex flex-column" style="padding-left: 230px;">
+    <footer id="mainFooter" class="d-flex flex-column">
         <div class="d-flex flex-row w-100 justify-content-between p-5">
             <ul>
                 <li class="li-title"><strong>Casino games</strong></li>

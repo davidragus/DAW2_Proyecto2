@@ -1,23 +1,25 @@
 <template>
   <div>
     <Button @click="visible = true" class="mx-3" buttonColor="yellow" buttonStyle="outlined" buttonSize="normal">REGISTER</Button>
-    <Dialog v-model:visible="visible" modal header="Sign Up" :style="{ width: '400px' }" @update:visible="onDialogClose">
+    <Dialog v-model:visible="visible" modal header="Sign Up" :style="{ width: '400px' , backgroundColor: '#212121', color: 'white' , borderColor: '#3B3B3B'}" :panelStyle="{backgroundColor: 'red'}" @update:visible="onDialogClose">
       <div class="signup-container p-4">
         <form @submit.prevent="submitRegister">
           <div class="mb-3">
-            <Dropdown v-model="registerForm.country" :options="countries" placeholder="Country of residence" class="w-100" />
+            <Dropdown v-model="registerForm.country" :options="countries" placeholder="Country of residence" class="w-100" :style="{backgroundColor: '#313131', color: 'white' , borderColor: '#414141', placeholderColor: ''}"/>
           </div>
           <input v-model="registerForm.dni" type="text" class="form-control mb-3" placeholder="National Identity Card Number" required />
           
           <div class="mb-3">
-            <input type="file" @change="handleFileUpload" class="form-control" required />
+            <input id="idImage" type="file" @change="handleFileUpload" class="form-control image-input" required />
+            <label for="idImage" class="form-control mb-3"><span class="file-span">Choose a file</span>Upload your ID image</label>
+            <p v-if="fileName" class="text-white mt-2">Selected file: {{ fileName }}</p>
           </div>
-          <div class="border rounded">
+          <div class="border rounded name-container">
             <input v-model="registerForm.name" type="text" class="form-control first-name-rounded border-0 border-bottom" placeholder="Name" required />
             <input v-model="registerForm.surname1" type="text" class="form-control rounded-0 border-0 border-bottom" placeholder="Surname" required />
             <input v-model="registerForm.surname2" type="text" class="form-control border-0" placeholder="Second surname (optional)" />
           </div>
-          <div class="d-flex justify-content-center rounded border my-3">
+          <div class="d-flex justify-content-center rounded border my-3 gender-container">
             <div class="gender-option left-gender" @click="registerForm.gender = 'M'" :class="{ active: registerForm.gender === 'M' }">
               ♂
             </div>
@@ -49,9 +51,9 @@
             <label class="form-check-label">I confirm that I am over the majority age of my country and that I accept the Terms and Conditions and the Privacy Policy</label>
           </div>
           
-          <PrimeButton type="submit" label="SIGN UP" class="w-100 p-button-primary" :disabled="processing" />
+          <PrimeButton type="submit" label="SIGN UP" class="w-100" :disabled="processing" :style="{backgroundColor: 'red', color: 'white', borderColor: 'red'}"/>
           
-          <p class="text-center mt-3">Are you already registered? <a href="#" @click.prevent="openLoginDialog">Log in</a></p>
+          <p class="text-center mt-3">Are you already registered? <a href="#" class="login ms-2" @click.prevent="openLoginDialog">Log in</a></p>
         </form>
       </div>
     </Dialog>
@@ -69,6 +71,7 @@ import useAuth from '@/composables/auth';
 
 const props = defineProps(['visible']);
 const visible = ref(props.visible);
+const fileName = ref('');
 
 watch(() => props.visible, (newVal) => {
   visible.value = newVal;
@@ -87,6 +90,7 @@ const emit = defineEmits(['open-login-dialog', 'update:visible']);
 
 const handleFileUpload = (event) => {
   registerForm.idImage = event.target.files[0];
+  fileName.value = event.target.files[0].name;
 };
 
 const register = async () => {
@@ -127,7 +131,7 @@ const schema = yup.object({
   padding: 20px;
 }
 .gender-option {
-  background-color: #ffff;
+  background-color: #313131;
   flex: 1;
   text-align: center;
   cursor: pointer;
@@ -143,20 +147,73 @@ const schema = yup.object({
 }
 .left-gender {
   border-radius: 0.375rem 0 0 0.375rem;
-  border-right: 1px solid  #dee2e6;
+  border-right: 1px solid #414141;
 }
 .right-gender {
   border-radius: 0 0.375rem 0.375rem 0;
-  border-left: 1px solid  #dee2e6;
+  border-left: 1px solid #414141;
 }
 .border-bottom {
-  border-bottom: 1px solid  #dee2e6 !important;
+  border-bottom: 1px solid #414141 !important;
 }
 .first-name-rounded{
   border-radius: 0.375rem 0.375rem 0 0 ;
 }
+.form-control {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #414141;
+  border-radius: 5px;
+  background-color: #313131;
+  color: white;
+
+}
+
+.form-control::placeholder {
+  color: white;
+}
 .form-control:focus{
   box-shadow: none;
   border-color: #ced4da;
+}
+
+.form-check-input{
+  background-color: #414141;
+  border-color: #313131;
+}
+.form-check-input:checked{
+  background-color:red;
+  border-color: #cb0000;
+}
+.form-check-input:focus{
+  border-color: #313131;
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem #31313133;
+}
+.login {
+  color: white;
+  text-decoration: underline !important;
+}
+.login:hover {
+  color: red;
+}
+.name-container {
+  border: 1px solid #414141 !important;
+}
+.gender-container {
+  border: 1px solid #414141 !important;
+}
+.image-input{
+  display: none;
+}
+.file-span{
+  padding: 8px;
+  color: white;
+  background-color: #414141;
+  margin-right: 10px;
+}
+.p-select-option{
+  background-color: #313131;
+  color: white;
 }
 </style>
