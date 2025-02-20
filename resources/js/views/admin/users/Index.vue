@@ -1,109 +1,110 @@
 <template>
-    <div class="grid">
-        <div class="col-12">
-            <div class="card">
+	<div class="grid">
+		<div class="col-12">
+			<div class="card">
 
-                <div class="card-header bg-transparent ps-0 pe-0">
-                    <h5 class="float-start mb-0">Ejercicios</h5>
-                </div>
+				<div class="card-header bg-transparent ps-0 pe-0">
+					<h5 class="float-start mb-0">Ejercicios</h5>
+				</div>
 
-                    <DataTable v-model:filters="filters" :value="users.data" paginator :rows="5"
-                               :globalFilterFields="['id','alias', 'name','surname1','surname2','email','created_at','type.name']" stripedRows dataKey="id" size="small">
+				<!-- :globalFilterFields="['id', 'alias', 'name', 'surname1', 'surname2', 'email', 'created_at', 'type.name']" -->
 
-                        <template #header>
-                            <Toolbar pt:root:class="toolbar-table">
-                                <template #start>
-                                    <IconField >
-                                        <InputIcon class="pi pi-search"> </InputIcon>
-                                        <InputText v-model="filters['global'].value" placeholder="Buscar" />
-                                    </IconField>
+				<DataTable v-model:filters="filters" :value="users.data" paginator :rows="25" stripedRows dataKey="id"
+					size="small">
 
-                                    <Button type="button" icon="pi pi-filter-slash" label="Clear" class="ml-1" outlined @click="initFilters()" />
-                                    <Button type="button" icon="pi pi-refresh" class="h-100 ml-1" outlined @click="getUsers()" />
-                                </template>
-                                <template #end>
-                                    <Button v-if="can('exercise-create')" icon="pi pi-external-link" label="Crear Usuario" @click="$router.push('users/create')" class="float-end" />
-                                </template>
-                            </Toolbar>
-                            <!--
-                            <div class="flex justify-content-between flex-column sm:flex-row">
+					<template #header>
+						<Toolbar pt:root:class="toolbar-table">
+							<template #start>
+								<IconField>
+									<InputIcon class="pi pi-search"> </InputIcon>
+									<InputText v-model="filters['global'].value" placeholder="Buscar" />
+								</IconField>
 
-                                <Button icon="pi pi-external-link" label="Export" @click="exportCSV($event)" />
+								<Button type="button" icon="pi pi-filter-slash" label="Clear" class="ml-1" outlined
+									@click="initFilters()" />
+								<Button type="button" icon="pi pi-refresh" class="h-100 ml-1" outlined
+									@click="getUsers()" />
+							</template>
+							<template #end>
+								<Button v-if="can('user-create')" icon="pi pi-plus" label="Create user"
+									@click="$router.push('users/create')" class="float-end" />
+							</template>
+						</Toolbar>
 
-                                <div class="float-end">
+					</template>
 
-                                </div>
+					<template #empty> No users found. </template>
 
-                            </div>
-                            -->
-                        </template>
+					<Column field="id" header="ID" sortable></Column>
+					<Column field="dni" header="Identity Card Number" sortable></Column>
+					<Column field="last_validation" header="Validation status" sortable>
+						<template #body="{ data }">
+							<span class="rounded-4 py-1 px-3 text-light fw-bolder" :class="{
+								'bg-success': data.last_validation.status == 'ACCEPTED', 'bg-danger': data.last_validation.status == 'DENIED',
+								'bg-warning': data.last_validation.status == 'PENDING'
+							}">{{
+								data.last_validation.status }}</span>
+						</template>
+					</Column>
+					<Column field="role_name" header="Role" sortable></Column>
+					<Column field="username" header="Username" sortable></Column>
+					<Column field="name" header="Name" sortable></Column>
+					<Column field="surname1" header="First surname" sortable></Column>
+					<Column field="surname2" header="Second surname" sortable></Column>
+					<Column field="gender" header="Gender" sortable>
+						<template #body="{ data }">
+							<span v-if="data.gender == 'M'">MALE</span>
+							<span v-else-if="data.gender == 'F'">FEMALE</span>
+							<span v-else-if="data.gender == 'N'">NEUTRAL</span>
+						</template>
+					</Column>
+					<Column field="birth_date" header="Birth date" sortable></Column>
+					<Column field="email" header="Email" sortable></Column>
+					<Column field="phone_number" header="Phone" sortable></Column>
+					<Column field="created_at" header="Created at" sortable></Column>
 
-                        <template #empty> No customers found. </template>
+					<Column class="pe-0 me-0 icon-column-2">
+						<template #body="slotProps">
 
-                        <Column field="id" header="ID" sortable></Column>
-                        <Column field="alias" header="Alias" sortable></Column>
-                        <Column field="name" header="Nombre" sortable></Column>
-                        <Column field="surname1" header="Apellido1" sortable></Column>
-                        <Column field="surname2" header="Apellido2" sortable></Column>
-                        <Column field="email" header="Email" sortable></Column>
-                        <Column field="created_at" header="Creado el" sortable></Column>
+							<router-link v-if="can('user-edit')"
+								:to="{ name: 'users.edit', params: { id: slotProps.data.id } }">
+								<Button icon="pi pi-pencil" severity="info" size="small" class="mr-1" />
+							</router-link>
 
-<!--                        <Column header="categories" sortable-->
-<!--                                sortField="categories.name"-->
-<!--                                filterField="categories"-->
-<!--                                :showFilterMatchModes="false">-->
-<!--                            <template #body="slotProps">-->
-<!--                            <span v-for="cat in slotProps.data.categories" class="ms-2 badge  bg-secondary bg-gradient">-->
-<!--                                {{ cat.name }}-->
-<!--                            </span>-->
-<!--                            </template>-->
+							<Button icon="pi pi-trash" severity="danger" v-if="can('user-delete')"
+								@click.prevent="deleteUser(slotProps.data.id, slotProps.index)" size="small" />
 
-<!--                        </Column>-->
+						</template>
+					</Column>
 
-                        <Column class="pe-0 me-0 icon-column-2">
-                            <template #body="slotProps">
+				</DataTable>
 
-<!--                                <router-link :to="{ name: 'users.tasks', params: { id: slotProps.data.id } }">-->
-<!--                                    <Button icon="pi pi-eye"  severity="help" size="small" class="mr-1"/>-->
-<!--                                </router-link>-->
-
-                                <router-link v-if="can('user-edit')" :to="{ name: 'users.edit', params: { id: slotProps.data.id } }">
-                                    <Button icon="pi pi-pencil" severity="info" size="small" class="mr-1"/>
-                                </router-link>
-
-                                <Button icon="pi pi-trash" severity="danger" v-if="can('user-delete')" @click.prevent="deleteUser(slotProps.data.id, slotProps.index)" size="small"/>
-
-                            </template>
-                        </Column>
-
-                    </DataTable>
-
-            </div>
-        </div>
-    </div>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script setup>
-import {ref, onMounted} from "vue";
+import { ref, onMounted } from "vue";
 import useUsers from "../../../composables/users";
-import {useAbility} from '@casl/vue'
-import {FilterMatchMode, FilterService} from "@primevue/core/api";
+import { useAbility } from '@casl/vue'
+import { FilterMatchMode, FilterService } from "@primevue/core/api";
 
-const {users, getUsers, deleteUser, resetUserDB} = useUsers()
-const {can} = useAbility()
+const { users, getUsers, deleteUser, resetUserDB } = useUsers()
+const { can } = useAbility()
 
 const filters = ref({
-    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+	global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 });
 
 const initFilters = () => {
-    filters.value = {
-        global: { value: null, matchMode: FilterMatchMode.CONTAINS }
-    };
+	filters.value = {
+		global: { value: null, matchMode: FilterMatchMode.CONTAINS }
+	};
 };
 
 onMounted(() => {
-    getUsers()
+	getUsers()
 })
 
 </script>
