@@ -94,10 +94,10 @@
 						</div>
 						<div class="form-group col-3">
 							<label for="birthDate">Birth date</label>
-							<input v-model="user.birth_date" type="date" class="form-control" id="birthDate">
-							<div class="text-danger mt-1">{{ errors.birth_date }}</div>
+							<input v-model="user.birthdate" type="date" class="form-control" id="birthDate">
+							<div class="text-danger mt-1">{{ errors.birthdate }}</div>
 							<div class="text-danger mt-1">
-								<div v-for="message in validationErrors?.birth_date">
+								<div v-for="message in validationErrors?.birthdate">
 									{{ message }}
 								</div>
 							</div>
@@ -114,7 +114,7 @@
 						</div>
 						<div class="form-group col-3">
 							<label for="gender">Gender</label>
-							<select v-model="user.gender" type="text" class="form-control" id="gender">
+							<select v-model="user.gender" class="form-control" id="gender">
 								<option value="M">Male</option>
 								<option value="F">Female</option>
 								<option value="N">Neutral</option>
@@ -156,7 +156,7 @@
 								class="w-100" />
 						</div>
 					</div>
-					<div class="row">
+					<div v-if="!editMode" class="row">
 						<div class="form-check verify-container">
 							<input class="form-check-input m-0" type="checkbox" value="" id="autoValidate"
 								@change="toggleAutoVerify">
@@ -336,7 +336,7 @@ const schema = {
 	email: 'required',
 	surname1: 'required',
 	dni: 'required',
-	birth_date: 'required',
+	birthdate: 'required',
 	phone_number: 'required',
 	gender: 'required',
 	username: 'required'
@@ -349,10 +349,9 @@ const { value: name } = useField('name', null, { initialValue: '' });
 const { value: email } = useField('email', null, { initialValue: '' });
 const { value: surname1 } = useField('surname1', null, { initialValue: '' });
 const { value: surname2 } = useField('surname2', null, { initialValue: '' });
-const { value: password } = useField('password', null, { initialValue: '' });
 const { value: dni } = useField('dni', null, { initialValue: '' });
 const { value: phone_number } = useField('phone_number', null, { initialValue: '' });
-const { value: birth_date } = useField('birth_date', null, { initialValue: '' });
+const { value: birthdate } = useField('birthdate', null, { initialValue: '' });
 const { value: gender } = useField('gender', null, { initialValue: '' });
 const { value: role_id } = useField('role_id', null, { initialValue: '', label: 'role' });
 const { value: username } = useField('username', null, { initialValue: '', label: 'username' });
@@ -362,12 +361,11 @@ const user = reactive({
 	email,
 	surname1,
 	surname2,
-	password,
 	role_id,
 	dni,
 	phone_number,
 	gender,
-	birth_date,
+	birthdate,
 	username
 })
 
@@ -379,6 +377,9 @@ function submitForm() {
 			if (props.editMode) {
 				updateUser(user)
 			} else {
+				if (typeof user.role_id === 'object') {
+					user.role_id = user.role_id[0].id; //TODO: Refactor this conversion
+				}
 				storeUser(user)
 			}
 		}
@@ -396,10 +397,7 @@ onMounted(() => {
 	getRoleList()
 	if (props.editMode) {
 		getUser(route.params.id)
-	} else {
-		console.log(0);
 	}
-
 })
 // https://vuejs.org/api/reactivity-core.html#watcheffect
 watchEffect(() => {

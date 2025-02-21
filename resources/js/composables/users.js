@@ -68,12 +68,16 @@ export default function useUsers() {
 		isLoading.value = true
 		validationErrors.value = {}
 
+		console.log(user);
+
 		let serializedPost = new FormData()
 		for (let item in user) {
 			if (user.hasOwnProperty(item)) {
 				serializedPost.append(item, user[item])
 			}
 		}
+
+		console.log(serializedPost);
 
 		axios.post('/api/users', serializedPost)
 			.then(response => {

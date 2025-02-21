@@ -58,7 +58,7 @@
 							<span v-else-if="data.gender == 'N'">NEUTRAL</span>
 						</template>
 					</Column>
-					<Column field="birth_date" header="Birth date" sortable></Column>
+					<Column field="birthdate" header="Birth date" sortable></Column>
 					<Column field="email" header="Email" sortable></Column>
 					<Column field="phone_number" header="Phone" sortable></Column>
 					<Column field="created_at" header="Created at" sortable></Column>
