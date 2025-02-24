@@ -29,50 +29,58 @@
                     <a href="#" class="col-2 game-card">
                         <img src="/images/bingoGame.webp" alt="Bingo" class="game-image"/>
                         <p class="game-title">BINGO</p>
-                        <div class="red-line"></div>
+                        <div class="bottom-game-line"></div>
                     </a>
                     <a href="#" class="col-2 game-card">
                         <img src="/images/rouletteGame.webp" alt="Roulette" class="game-image"/>
                         <p class="game-title">ROULETTE</p>
-                        <div class="red-line"></div>
+                        <div class="bottom-game-line"></div>
                     </a>
                     <a href="#" class="col-2 game-card">
                         <img src="/images/pokerGame.webp" alt="Poker" class="game-image"/>
                         <p class="game-title">POKER</p>
-                        <div class="red-line"></div>
+                        <div class="bottom-game-line"></div>
                     </a>
                     <a href="#" class="col-2 game-card">
                         <img src="/images/blackjackGame.webp" alt="Blackjack" class="game-image"/>
                         <p class="game-title">BLACKJACK</p>
-                        <div class="red-line"></div>
+                        <div class="bottom-game-line"></div>
                     </a>
                     <div href="#" class="col-2 game-card"></div>
                 </div>
             </div>
             <div class="row d-flex justify-content-center">
-                <div class="col-11 container-category-title">
+                <div class="col-11 container-category-title d-flex justify-content-between align-items-center">
                     <h5 class="category-title">NEW CASINO GAMES</h5>
+                    <div class="nav-arrows-container">
+                        <button class="nav-arrow" disabled>
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="nav-arrow" disabled>
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
                 </div>
                 <div class="row d-flex justify-content-around mt-3">
                     <a href="#" class="col-2 game-card">
                         <img src="/images/bingoGame.webp" alt="Bingo" class="game-image"/>
                         <p class="game-title">BINGO</p>
-                        <div class="red-line"></div>
+                        <div class="bottom-game-line"></div>
                     </a>
                     <a href="#" class="col-2 game-card">
                         <img src="/images/rouletteGame.webp" alt="Roulette" class="game-image"/>
                         <p class="game-title">ROULETTE</p>
-                        <div class="red-line"></div>
+                        <div class="bottom-game-line"></div>
                     </a>
                     <a href="#" class="col-2 game-card">
                         <img src="/images/pokerGame.webp" alt="Poker" class="game-image"/>
                         <p class="game-title">POKER</p>
-                        <div class="red-line"></div>
+                        <div class="bottom-game-line"></div>
                     </a>
                     <a href="#" class="col-2 game-card">
                         <img src="/images/blackjackGame.webp" alt="Blackjack" class="game-image"/>
                         <p class="game-title">BLACKJACK</p>
-                        <div class="red-line"></div>
+                        <div class="bottom-game-line"></div>
                     </a>
                     <div href="#" class="col-2 game-card"></div>
                 </div>
