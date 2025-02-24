@@ -5,7 +5,16 @@
       <div class="signup-container p-4">
         <form @submit.prevent="submitRegister">
           <div class="mb-3">
-            <Dropdown v-model="registerForm.country" :options="countries" placeholder="Country of residence" class="w-100" :style="{backgroundColor: '#313131', color: 'white' , borderColor: '#414141', placeholderColor: ''}"/>
+            <Dropdown 
+            v-model="registerForm.country" 
+            :options="countries"
+             placeholder="Country of residence" 
+             class="w-100" 
+             :style="{backgroundColor: '#313131', color: 'white' , borderColor: '#414141', placeholderColor: ''}"
+             pt:option:id="option-dropdown-register"
+             pt:listContainer:id="list-container-dropdown-register" 
+             pt:overlay:id="overlay-dropdown-register"
+             pt:root:id="root-dropdown-register"/>
           </div>
           <input v-model="registerForm.dni" type="text" class="form-control mb-3" placeholder="National Identity Card Number" required />
           
@@ -165,12 +174,12 @@ const schema = yup.object({
   border: 1px solid #414141;
   border-radius: 5px;
   background-color: #313131;
-  color: white;
+  color: #bcbcbc;
 
 }
 
 .form-control::placeholder {
-  color: white;
+  color: #bcbcbc;
 }
 .form-control:focus{
   box-shadow: none;

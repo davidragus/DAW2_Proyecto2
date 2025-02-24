@@ -17,6 +17,8 @@
     <link rel="icon" type="image/svg" href="/images/logo.svg">
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
     <!--<link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">-->
     <script>
         window.config = @json($config);
