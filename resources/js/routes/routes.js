@@ -253,6 +253,19 @@ export default [
 					}
 				]
 			},
+			{
+				name: 'validations',
+				path: 'validations',
+				meta: { breadCrumb: 'Validations' },
+				children: [
+					{
+						name: 'validations.index',
+						path: '',
+						component: () => import('../views/admin/validations/Index.vue'),
+						meta: { breadCrumb: 'Validations' }
+					},
+				]
+			},
 
 			//TODO Organizar rutas
 			{
