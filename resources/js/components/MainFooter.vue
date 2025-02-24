@@ -1,32 +1,32 @@
 <template>
     <footer id="mainFooter" class="d-flex flex-column">
-        <div class="d-flex flex-row w-100 justify-content-between p-5">
+        <div class="d-flex flex-row w-100 justify-content-between p-5 footer-content">
             <ul>
-                <li class="li-title"><strong>Casino games</strong></li>
-                <li><a href="">Roulette</a></li>
-                <li><a href="">Blackjack</a></li>
-                <li><a href="">Bingo</a></li>
+                <li class="li-title" @click="toggleList(0)"><strong>Casino games</strong></li>
+                <li v-show="isListVisible[0] || !isMobile"><a href="">Roulette</a></li>
+                <li v-show="isListVisible[0] || !isMobile"><a href="">Blackjack</a></li>
+                <li v-show="isListVisible[0] || !isMobile"><a href="">Bingo</a></li>
             </ul>
             <ul>
-                <li class="li-title"><strong>Who we are</strong></li>
-                <li><a href="">Help</a></li>
-                <li><a href="">Affiliates</a></li>
-                <li><a href="">Site map</a></li>
+                <li class="li-title" @click="toggleList(1)"><strong>Who we are</strong></li>
+                <li v-show="isListVisible[1] || !isMobile"><a href="">Help</a></li>
+                <li v-show="isListVisible[1] || !isMobile"><a href="">Affiliates</a></li>
+                <li v-show="isListVisible[1] || !isMobile"><a href="">Site map</a></li>
             </ul>
             <ul>
-                <li class="li-title"><strong>Safe play</strong></li>
-                <li><a href="">Privacy policy</a></li>
-                <li><a href="">User agreement</a></li>
-                <li><a href="">Bonus policy</a></li>
-                <li><a href="">Return percentage</a></li>
-                <li><a href="">Disconnection policy</a></li>
-                <li><a href="">Authorized game</a></li>
+                <li class="li-title" @click="toggleList(2)"><strong>Safe play</strong></li>
+                <li v-show="isListVisible[2] || !isMobile"><a href="">Privacy policy</a></li>
+                <li v-show="isListVisible[2] || !isMobile"><a href="">User agreement</a></li>
+                <li v-show="isListVisible[2] || !isMobile"><a href="">Bonus policy</a></li>
+                <li v-show="isListVisible[2] || !isMobile"><a href="">Return percentage</a></li>
+                <li v-show="isListVisible[2] || !isMobile"><a href="">Disconnection policy</a></li>
+                <li v-show="isListVisible[2] || !isMobile"><a href="">Authorized game</a></li>
             </ul>
             <ul>
-                <li class="li-title"><strong>Real money</strong></li>
-                <li><a href="">Payments</a></li>
-                <li><a href="">Charges</a></li>
-                <li><a href="">Verify identity</a></li>
+                <li class="li-title" @click="toggleList(3)"><strong>Real money</strong></li>
+                <li v-show="isListVisible[3] || !isMobile"><a href="">Payments</a></li>
+                <li v-show="isListVisible[3] || !isMobile"><a href="">Charges</a></li>
+                <li v-show="isListVisible[3] || !isMobile"><a href="">Verify identity</a></li>
             </ul>
             <ul>
                 <li class="li-title"><strong>Royal Flush Casino</strong></li>
@@ -38,9 +38,29 @@
         </div>
     </footer>
 </template>
-<script setup>
 
+<script setup>
+import { ref, onMounted } from 'vue';
+
+const isListVisible = ref([false, false, false, false]);
+const isMobile = ref(false);
+
+function toggleList(index) {
+    if (isMobile.value) {
+        isListVisible.value[index] = !isListVisible.value[index];
+    }
+}
+
+function checkMobile() {
+    isMobile.value = window.innerWidth <= 768;
+}
+
+onMounted(() => {
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+});
 </script>
+
 <style scoped>
     #mainFooter ul>li {
         list-style: none;
@@ -55,7 +75,22 @@
     #mainFooter {
         background-color: #000000;
     }
-    .li-title{
+    .li-title {
         margin-bottom: 20px;
+        cursor: pointer;
+    }
+    @media (max-width: 768px) {
+        .footer-content {
+            flex-direction: column !important;
+        }
+        #mainFooter ul {
+            margin-bottom: 20px;
+        }
+        #mainFooter ul>li {
+            display: none;
+        }
+        #mainFooter ul>li.li-title {
+            display: block;
+        }
     }
 </style>
