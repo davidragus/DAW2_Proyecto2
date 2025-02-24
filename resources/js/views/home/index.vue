@@ -1,251 +1,194 @@
 <template>
-
-	<main id="mainContent">
-		THIS IS A TEST <br>
-		THIS IS A TEST <br>
-		THIS IS A TEST <br>
-		THIS IS A TEST <br>
-		THIS IS A TEST <br>
-		THIS IS A TEST <br>
-		THIS IS A TEST <br>
-		THIS IS A TEST <br>
-		THIS IS A TEST <br>
-		THIS IS A TEST <br>
-		THIS IS A TEST <br>
-		THIS IS A TEST <br>
-		THIS IS A TEST <br>
-		THIS IS A TEST <br>
-		THIS IS A TEST <br>
-		THIS IS A TEST <br>
-		THIS IS A TEST <br>
-		THIS IS A TEST <br>
-		THIS IS A TEST <br>
-		THIS IS A TEST <br>
-		THIS IS A TEST <br>
-		THIS IS A TEST <br>
-		THIS IS A TEST <br>
-		THIS IS A TEST <br>
-		THIS IS A TEST <br>
-		THIS IS A TEST <br>
-		THIS IS A TEST <br>
-		THIS IS A TEST <br>
-		THIS IS A TEST <br>
-		THIS IS A TEST <br>
-	</main>
-
-</template>
-<!--
-<template>
-    <div class="demo" id="edit-demo">
-        <div class="viewport" @click="select(null)" @mousedown.capture="blockEvents" @wheel.capture="blockEvents">
-            <screen ref="screen">
-                <g v-for="edge in graph.edges" @click.stop="select(edge)" :key="edge.id">
-                    <edge :class="selection && selection.id === edge.id && 'selected'"
-                          :data="edge"
-                          :nodes="graph.nodes">
-                    </edge>
-                </g>
-                <g v-for="node in graph.nodes" :key="node.id">
-                    <node :data="node" ref="node" :class="isSelected(node) && 'selected'" :textSelect="node.textSelect" :useDrag="node.useDrag">
-                        <div v-html="node.html" @click.stop="select(node)">
-                        </div>
-                    </node>
-                </g>
-            </screen>
+    <main id="mainContent" class="container-fluid pr-0">
+        <div class="banner-background d-flex col-12">
+            <div class="banner-filter"></div>
+            <div class="container h-100 d-flex align-items-center">
+                <div class="row w-100 d-flex justify-content-center align-items-end">
+                    <div class="col-12 col-md-6 d-flex flex-column justify-content-center align-items-start">
+                        <h1 class="banner-title">NEW ROULETTE GAME !</h1>
+                        <p class="banner-text">You can now play roulette at Royal Flush Casino</p>
+                        <Button class="banner-button" buttonColor="yellow" buttonStyle="filled">Click here to be a winner!!</Button>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="sidebar">
-            <codemirror v-model="editText" :options="{
-          mode: 'text/javascript',
-          theme: 'default',
-          lineWrapping: true,
-          scrollbarStyle: null,
-          styleActiveLine: true,
-          line: true,
-        }"
-                        style="font-size: 13.3333px; font-family: monospace; -webkit-text-size-adjust: 100%; height: 100%"
-            ></codemirror>
+        <div class="container games-container">
+            <div class="row d-flex justify-content-center">
+                <div class="col-11 container-category-title d-flex justify-content-between align-items-center">
+                    <h5 class="category-title">FEATURED GAMES</h5>
+                    <div class="nav-arrows-container">
+                        <button class="nav-arrow" disabled>
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="nav-arrow" disabled>
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="row d-flex justify-content-around mt-3">
+                    <a href="#" class="col-2 game-card">
+                        <img src="/images/bingoGame.webp" alt="Bingo" class="game-image"/>
+                        <p class="game-title">BINGO</p>
+                        <div class="red-line"></div>
+                    </a>
+                    <a href="#" class="col-2 game-card">
+                        <img src="/images/rouletteGame.webp" alt="Roulette" class="game-image"/>
+                        <p class="game-title">ROULETTE</p>
+                        <div class="red-line"></div>
+                    </a>
+                    <a href="#" class="col-2 game-card">
+                        <img src="/images/pokerGame.webp" alt="Poker" class="game-image"/>
+                        <p class="game-title">POKER</p>
+                        <div class="red-line"></div>
+                    </a>
+                    <a href="#" class="col-2 game-card">
+                        <img src="/images/blackjackGame.webp" alt="Blackjack" class="game-image"/>
+                        <p class="game-title">BLACKJACK</p>
+                        <div class="red-line"></div>
+                    </a>
+                    <div href="#" class="col-2 game-card"></div>
+                </div>
+            </div>
+            <div class="row d-flex justify-content-center">
+                <div class="col-11 container-category-title">
+                    <h5 class="category-title">NEW CASINO GAMES</h5>
+                </div>
+                <div class="row d-flex justify-content-around mt-3">
+                    <a href="#" class="col-2 game-card">
+                        <img src="/images/bingoGame.webp" alt="Bingo" class="game-image"/>
+                        <p class="game-title">BINGO</p>
+                        <div class="red-line"></div>
+                    </a>
+                    <a href="#" class="col-2 game-card">
+                        <img src="/images/rouletteGame.webp" alt="Roulette" class="game-image"/>
+                        <p class="game-title">ROULETTE</p>
+                        <div class="red-line"></div>
+                    </a>
+                    <a href="#" class="col-2 game-card">
+                        <img src="/images/pokerGame.webp" alt="Poker" class="game-image"/>
+                        <p class="game-title">POKER</p>
+                        <div class="red-line"></div>
+                    </a>
+                    <a href="#" class="col-2 game-card">
+                        <img src="/images/blackjackGame.webp" alt="Blackjack" class="game-image"/>
+                        <p class="game-title">BLACKJACK</p>
+                        <div class="red-line"></div>
+                    </a>
+                    <div href="#" class="col-2 game-card"></div>
+                </div>
+            </div>
         </div>
-    </div>
+    </main>
 </template>
 
-<script>
-import Screen from '../components/Screen.vue'
-import Node from '../components/Node.vue'
-import Edge from '../components/Edge.vue'
-import graph from '../graph'
-import pretty from 'pretty'
-import stringify from 'javascript-stringify'
-import { Codemirror } from 'vue-codemirror'
-// import 'codemirror/mode/javascript/javascript.js'
-// import 'codemirror/lib/codemirror.css'
-
-export default {
-    components: {
-        Screen,
-        Node,
-        Edge,
-        Codemirror
-    },
-    data() {
-        return {
-            graph: new graph(),
-            selection: null,
-            editText: '/* click on a node or edge to start editing */',
-        }
-    },
-    methods: {
-        select (obj) {
-            this.selection = obj
-            if (!this.selection) {
-                this.editText = '/* click on a node or edge to start editing */'
-                return
-            }
-            const editText = { ...obj }
-            delete editText.pathd
-            if (editText.html) {
-                editText.html = "\n" + pretty(editText.html) + "\n"
-            }
-            this.editText = stringify(editText, null, 2)
-                .replace(/\\n/g, "\n")
-                .replace(/html: '([^]*)\s'/g, 'html: `$1\n`')
-        },
-        applyChanges () {
-            if (!this.selection) {
-                return
-            }
-            try {
-                const edit = eval('('+this.editText+')')
-                Object.assign(this.selection, edit)
-                this.$nextTick(() => {
-                    this.$refs.node.forEach(node => {
-                        node.fitContent()
-                    })
-                })
-            } catch (_) {
-                console.log('TODO invalid code')
-            }
-        },
-        isSelected (node) {
-            return this.selection
-                && this.selection.id === node.id
-        },
-        /**
-         * HACKS
-         * support shortcut .no-drag and .no-wheel classes
-         * to disable dragging and mouse-wheel behavior from editable html
-         */
-        blockEvents (e) {
-            const path = e.path || e.composedPath?.();
-            if (path?.find(el => el.classList?.contains('no-drag'))) { // @mousedown
-                const pz = this.$refs.screen.panzoom
-                pz.options.preventMouseEventsDefault = false // enable default events (text select, input click)
-                document.addEventListener('mouseup', () => {
-                    pz.options.preventMouseEventsDefault = true
-                }, { once: true })
-                e.stopPropagation() // disable node drag
-            }
-            if (path?.find(el => el.classList?.contains('no-wheel'))) { // @wheel
-                e.stopPropagation() // disable wheel zoom
-            }
-        },
-    },
-    mounted () {
-        this.graph.createNode({
-            id: 'a',
-            html: '<h5>A</h5>'
-        })
-        this.graph.createNode({
-            id: 'b',
-            x: 200,
-            y: 200,
-            textSelect: false,
-            useDrag: true,
-            html:
-                `<div><h4>B</h4><p>Subtitle</p><button>Yo</button></div>`
-        })
-        this.graph.createNode({
-            id: 'c',
-            x: -100,
-            y: 150,
-            textSelect: false,
-            useDrag: true,
-            html: `<div> <h4>okay</h4> <textarea type="text" class="no-drag">Some text here</textarea><br/><select class="no-drag" name="cars" id="cars"><option value="volvo">Volvo</option><option value="saab">Saab</option><option value="mercedes">Mercedes</option><option value="audi">Audi</option></select></div>`
-        })
-        this.graph.createNode({
-            id: 'd',
-            x: 340,
-            textSelect: false,
-            useDrag: true,
-            html: `<div>Okay</div>`
-        })
-        this.graph.createEdge({
-            id: 'a:b',
-            from: 'a',
-            to: 'b',
-            toAnchor: { x: '50%', y: '50%', snap: 'rect' },
-            type: 'smooth'
-        })
-        this.graph.createEdge({ id: 'c:d', from: 'c', to: 'd', type: 'smooth' })
-        this.$nextTick(() => {
-            this.$refs.screen.zoomNodes(this.graph.nodes, {scale: 1})
-        })
-    },
-    watch: {
-        editText: 'applyChanges',
-    },
-}
+<script setup>
+import Button from '../../components/Button.vue';
 </script>
 
-<style>
-#edit-demo .CodeMirror {
-    width: 100%;
-    height: 500px;
-    margin: 0;
-    overflow: hidden;
-    position: relative;
-    background-color: #f1f1f1;
-    border: 1px solid #f1f1f1;
-}
-#edit-demo .node .background {
-    /* background-color: #ccc; */
-}
-
-#edit-demo .node .content > div {
-    padding: 25px;
-}
-
-#edit-demo .node .content h4,h5,p {
-    margin: 0
-}
-
-#edit-demo .node:hover .background {
-    background-color: rgb(90 200 90);
-}
-
-#edit-demo .node.selected .content {
-    background-color: rgba(100, 200, 100, 1);
-    box-shadow: 0px 0px 0px 2px #333;
-}
-
-#edit-demo .node .content {
-    cursor: pointer;
-}
-
-#edit-demo .edge {
-    cursor: pointer;
-}
-#edit-demo .edge:hover {
-    /* stroke-width: 4 */
-    stroke: rgb(90 200 90)
-}
-#edit-demo .edge.selected {
-    /* stroke-width: 4 */
-    stroke: #333
-}
-</style>
--->
 <style scoped>
     #mainContent {
         background-color: #2A2A2A;
+    }
+    .banner-background {
+        height: 300px;
+        background-image: url('/images/banner.jpg');
+        background-size: cover;
+        background-position: center;
+        position: relative;
+        margin-bottom: 75px;
+    }
+    .banner-filter {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* Ajusta la opacidad según sea necesario */
+        z-index: 1;
+    }
+    .banner-title {
+        font-weight: bold;
+        color: red;
+        font-size: 48px;
+        z-index: 2;
+        width: 75%;
+    }
+    .banner-text {
+        font-size: 24px;
+        font-weight: bolder;
+        color: white;
+        z-index: 2;
+        width: 60%;
+    }
+    .banner-button {
+        padding: 10px 20px;
+        font-size: 20px;
+        cursor: pointer;
+        z-index: 2;
+        width: 60%;
+    }
+    .container-category-title {
+        border-left: 5px solid red;
+        margin-top: 50px;
+        background: rgb(0,0,0);
+        background: linear-gradient(90deg, #000000 16%, #2a2a2a 40%);
+    }
+    .category-title{
+        margin: 0;
+        color: red;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+    }
+    .game-card {
+        height: 200px;
+        width: 150px;
+        text-align: center;
+        margin: 10px;
+    }
+    .game-image {
+        width: 100%;
+        object-fit: cover;
+        border-radius: 25%;
+        border: 1px solid #000000;
+    }
+    .game-title {
+        margin-top: 10px;
+        font-size: 16px;
+        color: white;
+    }
+    .bottom-game-line{
+        width: 100%;
+        height: 1px;
+        background: rgb(0,0,0);
+        background: linear-gradient(90deg, #00000000 0%, #ff0000 50%, #00000000 100%);
+    }
+    .background-none{
+        background: none;
+        border: none;
+    }
+    .nav-arrows-container{
+        display: flex;
+        gap: 5px;
+    }
+    .nav-arrow:enabled{
+        background: none;
+        border: 1px solid #717171;
+        background-color: #000000;
+        border-radius: 100%;
+        height: 30px;
+        width: 30px;
+        color: #717171;
+        font-size: 16px;
+    }
+    .nav-arrow:disabled{
+        background: none;
+        border: 1px solid #717171;
+        background-color: #212121;
+        border-radius: 100%;
+        height: 30px;
+        width: 30px;
+        color: #717171;
+        font-size: 16px;
     }
 </style>
