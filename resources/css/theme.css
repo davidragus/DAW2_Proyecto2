@@ -572,3 +572,22 @@ div.corner:after , div.corner:after {
 .mh-empty{
     min-height:150px !important;
 }
+
+#option-dropdown-register{
+    background-color: #313131 !important;
+    color: white !important;
+}
+#list-container-dropdown-register{
+    background-color: #313131 !important;
+    color: white !important;
+}
+#overlay-dropdown-register{
+    border: 0 !important;
+    color: white !important;
+}
+#input-text-dropdown-register{
+    color: white !important;
+}
+#root-dropdown-register>span{
+    color: #bcbcbc !important;
+}
