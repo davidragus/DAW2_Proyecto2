@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
+use App\Models\PendingValidation;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -62,6 +63,9 @@ class UserController extends Controller
 		if ($user->save()) {
 			if ($role) {
 				$user->assignRole($role);
+			}
+			if ($request->automaticValidation) {
+				PendingValidation::create(['user_id' => $user->id]);
 			}
 			return new UserResource($user);
 		}

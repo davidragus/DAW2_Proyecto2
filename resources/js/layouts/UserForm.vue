@@ -114,7 +114,7 @@
 						</div>
 						<div class="form-group col-3">
 							<label for="gender">Gender</label>
-							<select v-model="user.gender" class="form-control" id="gender">
+							<select v-model="user.gender" class="form-select" id="gender">
 								<option value="M">Male</option>
 								<option value="F">Female</option>
 								<option value="N">Neutral</option>
@@ -158,15 +158,16 @@
 					</div>
 					<div v-if="!editMode" class="row">
 						<div class="form-check verify-container">
-							<input class="form-check-input m-0" type="checkbox" value="" id="autoValidate"
-								@change="toggleAutoVerify">
+							<input class="form-check-input m-0" v-model="user.automaticValidation" type="checkbox"
+								value="" id="autoValidate" @change="toggleAutoVerify">
 							<label class="form-check-label my-0 ps-2 h-100 d-flex align-items-center"
 								for="autoValidate">
 								Validate this user at creation
 							</label>
 						</div>
 						<div v-if="autoVerify" class="col-3 p-0">
-							<input class="form-control" type="file" id="nationalCardImage" name="nationalCardImage">
+							<input class="form-control" type="file" accept="image/png,image/jpeg,image/jpg"
+								id=" nationalCardImage" name="nationalCardImage" multiple>
 						</div>
 					</div>
 					<div class="row d-flex justify-content-end">
@@ -355,6 +356,7 @@ const { value: birthdate } = useField('birthdate', null, { initialValue: '' });
 const { value: gender } = useField('gender', null, { initialValue: '' });
 const { value: role_id } = useField('role_id', null, { initialValue: '', label: 'role' });
 const { value: username } = useField('username', null, { initialValue: '', label: 'username' });
+const { value: automaticValidation } = useField('automaticValidation', null, { initialValue: false, label: 'automaticValidation' });
 
 const user = reactive({
 	name,
@@ -366,13 +368,13 @@ const user = reactive({
 	phone_number,
 	gender,
 	birthdate,
-	username
+	username,
+	automaticValidation
 })
 
 const route = useRoute()
 function submitForm() {
 	validate().then(form => {
-		console.log();
 		if (form.valid) {
 			if (props.editMode) {
 				updateUser(user)
