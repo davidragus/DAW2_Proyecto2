@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Button @click="visible = true" class="mx-3" buttonColor="yellow" buttonStyle="outlined" buttonSize="normal">REGISTER</Button>
+    <Button @click="visible = true" class="register-button" buttonColor="yellow" buttonStyle="outlined" buttonSize="normal">REGISTER</Button>
     <Dialog v-model:visible="visible" modal header="Sign Up" :style="{ width: '400px' , backgroundColor: '#212121', color: 'white' , borderColor: '#3B3B3B'}" :panelStyle="{backgroundColor: 'red'}" @update:visible="onDialogClose">
       <div class="signup-container p-4">
         <form @submit.prevent="submitRegister">
@@ -60,7 +60,7 @@
             <label class="form-check-label">I confirm that I am over the majority age of my country and that I accept the Terms and Conditions and the Privacy Policy</label>
           </div>
           
-          <PrimeButton type="submit" label="SIGN UP" class="w-100" :disabled="processing" :style="{backgroundColor: 'red', color: 'white', borderColor: 'red'}"/>
+          <PrimeButton type="submit" label="SIGN UP" class="w-100 register-button" :disabled="processing" :style="{backgroundColor: 'red', color: 'white', borderColor: 'red'}"/>
           
           <p class="text-center mt-3">Are you already registered? <a href="#" class="login ms-2" @click.prevent="openLoginDialog">Log in</a></p>
         </form>
@@ -131,8 +131,6 @@ const schema = yup.object({
   password_confirmation: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match'),
   country: yup.string().required('Country is required').max(255),
 });
-
-
 </script>
 
 <style scoped>
@@ -174,8 +172,7 @@ const schema = yup.object({
   border: 1px solid #414141;
   border-radius: 5px;
   background-color: #313131;
-  color: #bcbcbc;
-
+  color: white;
 }
 
 .form-control::placeholder {
@@ -224,5 +221,16 @@ const schema = yup.object({
 .p-select-option{
   background-color: #313131;
   color: white;
+}
+.register-button {
+  font-size: 16px;
+  padding: 10px 20px;
+}
+
+@media (max-width: 768px) {
+  .register-button {
+    font-size: 14px;
+    padding: 5px 10px;
+  }
 }
 </style>

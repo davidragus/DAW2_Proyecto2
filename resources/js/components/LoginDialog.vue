@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Button @click="visible = true" class="mx-3" buttonColor="red" buttonStyle="filled" buttonSize="normal">LOG IN</Button>
+    <Button @click="visible = true" class="login-button" buttonColor="red" buttonStyle="filled" buttonSize="normal">LOG IN</Button>
     
     <Dialog v-model:visible="visible" modal header="LOG IN" :style="{ width: '400px' , backgroundColor: '#212121', color: 'white' , borderColor: '#3B3B3B'}" class="login-dialog" @update:visible="onDialogClose">
       <div class="login-container">
@@ -76,11 +76,12 @@ const openRegisterDialog = () => {
   border: 1px solid #414141;
   border-radius: 5px;
   background-color: #313131;
+  color: white;
 
 }
 
 .form-control::placeholder {
-  color: white;
+  color: #bcbcbc;
 }
 
 .text-danger {
@@ -120,5 +121,17 @@ const openRegisterDialog = () => {
   border-color: #313131;
   outline: 0;
   box-shadow: 0 0 0 0.25rem #31313133;
+}
+
+.login-button {
+  font-size: 16px;
+  padding: 10px 20px;
+}
+
+@media (max-width: 768px) {
+  .login-button {
+    font-size: 14px;
+    padding: 5px 10px;
+  }
 }
 </style>

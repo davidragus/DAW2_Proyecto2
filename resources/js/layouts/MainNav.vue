@@ -1,13 +1,12 @@
 <template>
-	<MainHeader @toggle-sidebar="toggleSideBar" />
-	<MainSideBar :visible="isToggled"/>
+	<MainHeader :isMobile="isMobile" @toggle-sidebar="toggleSideBar" />
+	<MainSideBar :isMobile="isMobile" :visible="isToggled"/>
 </template>
 
 <script setup>
 import MainHeader from '../components/MainHeader.vue';
 import MainSideBar from '../components/MainSideBar.vue';
-
-import { ref } from "vue";
+import { ref, onMounted } from 'vue';
 
 const isToggled = ref(true);
 
@@ -27,6 +26,25 @@ function toggleSideBar() {
 	}
 	isToggled.value = !isToggled.value;
 }
+const isMobile = ref(false);
+function checkMobile() {
+    isMobile.value = window.innerWidth <= 768;
+	console.log(isMobile.value);
+	if(isMobile.value){
+		console.log("mobile");
+		document.getElementById('mainContent').style.setProperty('padding-left', '0px');
+		document.getElementById('mainFooter').style.setProperty('padding-left', '0px');
+	} else{
+		console.log("desktop");
+		document.getElementById('mainContent').style.setProperty('padding-left', '230px');
+		document.getElementById('mainFooter').style.setProperty('padding-left', '230px');
+	}
+}
+
+onMounted(() => {
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+});
 
 </script>
 

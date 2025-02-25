@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex">
+  <div class="d-flex gap-3">
     <Login @open-register-dialog="openRegisterDialog" :visible="loginDialogVisible" @update:visible="updateLoginDialogVisible"/>
     <Register @open-login-dialog="openLoginDialog" :visible="registerDialogVisible" @update:visible="updateRegisterDialogVisible"/>
   </div>

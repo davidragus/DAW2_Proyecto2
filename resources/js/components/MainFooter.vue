@@ -30,7 +30,7 @@
             </ul>
             <ul>
                 <li class="li-title"><strong>Royal Flush Casino</strong></li>
-                <li><a href=""><img src="/images/logo.svg" alt=""></a></li>
+                <li><a href=""><img src="/images/logo.svg" alt="" id="logo-footer"></a></li>
             </ul>
         </div>
         <div class="ps-5 pb-3">
@@ -80,14 +80,17 @@ onMounted(() => {
         cursor: pointer;
     }
     @media (max-width: 768px) {
+        #logo-footer {
+            width: 100px;
+        }
+        #mainFooter {
+            padding-left: 0;
+        }
         .footer-content {
             flex-direction: column !important;
         }
         #mainFooter ul {
             margin-bottom: 20px;
-        }
-        #mainFooter ul>li {
-            display: none;
         }
         #mainFooter ul>li.li-title {
             display: block;
