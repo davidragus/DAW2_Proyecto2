@@ -11,23 +11,23 @@ use Spatie\Permission\Traits\HasRoles;
 
 class PendingValidation extends Model implements HasMedia
 {
-    use HasFactory, InteractsWithMedia;
+	use HasFactory, InteractsWithMedia;
 
-    protected $fillable = [
-        'user_id',
-        'status',
-        'image_url',
-    ];
+	protected $fillable = [
+		'user_id',
+		'status',
+		'image_url'
+	];
 
-    public function registerMediaCollections(): void
-    {
-        $this->addMediaCollection('pending_validation')
-            ->useFallbackUrl('/images/placeholder.jpg')
-            ->useFallbackPath(public_path('/images/placeholder.jpg'));
-    }
+	public function registerMediaCollections(): void
+	{
+		$this->addMediaCollection('pending_validation')
+			->useFallbackUrl('/images/placeholder.jpg')
+			->useFallbackPath(public_path('/images/placeholder.jpg'));
+	}
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+	public function user()
+	{
+		return $this->belongsTo(User::class);
+	}
 }

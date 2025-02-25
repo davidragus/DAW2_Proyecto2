@@ -4,7 +4,7 @@
 			<div class="card">
 
 				<div class="card-header bg-transparent ps-0 pe-0">
-					<h5 class="float-start mb-0">Ejercicios</h5>
+					<h5 class="float-start mb-0">Users</h5>
 				</div>
 
 				<!-- :globalFilterFields="['id', 'alias', 'name', 'surname1', 'surname2', 'email', 'created_at', 'type.name']" -->
@@ -37,13 +37,13 @@
 
 					<Column field="id" header="ID" sortable></Column>
 					<Column field="dni" header="Identity Card Number" sortable></Column>
-					<Column field="last_validation" header="Validation status" sortable>
+					<Column field="validation_status" header="Validation status" sortable>
 						<template #body="{ data }">
 							<span class="rounded-4 py-1 px-3 text-light fw-bolder" :class="{
-								'bg-success': data.last_validation.status == 'ACCEPTED', 'bg-danger': data.last_validation.status == 'DENIED',
-								'bg-warning': data.last_validation.status == 'PENDING'
+								'bg-success': data.validation_status == 'ACCEPTED', 'bg-danger': data.validation_status == 'DENIED',
+								'bg-warning': data.validation_status == 'PENDING'
 							}">{{
-								data.last_validation.status }}</span>
+								data.validation_status }}</span>
 						</template>
 					</Column>
 					<Column field="role_name" header="Role" sortable></Column>
