@@ -15,7 +15,7 @@
                     <i class="fa-regular fa-user icon-24"></i>
                 </div>
                 <div v-show="dropdownVisible" class="dropdown-menu">
-                    <a href="#" class="dropdown-item">My account</a>
+                    <a href="#" class="dropdown-item" @click="fMyAccount">My account</a>
                     <div class="dropdown-divider"></div>
                     <a href="#" class="dropdown-item">Add chips</a>
                     <a href="#" class="dropdown-item">Withdraw</a>
@@ -34,11 +34,14 @@ import LoginAndRegister from "../components/LoginAndRegister.vue";
 import WebsiteLogo from "../components/WebsiteLogo.vue";
 import useAuth from "@/composables/auth";
 import { authStore } from "../store/auth";
+import MyAccount from './MyAccount.vue';
+import { useRouter } from 'vue-router';
 
 defineProps({ isMobile: Boolean });
 
 const dropdownVisible = ref(false);
 const loginContainer = ref(null);
+const router = useRouter();
 
 function toggleDropdown() {
     dropdownVisible.value = !dropdownVisible.value;
@@ -62,6 +65,12 @@ function logout() {
     // Lógica para cerrar sesión
     authStore().logout();
     dropdownVisible.value = false;
+    router.push({ name: 'home' });
+}
+
+function fMyAccount() {
+    dropdownVisible.value = false;
+    window.$('#myAccountModal').modal('show');
 }
 </script>
 

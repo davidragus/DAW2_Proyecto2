@@ -12,47 +12,55 @@ const isToggled = ref(true);
 
 function toggleSideBar() {
 	const sideBar = document.getElementById('sideBar');
-	if (isToggled.value) {
-		sideBar.style.setProperty('width', '115px');
-		document.getElementById('mainContent').style.setProperty('padding-left', '115px');
-		document.getElementById('mainFooter').style.setProperty('padding-left', '115px');
-		document.getElementById('lang-container').style.setProperty('width', '95%');
-	} else {
-		sideBar.style.setProperty('width', '230px');
-		document.getElementById('mainContent').style.setProperty('padding-left', '230px');
-		document.getElementById('mainFooter').style.setProperty('padding-left', '230px');
-		document.getElementById('lang-container').style.setProperty('width', '49%');
-
-	}
-	isToggled.value = !isToggled.value;
+    if (sideBar) {
+        if (isToggled.value) {
+            sideBar.style.setProperty('width', '115px');
+            const mainContent = document.getElementById('mainContent');
+            const mainFooter = document.getElementById('mainFooter');
+            if (mainContent) mainContent.style.setProperty('padding-left', '115px');
+            if (mainFooter) mainFooter.style.setProperty('padding-left', '115px');
+            document.getElementById('lang-container').style.setProperty('width', '95%');
+        } else {
+            sideBar.style.setProperty('width', '230px');
+            const mainContent = document.getElementById('mainContent');
+            const mainFooter = document.getElementById('mainFooter');
+            if (mainContent) mainContent.style.setProperty('padding-left', '230px');
+            if (mainFooter) mainFooter.style.setProperty('padding-left', '230px');
+            document.getElementById('lang-container').style.setProperty('width', '49%');
+        }
+        isToggled.value = !isToggled.value;
+    }
 }
 function toggleSideBarMobile() {
 	const sideBar = document.getElementById('sideBar');
-	if (isToggled.value) {
-		sideBar.style.setProperty('width', '80%');
-	} else {
-		sideBar.style.setProperty('width', '0px');
-	}
-	isToggled.value = !isToggled.value;
+    if (sideBar) {
+        if (isToggled.value) {
+            sideBar.style.setProperty('width', '80%');
+        } else {
+            sideBar.style.setProperty('width', '0px');
+        }
+        isToggled.value = !isToggled.value;
+    }
 }
 const isMobile = ref(false);
 function checkMobile() {
     isMobile.value = window.innerWidth <= 768;
-	console.log(isMobile.value);
-	if(isMobile.value){
-		console.log("mobile");
-		document.getElementById('mainContent').style.setProperty('padding-left', '0px');
-		document.getElementById('mainFooter').style.setProperty('padding-left', '0px');
-	} else{
-		console.log("desktop");
-		if(isToggled.value){
-			document.getElementById('mainContent').style.setProperty('padding-left', '230px');
-			document.getElementById('mainFooter').style.setProperty('padding-left', '230px');
-		} else{
-			document.getElementById('mainContent').style.setProperty('padding-left', '115px');
-			document.getElementById('mainFooter').style.setProperty('padding-left', '115px');
-		}
-	}
+    const mainContent = document.getElementById('mainContent');
+    const mainFooter = document.getElementById('mainFooter');
+    if (mainContent && mainFooter) {
+        if (isMobile.value) {
+            mainContent.style.setProperty('padding-left', '0px');
+            mainFooter.style.setProperty('padding-left', '0px');
+        } else {
+            if (isToggled.value) {
+                mainContent.style.setProperty('padding-left', '230px');
+                mainFooter.style.setProperty('padding-left', '230px');
+            } else {
+                mainContent.style.setProperty('padding-left', '115px');
+                mainFooter.style.setProperty('padding-left', '115px');
+            }
+        }
+    }
 }
 
 onMounted(() => {

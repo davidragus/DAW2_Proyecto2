@@ -106,6 +106,12 @@ export default [
 				component: () => import('../views/auth/passwords/Reset.vue'),
 				beforeEnter: guest,
 			},
+			{
+				path: 'MyAccount',
+				name: 'auth.my-account',
+				component: () => import('../components/MyAccount.vue'),
+				beforeEnter: requireLogin,
+			},
 		]
 	},
 
