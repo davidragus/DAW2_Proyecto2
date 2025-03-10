@@ -1,5 +1,5 @@
 <template>
-	<MainHeader :isMobile="isMobile" @toggle-sidebar="toggleSideBar" />
+	<MainHeader :isMobile="isMobile" @toggle-sidebar="toggleSideBar" @toggle-sidebar-mobile="toggleSideBarMobile" />
 	<MainSideBar :isMobile="isMobile" :visible="isToggled"/>
 </template>
 
@@ -26,6 +26,15 @@ function toggleSideBar() {
 	}
 	isToggled.value = !isToggled.value;
 }
+function toggleSideBarMobile() {
+	const sideBar = document.getElementById('sideBar');
+	if (isToggled.value) {
+		sideBar.style.setProperty('width', '80%');
+	} else {
+		sideBar.style.setProperty('width', '0px');
+	}
+	isToggled.value = !isToggled.value;
+}
 const isMobile = ref(false);
 function checkMobile() {
     isMobile.value = window.innerWidth <= 768;
@@ -36,8 +45,13 @@ function checkMobile() {
 		document.getElementById('mainFooter').style.setProperty('padding-left', '0px');
 	} else{
 		console.log("desktop");
-		document.getElementById('mainContent').style.setProperty('padding-left', '230px');
-		document.getElementById('mainFooter').style.setProperty('padding-left', '230px');
+		if(isToggled.value){
+			document.getElementById('mainContent').style.setProperty('padding-left', '230px');
+			document.getElementById('mainFooter').style.setProperty('padding-left', '230px');
+		} else{
+			document.getElementById('mainContent').style.setProperty('padding-left', '115px');
+			document.getElementById('mainFooter').style.setProperty('padding-left', '115px');
+		}
 	}
 }
 

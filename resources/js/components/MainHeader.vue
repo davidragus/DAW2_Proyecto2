@@ -2,7 +2,7 @@
     <nav class="navbar py-0">
         <div class="d-flex align-items-center">
             <SideBarButton v-if="!isMobile" @toggle-sidebar="$emit('toggle-sidebar')" />
-            <SideBarButtonMobile v-else @toggle-sidebar="$emit('toggle-sidebar')" />
+            <SideBarButtonMobile v-else @toggle-sidebar-mobile="$emit('toggle-sidebar-mobile')" />
             <div class="vertical-separator"></div>
             <WebsiteLogo />
         </div>

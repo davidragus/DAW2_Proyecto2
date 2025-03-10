@@ -46,7 +46,7 @@
                         <p class="game-title">BLACKJACK</p>
                         <div class="bottom-game-line"></div>
                     </a>
-                    <div href="#" class="col-2 game-card"></div>
+                    <div v-show="!isMobile" href="#" class="col-2 game-card"></div>
                 </div>
             </div>
             <div class="row d-flex justify-content-center">
@@ -81,7 +81,7 @@
                         <p class="game-title">BLACKJACK</p>
                         <div class="bottom-game-line"></div>
                     </a>
-                    <div href="#" class="col-2 game-card"></div>
+                    <div v-show="!isMobile" href="#" class="col-2 game-card"></div>
                 </div>
             </div>
         </div>

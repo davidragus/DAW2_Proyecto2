@@ -10,7 +10,10 @@
             <div v-for="message in validationErrors.email" :key="message">{{ message }}</div>
           </div>
 
-          <input v-model="loginForm.password" type="password" class="form-control mb-2" placeholder="Password" required />
+          <div class="password-container">
+            <input :type="passwordFieldType" v-model="loginForm.password" class="form-control mb-2" placeholder="Password" required />
+            <i class="fa fa-eye password-toggle" @mousedown="showPassword" @mouseup="hidePassword" @mouseleave="hidePassword"></i>
+          </div>
           <div v-if="validationErrors.password" class="text-danger">
             <div v-for="message in validationErrors.password" :key="message">{{ message }}</div>
           </div>
@@ -61,6 +64,16 @@ const openRegisterDialog = () => {
   visible.value = false;
   emit('update:visible', false);
   emit('open-register-dialog');
+};
+
+const passwordFieldType = ref('password');
+
+const showPassword = () => {
+  passwordFieldType.value = 'text';
+};
+
+const hidePassword = () => {
+  passwordFieldType.value = 'password';
 };
 </script>
 
@@ -126,6 +139,19 @@ const openRegisterDialog = () => {
 .login-button {
   font-size: 16px;
   padding: 10px 20px;
+}
+
+.password-container {
+  position: relative;
+}
+
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #bcbcbc;
 }
 
 @media (max-width: 768px) {

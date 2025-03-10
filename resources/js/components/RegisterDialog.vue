@@ -51,7 +51,10 @@
           <input v-model="registerForm.username" type="text" class="form-control mb-3" placeholder="Username" required />
           
           <div class="d-flex mb-3">
-            <input v-model="registerForm.password" type="password" class="form-control me-1" placeholder="Password" required />
+            <div class="password-container me-1">
+              <input v-model="registerForm.password" :type="passwordFieldType" class="form-control" placeholder="Password" required />
+              <i class="fa fa-eye password-toggle" @mousedown="showPassword" @mouseup="hidePassword" @mouseleave="hidePassword"></i>
+            </div>
             <input v-model="registerForm.password_confirmation" type="password" class="form-control ms-1" placeholder="Confirm password" required />
           </div>
           
@@ -118,6 +121,17 @@ const openLoginDialog = () => {
   emit('update:visible', false);
   emit('open-login-dialog');
 };
+
+const passwordFieldType = ref('password');
+
+const showPassword = () => {
+  passwordFieldType.value = 'text';
+};
+
+const hidePassword = () => {
+  passwordFieldType.value = 'password';
+};
+
 const schema = yup.object({
   username: yup.string().required('Username is required').max(255),
   name: yup.string().required('Name is required').max(255),
@@ -225,6 +239,20 @@ const schema = yup.object({
 .register-button {
   font-size: 16px;
   padding: 10px 20px;
+}
+
+.password-container {
+  position: relative;
+  width: 100%;
+}
+
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #bcbcbc;
 }
 
 @media (max-width: 768px) {

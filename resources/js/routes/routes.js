@@ -48,7 +48,7 @@ async function requireAdmin(to, from, next) {
 		if (hasAdmin(user.roles)) {
 			next()
 		} else {
-			next('/app')
+			next('/')
 		}
 	} else {
 		next('/login')

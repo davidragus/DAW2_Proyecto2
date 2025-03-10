@@ -1,19 +1,19 @@
 <template>
     <nav :class="{ 'd-none': isMobile, 'd-flex': !isMobile }" id="sideBar" class="flex-column justify-content-between align-items-center">
         <ul class="mt-5 w-75">
-            <li><a href="" class="d-block container-fluid">icono<span :class="{ 'd-none': !visible }">HOME</span></a></li>
+            <li><a href="" class="d-flex container-fluid align-items-center gap-3"><i class="fa-regular fa-house" style="color: #ffffff;"></i><span :class="{ 'd-none': !visible && !isMobile}">HOME</span></a></li>
             <hr>
             <li>
-                <a href="" class="d-flex container-fluid align-items-center">
+                <a href="" class="d-flex container-fluid align-items-center gap-3">
                     <img src="/images/iRoulette.svg" alt="" class="icon color-dark">
-                    <span :class="{ 'd-none': !visible }">ROULETTE</span>
+                    <span :class="{ 'd-none': !visible && !isMobile }">ROULETTE</span>
                 </a>
             </li>
-            <li><a href="" class="d-block container-fluid">icono<span :class="{ 'd-none': !visible }">BINGO</span></a></li>
+            <li><a href="" class="d-flex container-fluid align-items-center gap-3">icono<span :class="{ 'd-none': !visible && !isMobile }">BINGO</span></a></li>
             <li>
-                <a href="" class="d-flex container-fluid align-items-center">
+                <a href="" class="d-flex container-fluid align-items-center gap-3">
                     <iBlackJack class="icon"></iBlackJack>
-                    <span :class="{ 'd-none': !visible }">BLACKJACK</span>
+                    <span :class="{ 'd-none': !visible && !isMobile }">BLACKJACK</span>
                 </a>
             </li>
         </ul>
@@ -28,12 +28,13 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import LocaleSwitcher from './LocaleSwitcher.vue';
 import iRoulette from './iRoulette.vue';
 import iBlackJack from './iBlackJack.vue';
 
 defineProps({ visible: Boolean, isMobile: Boolean });
+
 
 // Estado para el modal de idiomas
 const showModal = ref(false);

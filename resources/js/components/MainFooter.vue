@@ -2,19 +2,19 @@
     <footer id="mainFooter" class="d-flex flex-column">
         <div class="d-flex flex-row w-100 justify-content-between p-5 footer-content">
             <ul>
-                <li class="li-title" @click="toggleList(0)"><strong>Casino games</strong></li>
+                <li :class="{ 'clickable': isMobile }" class="li-title" @click="toggleList(0)"><strong>Casino games</strong></li>
                 <li v-show="isListVisible[0] || !isMobile"><a href="">Roulette</a></li>
                 <li v-show="isListVisible[0] || !isMobile"><a href="">Blackjack</a></li>
                 <li v-show="isListVisible[0] || !isMobile"><a href="">Bingo</a></li>
             </ul>
             <ul>
-                <li class="li-title" @click="toggleList(1)"><strong>Who we are</strong></li>
+                <li :class="{ 'clickable': isMobile }" class="li-title" @click="toggleList(1)"><strong>Who we are</strong></li>
                 <li v-show="isListVisible[1] || !isMobile"><a href="">Help</a></li>
                 <li v-show="isListVisible[1] || !isMobile"><a href="">Affiliates</a></li>
                 <li v-show="isListVisible[1] || !isMobile"><a href="">Site map</a></li>
             </ul>
             <ul>
-                <li class="li-title" @click="toggleList(2)"><strong>Safe play</strong></li>
+                <li :class="{ 'clickable': isMobile }" class="li-title" @click="toggleList(2)"><strong>Safe play</strong></li>
                 <li v-show="isListVisible[2] || !isMobile"><a href="">Privacy policy</a></li>
                 <li v-show="isListVisible[2] || !isMobile"><a href="">User agreement</a></li>
                 <li v-show="isListVisible[2] || !isMobile"><a href="">Bonus policy</a></li>
@@ -23,7 +23,7 @@
                 <li v-show="isListVisible[2] || !isMobile"><a href="">Authorized game</a></li>
             </ul>
             <ul>
-                <li class="li-title" @click="toggleList(3)"><strong>Real money</strong></li>
+                <li :class="{ 'clickable': isMobile }" class="li-title" @click="toggleList(3)"><strong>Real money</strong></li>
                 <li v-show="isListVisible[3] || !isMobile"><a href="">Payments</a></li>
                 <li v-show="isListVisible[3] || !isMobile"><a href="">Charges</a></li>
                 <li v-show="isListVisible[3] || !isMobile"><a href="">Verify identity</a></li>
@@ -47,7 +47,7 @@ const isMobile = ref(false);
 
 function toggleList(index) {
     if (isMobile.value) {
-        isListVisible.value[index] = !isListVisible.value[index];
+        isListVisible.value = isListVisible.value.map((_, i) => i === index ? !isListVisible.value[i] : false);
     }
 }
 
@@ -77,6 +77,8 @@ onMounted(() => {
     }
     .li-title {
         margin-bottom: 20px;
+    }
+    .clickable {
         cursor: pointer;
     }
     @media (max-width: 768px) {
