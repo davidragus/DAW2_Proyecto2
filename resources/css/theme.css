@@ -591,3 +591,6 @@ div.corner:after , div.corner:after {
 #root-dropdown-register>span{
     color: #bcbcbc !important;
 }
+body {
+    background-color: #2A2A2A !important;
+}

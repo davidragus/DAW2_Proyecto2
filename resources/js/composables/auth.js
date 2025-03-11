@@ -75,7 +75,9 @@ export default function useAuth() {
                     icon: 'success',
                     title: 'Login correcto',
                     showConfirmButton: false,
-                    timer: 1500
+                    timer: 1500,
+                    background: '#2A2A2A',
+                    color: '#ffffff'
                 })
                 await router.push({ name: 'admin.index' })
             })
@@ -194,7 +196,7 @@ export default function useAuth() {
                 user.email = ''
                 auth.logout()
                 //store.dispatch('auth/logout')
-                // router.push({ name: 'auth.login' })
+                router.push({ name: 'auth.login' })
             })
             .catch(error => {
                 // swal({

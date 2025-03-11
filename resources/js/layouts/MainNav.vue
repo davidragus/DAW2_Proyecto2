@@ -33,10 +33,17 @@ function toggleSideBar() {
 }
 function toggleSideBarMobile() {
 	const sideBar = document.getElementById('sideBar');
+    const overlay = document.getElementById('overlaySideBar');
     if (sideBar) {
         if (isToggled.value) {
+            overlay.classList.remove('d-none');
+            sideBar.classList.remove('d-none');
+            sideBar.classList.add('show-mobile');
             sideBar.style.setProperty('width', '80%');
         } else {
+            overlay.classList.add('d-none');
+            sideBar.classList.add('d-none');
+            sideBar.classList.remove('show-mobile');
             sideBar.style.setProperty('width', '0px');
         }
         isToggled.value = !isToggled.value;
@@ -47,17 +54,21 @@ function checkMobile() {
     isMobile.value = window.innerWidth <= 768;
     const mainContent = document.getElementById('mainContent');
     const mainFooter = document.getElementById('mainFooter');
+    const sideBar = document.getElementById('sideBar');
     if (mainContent && mainFooter) {
         if (isMobile.value) {
             mainContent.style.setProperty('padding-left', '0px');
             mainFooter.style.setProperty('padding-left', '0px');
+            if (sideBar) sideBar.style.setProperty('width', '0px');
         } else {
             if (isToggled.value) {
                 mainContent.style.setProperty('padding-left', '230px');
                 mainFooter.style.setProperty('padding-left', '230px');
+                if (sideBar) sideBar.style.setProperty('width', '230px');
             } else {
                 mainContent.style.setProperty('padding-left', '115px');
                 mainFooter.style.setProperty('padding-left', '115px');
+                if (sideBar) sideBar.style.setProperty('width', '115px');
             }
         }
     }

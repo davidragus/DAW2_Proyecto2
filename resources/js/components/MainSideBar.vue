@@ -1,5 +1,5 @@
 <template>
-    <nav :class="{ 'd-none': isMobile, 'd-flex': !isMobile }" id="sideBar" class="flex-column justify-content-between align-items-center">
+    <nav :class="{ 'd-none': isMobile, 'd-flex': !isMobile, 'show-mobile': isMobile && visible }" id="sideBar" class="flex-column justify-content-between align-items-center">
         <ul class="mt-5 w-75">
             <li><a href="" class="d-flex container-fluid align-items-center gap-3"><i class="fa-regular fa-house" style="color: #ffffff;"></i><span :class="{ 'd-none': !visible && !isMobile}">HOME</span></a></li>
             <hr>
@@ -25,6 +25,7 @@
             </button>
         </div>
     </nav>
+    <div v-if="isMobile" id="overlaySideBar" class="overlay d-none" @click="closeSidebar"></div>
 </template>
 
 <script setup>
@@ -35,8 +36,6 @@ import iBlackJack from './iBlackJack.vue';
 
 defineProps({ visible: Boolean, isMobile: Boolean });
 
-
-// Estado para el modal de idiomas
 const showModal = ref(false);
 
 const languages = ref([
@@ -44,6 +43,10 @@ const languages = ref([
     "Italiano", "Português", "Nederlands", "中文",
     "日本語", "한국어", "Русский", "العربية"
 ]);
+
+function closeSidebar() {
+    emit('toggle-sidebar-mobile');
+}
 </script>
 
 <style scoped>
@@ -54,6 +57,12 @@ const languages = ref([
     width: 230px;
     height: calc(100% - var(--main-header-height));
     box-shadow: 5px 0 20px 10px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s ease-in-out;
+    transform: translateX(-100%);
+}
+
+#sideBar.show-mobile {
+    transform: translateX(0);
 }
 
 ul {
@@ -90,7 +99,6 @@ a:hover {
     color: white;
 }
 
-/* Estilos para la lista de idiomas */
 .languages-container {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -111,12 +119,27 @@ a:hover {
     background: #d4d4d4;
 }
 
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 100;
+}
+
 @media (max-width: 768px) {
     #sideBar {
-        width: 100%;
-        height: auto;
-        position: relative;
-        box-shadow: none;
+        width: 80%;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        transform: translateX(-100%);
+    }
+    #sideBar.show-mobile {
+        transform: translateX(0);
     }
     ul {
         display: flex;

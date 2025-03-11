@@ -15,7 +15,7 @@
                     <i class="fa-regular fa-user icon-24"></i>
                 </div>
                 <div v-show="dropdownVisible" class="dropdown-menu">
-                    <a href="#" class="dropdown-item" @click="fMyAccount">My account</a>
+                    <a href="#" class="dropdown-item" @click="redirectMyAccount">My account</a>
                     <div class="dropdown-divider"></div>
                     <a href="#" class="dropdown-item">Add chips</a>
                     <a href="#" class="dropdown-item">Withdraw</a>
@@ -65,12 +65,14 @@ function logout() {
     // Lógica para cerrar sesión
     authStore().logout();
     dropdownVisible.value = false;
-    router.push({ name: 'home' });
+    // Recargar la página para que se actualice el estado de la sesión
+    document.defaultView.location.reload();
+    // Por ejemplo, redirigir a la página de inicio
+    // router.push({ name: 'home' });
 }
 
-function fMyAccount() {
-    dropdownVisible.value = false;
-    window.$('#myAccountModal').modal('show');
+function redirectMyAccount() {
+    router.push({ name: 'auth.my-account' });
 }
 </script>
 

@@ -107,7 +107,7 @@ export default [
 				beforeEnter: guest,
 			},
 			{
-				path: 'MyAccount',
+				path: 'my-account',
 				name: 'auth.my-account',
 				component: () => import('../components/MyAccount.vue'),
 				beforeEnter: requireLogin,
