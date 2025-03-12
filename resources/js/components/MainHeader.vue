@@ -15,7 +15,7 @@
                     <i class="fa-regular fa-user icon-24"></i>
                 </div>
                 <div v-show="dropdownVisible" class="dropdown-menu">
-                    <a href="#" class="dropdown-item" @click="redirectMyAccount">My account</a>
+                    <router-link to="/my-account" class="dropdown-item">My account</router-link>
                     <div class="dropdown-divider"></div>
                     <a href="#" class="dropdown-item">Add chips</a>
                     <a href="#" class="dropdown-item">Withdraw</a>
@@ -35,13 +35,11 @@ import WebsiteLogo from "../components/WebsiteLogo.vue";
 import useAuth from "@/composables/auth";
 import { authStore } from "../store/auth";
 import MyAccount from './MyAccount.vue';
-import { useRouter } from 'vue-router';
 
 defineProps({ isMobile: Boolean });
 
 const dropdownVisible = ref(false);
 const loginContainer = ref(null);
-const router = useRouter();
 
 function toggleDropdown() {
     dropdownVisible.value = !dropdownVisible.value;
@@ -54,10 +52,12 @@ function handleClickOutside(event) {
 }
 
 onMounted(() => {
+    console.log('onmount1');
     document.addEventListener('click', handleClickOutside);
 });
 
 onUnmounted(() => {
+    console.log('onmount1');
     document.removeEventListener('click', handleClickOutside);
 });
 
@@ -69,10 +69,6 @@ function logout() {
     document.defaultView.location.reload();
     // Por ejemplo, redirigir a la página de inicio
     // router.push({ name: 'home' });
-}
-
-function redirectMyAccount() {
-    router.push({ name: 'auth.my-account' });
 }
 </script>
 

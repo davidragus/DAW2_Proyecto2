@@ -92,6 +92,7 @@ const updateUser = async () => {
 };
 
 onMounted(() => {
+    console.log('onmount3');
     document.getElementById('mainContent').classList.add('ml-4');
     if(window.innerWidth <= 768) {
         document.getElementById('mainContent').style.paddingLeft = '0';

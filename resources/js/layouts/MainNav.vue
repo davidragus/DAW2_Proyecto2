@@ -1,6 +1,6 @@
 <template>
-	<MainHeader :isMobile="isMobile" @toggle-sidebar="toggleSideBar" @toggle-sidebar-mobile="toggleSideBarMobile" />
-	<MainSideBar :isMobile="isMobile" :visible="isToggled"/>
+    <MainHeader :isMobile="isMobile" @toggle-sidebar="toggleSideBar" @toggle-sidebar-mobile="toggleSideBarMobile" />
+    <MainSideBar :isMobile="isMobile" :visible="isToggled"/>
 </template>
 
 <script setup>
@@ -11,7 +11,7 @@ import { ref, onMounted } from 'vue';
 const isToggled = ref(true);
 
 function toggleSideBar() {
-	const sideBar = document.getElementById('sideBar');
+    const sideBar = document.getElementById('sideBar');
     if (sideBar) {
         if (isToggled.value) {
             sideBar.style.setProperty('width', '115px');
@@ -31,36 +31,41 @@ function toggleSideBar() {
         isToggled.value = !isToggled.value;
     }
 }
+
 function toggleSideBarMobile() {
-	const sideBar = document.getElementById('sideBar');
+    const sideBar = document.getElementById('sideBar');
     const overlay = document.getElementById('overlaySideBar');
     if (sideBar) {
         if (isToggled.value) {
             overlay.classList.remove('d-none');
-            sideBar.classList.remove('d-none');
             sideBar.classList.add('show-mobile');
-            sideBar.style.setProperty('width', '80%');
         } else {
             overlay.classList.add('d-none');
-            sideBar.classList.add('d-none');
             sideBar.classList.remove('show-mobile');
-            sideBar.style.setProperty('width', '0px');
         }
         isToggled.value = !isToggled.value;
     }
 }
+
 const isMobile = ref(false);
+
 function checkMobile() {
     isMobile.value = window.innerWidth <= 768;
     const mainContent = document.getElementById('mainContent');
     const mainFooter = document.getElementById('mainFooter');
     const sideBar = document.getElementById('sideBar');
+    if (sideBar.classList.contains('d-none')) {
+        sideBar.classList.remove('d-none');
+    }
     if (mainContent && mainFooter) {
         if (isMobile.value) {
             mainContent.style.setProperty('padding-left', '0px');
             mainFooter.style.setProperty('padding-left', '0px');
             if (sideBar) sideBar.style.setProperty('width', '0px');
+            if (sideBar) sideBar.classList.add('d-none');
+            isToggled.value = false;
         } else {
+            isToggled.value = true;
             if (isToggled.value) {
                 mainContent.style.setProperty('padding-left', '230px');
                 mainFooter.style.setProperty('padding-left', '230px');
@@ -78,7 +83,6 @@ onMounted(() => {
     checkMobile();
     window.addEventListener('resize', checkMobile);
 });
-
 </script>
 
 <style scoped></style>

@@ -594,3 +594,7 @@ div.corner:after , div.corner:after {
 body {
     background-color: #2A2A2A !important;
 }
+.card{
+    background-color: #313131 !important;
+    color: white !important;
+}
