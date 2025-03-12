@@ -21,9 +21,9 @@ class PendingValidation extends Model implements HasMedia
 
 	public function registerMediaCollections(): void
 	{
-		$this->addMediaCollection('pending_validation')
-			->useFallbackUrl('/images/placeholder.jpg')
-			->useFallbackPath(public_path('/images/placeholder.jpg'));
+		$this->addMediaCollection('pending_validations')
+			->useFallbackUrl('/images/pending_validations')
+			->useFallbackPath(public_path('/images/pending_validations'));
 	}
 
 	public function user()

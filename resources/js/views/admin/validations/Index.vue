@@ -43,26 +43,6 @@
 								data.status }}</span>
 						</template>
 					</Column>
-					<!-- <Column field="user" header="User" sortable>
-						<template #body="{ data }">
-							<span>{{ data.user.email }}</span>
-						</template>
-					</Column> -->
-					<!-- <Column field="role_name" header="Role" sortable></Column>
-					<Column field="username" header="Username" sortable></Column>
-					<Column field="name" header="Name" sortable></Column>
-					<Column field="surname1" header="First surname" sortable></Column>
-					<Column field="surname2" header="Second surname" sortable></Column>
-					<Column field="gender" header="Gender" sortable>
-						<template #body="{ data }">
-							<span v-if="data.gender == 'M'">MALE</span>
-							<span v-else-if="data.gender == 'F'">FEMALE</span>
-							<span v-else-if="data.gender == 'N'">NEUTRAL</span>
-						</template>
-					</Column>
-					<Column field="birthdate" header="Birth date" sortable></Column>
-					<Column field="email" header="Email" sortable></Column>
-					<Column field="phone_number" header="Phone" sortable></Column> -->
 					<Column field="created_at" header="Created at" sortable></Column>
 
 					<Column class="pe-0 me-0 icon-column-2">
