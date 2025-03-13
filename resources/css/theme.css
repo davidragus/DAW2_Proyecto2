@@ -598,3 +598,7 @@ body {
     background-color: #313131 !important;
     color: white !important;
 }
+.card a{
+    color: white !important;
+    text-decoration: underline !important;
+}

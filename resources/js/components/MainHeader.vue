@@ -11,6 +11,13 @@
                 <LoginAndRegister />
             </div>
             <div v-else class="d-flex align-items-center position-relative">
+                <div class="d-flex align-items-center me-4">
+                    <div class="d-flex align-items-center">
+                        <img src="/images/chips2.png" alt="icon of chips" class="icon-24 me-2">
+                        <span class="text-white me-3 chips-number">123</span>
+                    </div>
+                    <CashierDialog></CashierDialog>
+                </div>
                 <div ref="loginContainer" class="login-container gray-background p-2 rounded-circle" @click="toggleDropdown">
                     <i class="fa-regular fa-user icon-24"></i>
                 </div>
@@ -35,6 +42,8 @@ import WebsiteLogo from "../components/WebsiteLogo.vue";
 import useAuth from "@/composables/auth";
 import { authStore } from "../store/auth";
 import MyAccount from './MyAccount.vue';
+import CashierDialog from '../components/CashierDialog.vue';
+
 
 defineProps({ isMobile: Boolean });
 
@@ -105,6 +114,8 @@ nav {
 
 .icon-24 {
     font-size: 24px;
+    width: 24px;
+    height: 24px;
 }
 
 .dropdown-menu {
@@ -136,6 +147,10 @@ nav {
     background-color: #353535;
     margin: 5px 0;
 }
+
+.chips-number {
+    font-size: 15px;
+}   
 
 @media (max-width: 768px) {
     nav {
