@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('birthdate');
             $table->string('country')->nullable();
             $table->tinyInteger('validated')->nullable();
+            $table->integer('chips')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });

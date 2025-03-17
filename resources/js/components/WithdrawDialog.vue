@@ -1,15 +1,13 @@
 <template>
     <div>
-        <Button class="cashier-button" buttonColor="yellow" buttonStyle="filled" @click="visible = true">CASHIER</Button>
-        <Dialog v-model:visible="visible" modal header="ADD CHIPS" :style="{ width: '400px' , backgroundColor: '#212121', color: 'white' , borderColor: '#3B3B3B'}" @update:visible="onDialogClose">
-            <form class="cashier-container p-4" @submit.prevent="deposit">
-                <h3>Pick your deposit:</h3>
-                <div class="deposit-options">
-                    <Button v-for="amount in [10, 25, 50, 100, 200]" :key="amount" :id="amount" :class="['deposit-button', { 'selected': customDeposit.value === amount }]" @click="setDeposit($event, amount)">{{ amount }}€</Button>
-                </div>
-                <div class="custom-deposit">
-                    <label for="customDeposit">Custom deposit:</label>
-                    <input type="number" id="customDeposit" v-model="customDeposit" class="form-control" @input="selectButton" required />
+        <Dialog v-model:visible="visible" modal header="WITHDRAW" :style="{ width: '400px' , backgroundColor: '#212121', color: 'white' , borderColor: '#3B3B3B'}" @update:visible="onDialogClose">
+            <form class="withdraw-container p-4" @submit.prevent="withdraw">
+                <h3>Amount of chips to withdraw:</h3>
+                <div class="withdraw-amount">
+                    <span class="chips-icon">🪙</span>
+                    <input type="number" v-model="chips" class="form-control chips-input" required />
+                    <span class="equals">=</span>
+                    <span class="amount">{{ (chips * 0.1).toFixed(2) }}€</span>
                 </div>
                 <div class="card-details">
                     <input type="text" placeholder="Card number" class="form-control" v-model="cardNumber" required />
@@ -21,7 +19,7 @@
                     <input type="checkbox" id="confirmName" class="form-check-input" v-model="confirmName" required />
                     <label for="confirmName" class="form-check-label">I confirm that the full name of the owner of the card is the same as the full name of the account.</label>
                 </div>
-                <Button class="deposit-button" type="submit">DEPOSIT</Button>
+                <Button class="withdraw-button" type="submit">WITHDRAW</Button>
             </form>
         </Dialog>
     </div>
@@ -38,7 +36,7 @@ const props = defineProps({
 });
 
 const visible = ref(false);
-const customDeposit = ref(0);
+const chips = ref(0);
 const cardNumber = ref('');
 const expirationDate = ref('');
 const cvc = ref('');
@@ -52,39 +50,17 @@ watch(() => props.show, (newVal) => {
     props.show = false;
 });
 
-const setDeposit = (event, amount) => {
-    event.preventDefault();
-    customDeposit.value = amount;
-    deselectButtons();
-    document.getElementById(amount).classList.add('selected');
-};
-
-const deselectButtons = () => {
-    const buttons = document.getElementsByClassName('deposit-button');
-    for (let i = 0; i < buttons.length; i++) {
-        buttons[i].classList.remove('selected');
-    }
-};
-
-const selectButton = () => {
-    deselectButtons();
-    if ([10, 25, 50, 100, 200].includes(customDeposit.value)) {
-        document.getElementById(customDeposit.value).classList.add('selected');
-    }
-};
-
-const deposit = () => {
+const withdraw = () => {
     if (
-        customDeposit.value != 0 &&
-        customDeposit.value != null &&
+        chips.value > 0 &&
         cardNumber.value != '' &&
         expirationDate.value != '' &&
         cvc.value != '' &&
         confirmName.value
     ) {
-        console.log('Deposit:', customDeposit.value, cardNumber.value, expirationDate.value, cvc.value, confirmName.value);
+        console.log('Withdraw:', chips.value, cardNumber.value, expirationDate.value, cvc.value, confirmName.value);
         visible.value = false;
-        customDeposit.value = 0;
+        chips.value = 0;
         cardNumber.value = '';
         expirationDate.value = '';
         cvc.value = '';
@@ -100,37 +76,32 @@ const onDialogClose = (newValue) => {
 </script>
 
 <style scoped>
-.cashier-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: 900;
-    cursor: pointer;
-}
-
-.cashier-container {
+.withdraw-container {
     padding: 20px;
 }
 
-.deposit-options {
+.withdraw-amount {
     display: flex;
+    align-items: center;
     justify-content: space-between;
     margin-bottom: 10px;
 }
 
-.deposit-button {
-    background-color: #f0f0f0;
-    color: black;
-    border: 1px solid #ccc;
-    padding: 10px;
-    cursor: pointer;
+.chips-icon {
+    font-size: 24px;
 }
 
-.deposit-button.selected {
-    background-color: #3A3A3A;
+.chips-input {
+    width: 60px;
+    text-align: center;
 }
 
-.custom-deposit {
-    margin-bottom: 10px;
+.equals {
+    font-size: 24px;
+}
+
+.amount {
+    font-size: 24px;
 }
 
 .card-details {
@@ -141,23 +112,23 @@ const onDialogClose = (newValue) => {
 }
 
 .form-control {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #414141;
-  border-radius: 5px;
-  background-color: #313131;
-  color: white;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #414141;
+    border-radius: 5px;
+    background-color: #313131;
+    color: white;
 }
 
 .form-control::placeholder {
-  color: #bcbcbc;
+    color: #bcbcbc;
 }
 
 .form-check {
     margin-bottom: 10px;
 }
 
-.deposit-button {
+.withdraw-button {
     background-color: #ff0000;
     color: white;
     border: none;

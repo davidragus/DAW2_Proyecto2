@@ -16,9 +16,9 @@
                 <div class="d-flex align-items-center me-4">
                     <div class="d-flex align-items-center">
                         <img src="/images/chips2.png" alt="icon of chips" class="icon-24 me-2">
-                        <span class="text-white me-3 chips-number">123</span>
+                        <span class="text-white me-3 chips-number">{{ chipsNumber }}</span>
                     </div>
-                    <CashierDialog></CashierDialog>
+                    <CashierDialog :show="showCashierDialog"></CashierDialog>
                 </div>
                 <div ref="loginContainer" class="login-container gray-background p-2 rounded-circle" @click="toggleDropdown">
                     <i class="fa-regular fa-user icon-24"></i>
@@ -26,8 +26,8 @@
                 <div v-show="dropdownVisible" class="dropdown-menu">
                     <router-link to="/my-account" class="dropdown-item">My account</router-link>
                     <div class="dropdown-divider"></div>
-                    <a href="#" class="dropdown-item">Add chips</a>
-                    <a href="#" class="dropdown-item">Withdraw</a>
+                    <a href="#" class="dropdown-item" @click="openCashierDialog">Add chips</a>
+                    <a href="#" class="dropdown-item" @click="openWithdrawDialog">Withdraw</a>
                     <a href="#" class="dropdown-item" @click="logout">Logout</a>
                 </div>
             </div>
@@ -46,11 +46,16 @@ import { authStore } from "../store/auth";
 import MyAccount from './MyAccount.vue';
 import CashierDialog from '../components/CashierDialog.vue';
 
-
 defineProps({ isMobile: Boolean });
 
 const dropdownVisible = ref(false);
 const loginContainer = ref(null);
+const showCashierDialog = ref(false);
+const showWithdrawDialog = ref(false);
+
+const chipsNumber = ref(
+    authStore().user.chips
+);
 
 function toggleDropdown() {
     dropdownVisible.value = !dropdownVisible.value;
@@ -80,6 +85,14 @@ function logout() {
     document.defaultView.location.reload();
     // Por ejemplo, redirigir a la página de inicio
     // router.push({ name: 'home' });
+}
+function openCashierDialog() {
+    dropdownVisible.value = false;
+    showCashierDialog.value = true;
+}
+function openWithdrawDialog() {
+    dropdownVisible.value = false;
+    showWithdrawDialog.value = true;
 }
 </script>
 

@@ -11,29 +11,29 @@
             <div class="row justify-content-center ">
                 <div class="col-11 text-center">
                     <img src="/images/user-icon.png" alt="User Icon" class="user-icon">
-                    <h2 class="text-white">{{ user.name }} {{ user.surname1 }} {{ user.surname2 }}</h2>
+                    <h2 class="text-white">{{ userCopy.name }} {{ userCopy.surname1 }} {{ userCopy.surname2 }}</h2>
                 </div>
                 <div class="col-12 col-md-6">
                     <form @submit.prevent="updateUser">
                         <div class="mb-3">
                             <label for="name" class="form-label">Name</label>
-                            <input type="text" class="form-control" id="name" v-model="user.name" required>
+                            <input type="text" class="form-control" id="name" v-model="userCopy.name" required>
                         </div>
                         <div class="mb-3">
                             <label for="surname" class="form-label">Surname</label>
-                            <input type="text" class="form-control" id="surname" v-model="user.surname1" required>
+                            <input type="text" class="form-control" id="surname" v-model="userCopy.surname1" required>
                         </div>
                         <div class="mb-3">
                             <label for="lastSurname" class="form-label">Last surname (optional)</label>
-                            <input type="text" class="form-control" id="lastSurname" v-model="user.surname2" required>
+                            <input type="text" class="form-control" id="lastSurname" v-model="userCopy.surname2" required>
                         </div>
                         <div class="mb-3">
                             <label for="birthdate" class="form-label">Birthdate</label>
-                            <input type="date" class="form-control" id="birthdate" v-model="user.birthdate" required>
+                            <input type="date" class="form-control" id="birthdate" v-model="userCopy.birthdate" required>
                         </div>
                         <div class="mb-3">
                             <label for="country" class="form-label">Country of residence</label>
-                            <select class="form-select" id="country" v-model="user.country" required>
+                            <select class="form-select" id="country" v-model="userCopy.country" required>
                                 <option>Spain</option>
                                 <option>USA</option>
                                 <option>UK</option>
@@ -44,15 +44,15 @@
                         </div>
                         <div class="mb-3">
                             <label for="username" class="form-label">Username</label>
-                            <input type="text" class="form-control" id="username" v-model="user.username" required>
+                            <input type="text" class="form-control" id="username" v-model="userCopy.username" required>
                         </div>
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" v-model="user.email" required>
+                            <input type="email" class="form-control" id="email" v-model="userCopy.email" required>
                         </div>
                         <div class="mb-3">
                             <label for="phone" class="form-label">Phone number</label>
-                            <input type="text" class="form-control" id="phone" v-model="user.phone_number" required>
+                            <input type="text" class="form-control" id="phone" v-model="userCopy.phone_number" required>
                         </div>
                         <button type="submit" class="btn btn-primary w-100 mb-3">SAVE DATA</button>
                         <button type="button" class="btn btn-secondary w-100">CHANGE PASSWORD</button>
@@ -64,34 +64,48 @@
 </template>
 
 <script setup>
-import { computed, onMounted, onUnmounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { authStore } from "../store/auth";
+import Swal from 'sweetalert2';
 
 const auth = authStore();
 const logedUser = computed(() => auth.user);
-const user = logedUser;
+const userCopy = ref({ ...logedUser.value });
 
 const updateUser = async () => {
     try {
-        const response = await axios.put(`/api/users/${user.value.id}`, {
-            name: user.value.name,
-            surname1: user.value.surname1,
-            surname2: user.value.surname2,
-            birthdate: user.value.birthdate,
-            country: user.value.country,
-            username: user.value.username,
-            email: user.value.email,
-            phone_number: user.value.phone_number,
+        const response = await axios.put(`/api/users/${userCopy.value.id}`, {
+            name: userCopy.value.name,
+            surname1: userCopy.value.surname1,
+            surname2: userCopy.value.surname2,
+            birthdate: userCopy.value.birthdate,
+            country: userCopy.value.country,
+            username: userCopy.value.username,
+            email: userCopy.value.email,
+            phone_number: userCopy.value.phone_number,
         });
-        alert('User updated successfully');
+        Swal.fire({
+            icon: 'success',
+            title: 'User updated successfully',
+            showConfirmButton: false,
+            timer: 1500,
+            background: '#2A2A2A',
+            color: '#ffffff'
+        });
+        auth.user = { ...userCopy.value };
     } catch (error) {
         console.error('Error updating user:', error);
-        alert('Failed to update user');
+        Swal.fire({
+            icon: 'error',
+            title: 'Failed to update user',
+            text: error.response?.data?.message || 'An error occurred',
+            background: '#2A2A2A',
+            color: '#ffffff'
+        });
     }
 };
 
 onMounted(() => {
-    console.log('onmount3');
     document.getElementById('mainContent').classList.add('ml-4');
     if(window.innerWidth <= 768) {
         document.getElementById('mainContent').style.paddingLeft = '0';
