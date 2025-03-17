@@ -17,23 +17,23 @@
                     <form @submit.prevent="updateUser">
                         <div class="mb-3">
                             <label for="name" class="form-label">Name</label>
-                            <input type="text" class="form-control" id="name" v-model="user.name">
+                            <input type="text" class="form-control" id="name" v-model="user.name" required>
                         </div>
                         <div class="mb-3">
                             <label for="surname" class="form-label">Surname</label>
-                            <input type="text" class="form-control" id="surname" v-model="user.surname1">
+                            <input type="text" class="form-control" id="surname" v-model="user.surname1" required>
                         </div>
                         <div class="mb-3">
                             <label for="lastSurname" class="form-label">Last surname (optional)</label>
-                            <input type="text" class="form-control" id="lastSurname" v-model="user.surname2">
+                            <input type="text" class="form-control" id="lastSurname" v-model="user.surname2" required>
                         </div>
                         <div class="mb-3">
                             <label for="birthdate" class="form-label">Birthdate</label>
-                            <input type="date" class="form-control" id="birthdate" v-model="user.birthdate">
+                            <input type="date" class="form-control" id="birthdate" v-model="user.birthdate" required>
                         </div>
                         <div class="mb-3">
                             <label for="country" class="form-label">Country of residence</label>
-                            <select class="form-select" id="country" v-model="user.country">
+                            <select class="form-select" id="country" v-model="user.country" required>
                                 <option>Spain</option>
                                 <option>USA</option>
                                 <option>UK</option>
@@ -44,15 +44,15 @@
                         </div>
                         <div class="mb-3">
                             <label for="username" class="form-label">Username</label>
-                            <input type="text" class="form-control" id="username" v-model="user.username">
+                            <input type="text" class="form-control" id="username" v-model="user.username" required>
                         </div>
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" v-model="user.email">
+                            <input type="email" class="form-control" id="email" v-model="user.email" required>
                         </div>
                         <div class="mb-3">
                             <label for="phone" class="form-label">Phone number</label>
-                            <input type="text" class="form-control" id="phone" v-model="user.phone_number">
+                            <input type="text" class="form-control" id="phone" v-model="user.phone_number" required>
                         </div>
                         <button type="submit" class="btn btn-primary w-100 mb-3">SAVE DATA</button>
                         <button type="button" class="btn btn-secondary w-100">CHANGE PASSWORD</button>
@@ -68,7 +68,8 @@ import { computed, onMounted, onUnmounted } from 'vue';
 import { authStore } from "../store/auth";
 
 const auth = authStore();
-const user = computed(() => auth.user);
+const logedUser = computed(() => auth.user);
+const user = logedUser;
 
 const updateUser = async () => {
     try {
@@ -82,8 +83,6 @@ const updateUser = async () => {
             email: user.value.email,
             phone_number: user.value.phone_number,
         });
-        // Actualizar el estado del usuario en Vuex
-        store.commit('auth/setUser', response.data);
         alert('User updated successfully');
     } catch (error) {
         console.error('Error updating user:', error);
@@ -152,13 +151,14 @@ h2 {
 }
 
 form {
-    background-color: #f9f9f9;
+    background-color: #2A2A2A;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .form-label {
+    color: white;
     font-weight: bold;
 }
 
@@ -176,5 +176,21 @@ form {
     text-decoration: underline;
     color: #ffffff;
     font-weight: bold;
+}
+.form-control {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #414141;
+  border-radius: 5px;
+  background-color: #313131;
+  color: white;
+}
+.form-select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #414141;
+  border-radius: 5px;
+  background-color: #313131;
+  color: white;
 }
 </style>

@@ -4,7 +4,9 @@
             <SideBarButton v-if="!isMobile" @toggle-sidebar="$emit('toggle-sidebar')" />
             <SideBarButtonMobile v-else @toggle-sidebar-mobile="$emit('toggle-sidebar-mobile')" />
             <div class="vertical-separator"></div>
-            <WebsiteLogo />
+            <router-link to="/" class="logo-link">
+                <WebsiteLogo />
+            </router-link>
         </div>
         <div class="d-flex align-items-center ms-auto">
             <div v-if="!authStore().user?.name">
