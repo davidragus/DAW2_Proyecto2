@@ -25,9 +25,7 @@ return new class extends Migration
             $table->string('phone_number');
             $table->string('password');
             $table->string('birthdate');
-            $table->string('country')->nullable();
-            $table->tinyInteger('validated')->nullable();
-            $table->integer('chips')->default(0);
+            $table->timestamp('validated')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
