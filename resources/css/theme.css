@@ -591,3 +591,14 @@ div.corner:after , div.corner:after {
 #root-dropdown-register>span{
     color: #bcbcbc !important;
 }
+body {
+    background-color: #2A2A2A !important;
+}
+.card{
+    background-color: #313131 !important;
+    color: white !important;
+}
+.card a{
+    color: white !important;
+    text-decoration: underline !important;
+}

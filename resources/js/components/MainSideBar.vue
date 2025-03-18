@@ -24,27 +24,28 @@
 				<p class="color-white">LIVE CHAT</p>
 			</button>
 		</div>
+        <!-- <div class="overlay" id="overlaySideBar"></div> -->
 	</nav>
 </template>
-
+ 
 <script setup>
 import { ref } from 'vue';
 import LocaleSwitcher from './LocaleSwitcher.vue';
 import iRoulette from './iRoulette.vue';
 import iBlackJack from './iBlackJack.vue';
-
+ 
 defineProps({ visible: Boolean });
-
+ 
 // Estado para el modal de idiomas
 const showModal = ref(false);
-
+ 
 const languages = ref([
 	"English", "Español", "Français", "Deutsch",
 	"Italiano", "Português", "Nederlands", "中文",
 	"日本語", "한국어", "Русский", "العربية"
 ]);
 </script>
-
+ 
 <style scoped>
 #sideBar {
 	position: fixed;
@@ -54,27 +55,27 @@ const languages = ref([
 	height: calc(100% - var(--main-header-height));
 	box-shadow: 5px 0 20px 10px rgba(0, 0, 0, 0.5);
 }
-
+ 
 ul {
 	list-style-type: none;
 	padding: 0;
 	margin: 0;
 }
-
+ 
 a {
 	color: white;
 	font-size: 18px;
 }
-
+ 
 a:hover {
 	color: red;
 }
-
+ 
 .icon {
 	width: 24px;
 	height: 24px;
 }
-
+ 
 .bottom-buton {
 	width: 49%;
 	height: 75px;
@@ -84,11 +85,11 @@ a:hover {
 	border-top: 2px solid #3B3B3B;
 	border-top-right-radius: 25px;
 }
-
+ 
 .color-white {
 	color: white;
 }
-
+ 
 /* Estilos para la lista de idiomas */
 .languages-container {
 	display: grid;
@@ -96,7 +97,7 @@ a:hover {
 	gap: 10px;
 	padding: 10px;
 }
-
+ 
 .language-item {
 	background: #f0f0f0;
 	padding: 8px;
@@ -105,8 +106,17 @@ a:hover {
 	cursor: pointer;
 	transition: background 0.3s;
 }
-
+ 
 .language-item:hover {
 	background: #d4d4d4;
+}
+.overlay{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;  
 }
 </style>

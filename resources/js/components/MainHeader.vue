@@ -1,39 +1,186 @@
 <template>
-	<nav class="navbar py-0">
-		<div class="d-flex align-items-center">
-			<SideBarButton @toggle-sidebar="$emit('toggle-sidebar')" />
-			<div class="vertical-separator"></div>
-			<WebsiteLogo />
-		</div>
-		<template v-if="!authStore().user?.name">
-			<LoginAndRegister />
-		</template>
-	</nav>
+    <nav class="navbar py-0">
+        <div class="d-flex align-items-center">
+            <SideBarButton v-if="!isMobile" @toggle-sidebar="$emit('toggle-sidebar')" />
+            <SideBarButtonMobile v-else @toggle-sidebar-mobile="$emit('toggle-sidebar-mobile')" />
+            <div class="vertical-separator"></div>
+            <router-link to="/" class="logo-link">
+                <WebsiteLogo />
+            </router-link>
+        </div>
+        <div class="d-flex align-items-center ms-auto">
+            <div v-if="!authStore().user?.name">
+                <LoginAndRegister />
+            </div>
+            <div v-else class="d-flex align-items-center position-relative">
+                <div class="d-flex align-items-center me-4">
+                    <div class="d-flex align-items-center">
+                        <img src="/images/chips2.png" alt="icon of chips" class="icon-24 me-2">
+                        <span class="text-white me-3 chips-number">{{ chipsNumber }}</span>
+                    </div>
+                    <CashierDialog :show="showCashierDialog"></CashierDialog>
+                </div>
+                <div ref="loginContainer" class="login-container gray-background p-2 rounded-circle" @click="toggleDropdown">
+                    <i class="fa-regular fa-user icon-24"></i>
+                </div>
+                <div v-show="dropdownVisible" class="dropdown-menu">
+                    <router-link to="/my-account" class="dropdown-item">My account</router-link>
+                    <div class="dropdown-divider"></div>
+                    <a href="#" class="dropdown-item" @click="openCashierDialog">Add chips</a>
+                    <a href="#" class="dropdown-item" @click="openWithdrawDialog">Withdraw</a>
+                    <a href="#" class="dropdown-item" @click="logout">Logout</a>
+                </div>
+            </div>
+        </div>
+    </nav>
 </template>
 
 <script setup>
+import { ref, onMounted, onUnmounted } from 'vue';
 import SideBarButton from "../components/SideBarButton.vue";
+import SideBarButtonMobile from "../components/SideBarButtonMobile.vue";
 import LoginAndRegister from "../components/LoginAndRegister.vue";
 import WebsiteLogo from "../components/WebsiteLogo.vue";
 import useAuth from "@/composables/auth";
 import { authStore } from "../store/auth";
+import MyAccount from './MyAccount.vue';
+import CashierDialog from '../components/CashierDialog.vue';
 
+defineProps({ isMobile: Boolean });
+
+const dropdownVisible = ref(false);
+const loginContainer = ref(null);
+const showCashierDialog = ref(false);
+const showWithdrawDialog = ref(false);
+
+const chipsNumber = ref(
+    authStore().user.chips
+);
+
+function toggleDropdown() {
+    dropdownVisible.value = !dropdownVisible.value;
+}
+
+function handleClickOutside(event) {
+    if (loginContainer.value && !loginContainer.value.contains(event.target)) {
+        dropdownVisible.value = false;
+    }
+}
+
+onMounted(() => {
+    console.log('onmount1');
+    document.addEventListener('click', handleClickOutside);
+});
+
+onUnmounted(() => {
+    console.log('onmount1');
+    document.removeEventListener('click', handleClickOutside);
+});
+
+function logout() {
+    // Lógica para cerrar sesión
+    authStore().logout();
+    dropdownVisible.value = false;
+    // Recargar la página para que se actualice el estado de la sesión
+    document.defaultView.location.reload();
+    // Por ejemplo, redirigir a la página de inicio
+    // router.push({ name: 'home' });
+}
+function openCashierDialog() {
+    dropdownVisible.value = false;
+    showCashierDialog.value = true;
+}
+function openWithdrawDialog() {
+    dropdownVisible.value = false;
+    showWithdrawDialog.value = true;
+}
 </script>
 
 <style scoped>
 nav {
-	background-color: #1F1F1F;
-	position: sticky;
-	top: 0;
-	height: 70px;
-	border-bottom: 2px solid red;
-	box-shadow: 0 10px 25px 10px #ff000040;
-	z-index: 999;
+    background-color: #1F1F1F;
+    position: sticky;
+    top: 0;
+    height: 70px;
+    border-bottom: 2px solid red;
+    box-shadow: 0 10px 25px 10px #ff000040;
+    z-index: 999;
+    padding: 0 15px;
 }
 
 .vertical-separator {
-	height: 24px;
-	border-right: 1px solid #353535;
-	margin-right: 30px;
+    height: 24px;
+    border-right: 1px solid #353535;
+    margin-right: 30px;
+}
+
+.login-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+}
+
+.gray-background {
+    background-color: #898989;
+}
+
+.icon-24 {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 60px;
+    right: 0;
+    background-color: #1F1F1F;
+    border: 1px solid #353535;
+    border-radius: 5px;
+    z-index: 1000;
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+}
+
+.dropdown-item {
+    padding: 10px 15px;
+    color: white;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-item:hover {
+    background-color: #353535;
+}
+
+.dropdown-divider {
+    height: 1px;
+    background-color: #353535;
+    margin: 5px 0;
+}
+
+.chips-number {
+    font-size: 15px;
+}   
+
+@media (max-width: 768px) {
+    nav {
+        height: auto;
+        padding: 10px 15px;
+    }
+    .vertical-separator {
+        display: none;
+    }
+    .login-container {
+        width: 40px;
+        height: 40px;
+    }
+    .icon-24 {
+        font-size: 20px;
+    }
 }
 </style>

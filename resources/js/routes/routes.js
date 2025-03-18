@@ -48,7 +48,7 @@ async function requireAdmin(to, from, next) {
 		if (hasAdmin(user.roles)) {
 			next()
 		} else {
-			next('/app')
+			next('/')
 		}
 	} else {
 		next('/login')
@@ -105,6 +105,12 @@ export default [
 				name: 'auth.reset-password',
 				component: () => import('../views/auth/passwords/Reset.vue'),
 				beforeEnter: guest,
+			},
+			{
+				path: 'my-account',
+				name: 'auth.my-account',
+				component: () => import('../components/MyAccount.vue'),
+				beforeEnter: requireLogin,
 			},
 		]
 	},
