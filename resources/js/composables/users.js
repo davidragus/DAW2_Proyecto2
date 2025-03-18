@@ -42,7 +42,6 @@ export default function useUsers() {
 		axios.get('/api/users/' + id)
 			.then(response => {
 				user.value = response.data.data;
-				console.log(user.value)
 			})
 	}
 
@@ -74,7 +73,7 @@ export default function useUsers() {
 					user[item].forEach((value, index) => {
 						serializedPost.append(`${item}[${index}]`, value);
 					});
-				} else {
+				} else if (user[item]) {
 					serializedPost.append(item, user[item])
 				}
 			}

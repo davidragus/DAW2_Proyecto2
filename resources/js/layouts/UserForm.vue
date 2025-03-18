@@ -223,16 +223,16 @@ const schema = {
 // Create a form context with the validation schema
 const { validate, errors, resetForm } = useForm({ validationSchema: schema })
 // Define actual fields for validation
-const { value: name } = useField('name', null, { initialValue: '' });
-const { value: email } = useField('email', null, { initialValue: '' });
-const { value: surname1 } = useField('surname1', null, { initialValue: '' });
-const { value: surname2 } = useField('surname2', null, { initialValue: '' });
-const { value: dni } = useField('dni', null, { initialValue: '' });
-const { value: phone_number } = useField('phone_number', null, { initialValue: '' });
-const { value: birthdate } = useField('birthdate', null, { initialValue: '' });
-const { value: gender } = useField('gender', null, { initialValue: '' });
-const { value: role_id } = useField('role_id', null, { initialValue: '', label: 'role' });
-const { value: username } = useField('username', null, { initialValue: '', label: 'username' });
+const { value: name } = useField('name', null, { initialValue: null });
+const { value: email } = useField('email', null, { initialValue: null });
+const { value: surname1 } = useField('surname1', null, { initialValue: null });
+const { value: surname2 } = useField('surname2', null, { initialValue: null });
+const { value: dni } = useField('dni', null, { initialValue: null });
+const { value: phone_number } = useField('phone_number', null, { initialValue: null });
+const { value: birthdate } = useField('birthdate', null, { initialValue: null });
+const { value: gender } = useField('gender', null, { initialValue: null });
+const { value: role_id } = useField('role_id', null, { initialValue: null, label: 'role' });
+const { value: username } = useField('username', null, { initialValue: null, label: 'username' });
 const { value: automaticValidation } = useField('automaticValidation', null, { initialValue: false, label: 'automaticValidation' });
 
 const user = reactive({
