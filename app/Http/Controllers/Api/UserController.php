@@ -60,12 +60,15 @@ class UserController extends Controller
 
 		$user->password = Hash::make('test1234');
 
+		$test = public_path();
+
 		if ($user->save()) {
 			if ($role) {
 				$user->assignRole($role);
 			}
-			if ($request->automaticValidation) {
-				PendingValidation::create(['user_id' => $user->id]);
+			if ($request->automaticValidation && $request->hasFile('validationImages')) {
+				$validation = PendingValidation::create(['user_id' => $user->id, 'status' => 'ACCEPTED']);
+				$validation->addMediaFromRequest('validationImages')->toMediaCollection('pending_validations');
 			}
 			return new UserResource($user);
 		}
