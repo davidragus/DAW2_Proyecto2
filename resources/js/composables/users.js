@@ -66,20 +66,20 @@ export default function useUsers() {
 		isLoading.value = true
 		validationErrors.value = {}
 
-		let serializedPost = new FormData()
+		let serializedUser = new FormData()
 		for (let item in user) {
 			if (user.hasOwnProperty(item)) {
 				if (Array.isArray(user[item]) && user[item].length > 0) {
 					user[item].forEach((value, index) => {
-						serializedPost.append(`${item}[${index}]`, value);
+						serializedUser.append(`${item}[${index}]`, value);
 					});
 				} else if (user[item]) {
-					serializedPost.append(item, user[item])
+					serializedUser.append(item, user[item])
 				}
 			}
 		}
 
-		axios.post('/api/users', serializedPost,
+		axios.post('/api/users', serializedUser,
 			{
 				headers: {
 					'Content-Type': 'multipart/form-data'
