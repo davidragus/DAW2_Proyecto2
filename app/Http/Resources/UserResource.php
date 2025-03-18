@@ -25,7 +25,7 @@ class UserResource extends JsonResource
 			'roles' => $this->roles,
 			'role_name' => $this->roles->pluck('name')->first(),
 			'dni' => $this->dni,
-			'last_validation' => $this->pendingValidations->last() ? $this->pendingValidations->last() : 0,
+			'validation_status' => $this->pendingValidations->last() ? $this->pendingValidations->pluck('status')->last() : 'PENDING',
 			'phone_number' => $this->phone_number,
 			'gender' => $this->gender,
 			'birthdate' => $this->birthdate,

@@ -28,7 +28,7 @@ export default function useUsers() {
 			'&order_direction=' + order_direction)
 			.then(response => {
 				users.value = response.data;
-				console.log(user.value)
+				console.log(users.value)
 			})
 	}
 
@@ -76,8 +76,6 @@ export default function useUsers() {
 				serializedPost.append(item, user[item])
 			}
 		}
-
-		console.log(serializedPost);
 
 		axios.post('/api/users', serializedPost)
 			.then(response => {
