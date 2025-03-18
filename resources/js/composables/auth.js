@@ -6,237 +6,250 @@ import { ABILITY_TOKEN } from '@casl/vue';
 import { authStore } from "../store/auth";
 
 let user = reactive({
-    name: '',
-    email: '',
+	name: '',
+	email: '',
 })
 
 export default function useAuth() {
-    const processing = ref(false)
-    const validationErrors = ref({})
-    const router = useRouter()
-    const swal = inject('$swal')
-    const ability = inject(ABILITY_TOKEN)
-    const auth = authStore()
+	const processing = ref(false)
+	const validationErrors = ref({})
+	const router = useRouter()
+	const swal = inject('$swal')
+	const ability = inject(ABILITY_TOKEN)
+	const auth = authStore()
 
 
-    const loginForm = reactive({
-        email: '',
-        password: '',
-        remember: false
-    })
+	const loginForm = reactive({
+		email: '',
+		password: '',
+		remember: false
+	})
 
-    const forgotForm = reactive({
-        email: '',
-    })
+	const forgotForm = reactive({
+		email: '',
+	})
 
-    const resetForm = reactive({
-        email: '',
-        token: '',
-        password: '',
-        password_confirmation: ''
-    })
+	const resetForm = reactive({
+		email: '',
+		token: '',
+		password: '',
+		password_confirmation: ''
+	})
 
-    const registerForm = reactive({
-        username: '',
-        name: '',
-        surname1: '',
-        surname2: '',
-        email: '',
-        dni: '',
-        gender: '',
-        phone_number: '',
-        password: '',
-        password_confirmation: '',
-        day: '',
-        month: '',
-        year: '',
-        country: '',
-        validated: false,
-        terms: false,
-        idImage: null,
-        country: ''
-    });
+	const registerForm = reactive({
+		username: '',
+		name: '',
+		surname1: '',
+		surname2: '',
+		email: '',
+		dni: '',
+		gender: '',
+		phone_number: '',
+		password: '',
+		password_confirmation: '',
+		day: '',
+		month: '',
+		year: '',
+		country: '',
+		validated: false,
+		terms: false,
+		validationImages: [],
+		country: ''
+	});
 
-    const submitLogin = async () => {
-        if (processing.value) return
+	const submitLogin = async () => {
+		if (processing.value) return
 
-        processing.value = true
-        validationErrors.value = {}
+		processing.value = true
+		validationErrors.value = {}
 
-        await axios.post('/login', loginForm)
-            .then(async response => {
-                // console.log('await auth.getUser()');
-                await auth.getUser()
-                // console.log('uth.user.value');
-                // console.log(auth.user.value);
-                //await store.dispatch('auth/getUser')
-                await loginUser()
-                swal({
-                    icon: 'success',
-                    title: 'Login correcto',
-                    showConfirmButton: false,
-                    timer: 1500,
-                    background: '#2A2A2A',
-                    color: '#ffffff'
-                })
-                await router.push({ name: 'admin.index' })
-            })
-            .catch(error => {
-                if (error.response?.data) {
-                    validationErrors.value = error.response.data.errors
-                }
-            })
-            .finally(() => processing.value = false)
-    }
+		await axios.post('/login', loginForm)
+			.then(async response => {
+				// console.log('await auth.getUser()');
+				await auth.getUser()
+				// console.log('uth.user.value');
+				// console.log(auth.user.value);
+				//await store.dispatch('auth/getUser')
+				await loginUser()
+				swal({
+					icon: 'success',
+					title: 'Login correcto',
+					showConfirmButton: false,
+					timer: 1500,
+					background: '#2A2A2A',
+					color: '#ffffff'
+				})
+				await router.push({ name: 'admin.index' })
+			})
+			.catch(error => {
+				if (error.response?.data) {
+					validationErrors.value = error.response.data.errors
+				}
+			})
+			.finally(() => processing.value = false)
+	}
 
-    const submitRegister = async () => {
-        if (processing.value) return
+	const submitRegister = async () => {
+		if (processing.value) return
 
-        processing.value = true
-        validationErrors.value = {}
+		processing.value = true
+		validationErrors.value = {}
 
-        await axios.post('/register', registerForm)
-            .then(async response => {
-                // await store.dispatch('auth/getUser')
-                // await loginUser()
-                swal({
-                    icon: 'success',
-                    title: 'Registration successfully',
-                    showConfirmButton: false,
-                    timer: 1500
-                })
-                // await router.push({ name: 'auth.login' })
-            })
-            .catch(error => {
-                if (error.response?.data) {
-                    validationErrors.value = error.response.data.errors
-                }
-            })
-            .finally(() => processing.value = false)
-    }
+		let serializedUser = new FormData()
+		for (let item in registerForm) {
+			if (registerForm.hasOwnProperty(item)) {
+				if (Array.isArray(registerForm[item]) && registerForm[item].length > 0) {
+					registerForm[item].forEach((value, index) => {
+						serializedUser.append(`${item}[${index}]`, value);
+					});
+				} else if (registerForm[item]) {
+					serializedUser.append(item, registerForm[item])
+				}
+			}
+		}
 
-    const submitForgotPassword = async () => {
-        if (processing.value) return
+		await axios.post('/register', serializedUser)
+			.then(async response => {
+				// await store.dispatch('auth/getUser')
+				// await loginUser()
+				swal({
+					icon: 'success',
+					title: 'Registration successfully',
+					showConfirmButton: false,
+					timer: 1500
+				})
+				// await router.push({ name: 'auth.login' })
+			})
+			.catch(error => {
+				if (error.response?.data) {
+					validationErrors.value = error.response.data.errors
+				}
+			})
+			.finally(() => processing.value = false)
+	}
 
-        processing.value = true
-        validationErrors.value = {}
+	const submitForgotPassword = async () => {
+		if (processing.value) return
 
-        await axios.post('/api/forget-password', forgotForm)
-            .then(async response => {
-                swal({
-                    icon: 'success',
-                    title: 'We have emailed your password reset link! Please check your mail inbox.',
-                    showConfirmButton: false,
-                    timer: 1500
-                })
-                // await router.push({ name: 'admin.index' })
-            })
-            .catch(error => {
-                if (error.response?.data) {
-                    validationErrors.value = error.response.data.errors
-                }
-            })
-            .finally(() => processing.value = false)
-    }
+		processing.value = true
+		validationErrors.value = {}
 
-    const submitResetPassword = async () => {
-        if (processing.value) return
+		await axios.post('/api/forget-password', forgotForm)
+			.then(async response => {
+				swal({
+					icon: 'success',
+					title: 'We have emailed your password reset link! Please check your mail inbox.',
+					showConfirmButton: false,
+					timer: 1500
+				})
+				// await router.push({ name: 'admin.index' })
+			})
+			.catch(error => {
+				if (error.response?.data) {
+					validationErrors.value = error.response.data.errors
+				}
+			})
+			.finally(() => processing.value = false)
+	}
 
-        processing.value = true
-        validationErrors.value = {}
+	const submitResetPassword = async () => {
+		if (processing.value) return
 
-        await axios.post('/api/reset-password', resetForm)
-            .then(async response => {
-                swal({
-                    icon: 'success',
-                    title: 'Password successfully changed.',
-                    showConfirmButton: false,
-                    timer: 1500
-                })
-                await router.push({ name: 'auth.login' })
-            })
-            .catch(error => {
-                if (error.response?.data) {
-                    validationErrors.value = error.response.data.errors
-                }
-            })
-            .finally(() => processing.value = false)
-    }
+		processing.value = true
+		validationErrors.value = {}
 
-    const loginUser = () => {
-        //const auth = authStore(); //TODO test
-        // console.log('loginUser auth Compostable ' + auth.user)
-        // console.log(auth.user)
-        user = auth.user
-        //user = store.state.auth.user
-        // Cookies.set('loggedIn', true)
-        getAbilities()
-    }
+		await axios.post('/api/reset-password', resetForm)
+			.then(async response => {
+				swal({
+					icon: 'success',
+					title: 'Password successfully changed.',
+					showConfirmButton: false,
+					timer: 1500
+				})
+				await router.push({ name: 'auth.login' })
+			})
+			.catch(error => {
+				if (error.response?.data) {
+					validationErrors.value = error.response.data.errors
+				}
+			})
+			.finally(() => processing.value = false)
+	}
 
-    const getUser = async () => {
-        const auth = authStore();
-        // console.log('getUser')
+	const loginUser = () => {
+		//const auth = authStore(); //TODO test
+		// console.log('loginUser auth Compostable ' + auth.user)
+		// console.log(auth.user)
+		user = auth.user
+		//user = store.state.auth.user
+		// Cookies.set('loggedIn', true)
+		getAbilities()
+	}
 
-        if (auth.authenticated) {
-            await auth.getUser()
-            // console.log(auth.user.value)
-            // console.log(auth.authenticated)
-            await loginUser()
-        }
-    }
+	const getUser = async () => {
+		const auth = authStore();
+		// console.log('getUser')
 
-    const logout = async () => {
-        if (processing.value) return
+		if (auth.authenticated) {
+			await auth.getUser()
+			// console.log(auth.user.value)
+			// console.log(auth.authenticated)
+			await loginUser()
+		}
+	}
 
-        processing.value = true
+	const logout = async () => {
+		if (processing.value) return
 
-        axios.post('/logout')
-            .then(response => {
-                user.name = ''
-                user.email = ''
-                auth.logout()
-                //store.dispatch('auth/logout')
-                router.push({ name: 'auth.login' })
-            })
-            .catch(error => {
-                // swal({
-                //     icon: 'error',
-                //     title: error.response.status,
-                //     text: error.response.statusText
-                // })
-            })
-            .finally(() => {
-                processing.value = false
-                // Cookies.remove('loggedIn')
-            })
-    }
+		processing.value = true
 
-    const getAbilities = async () => {
-        await axios.get('/api/abilities')
-            .then(response => {
-                const permissions = response.data
-                const { can, rules } = new AbilityBuilder(createMongoAbility)
+		axios.post('/logout')
+			.then(response => {
+				user.name = ''
+				user.email = ''
+				auth.logout()
+				//store.dispatch('auth/logout')
+				router.push({ name: 'auth.login' })
+			})
+			.catch(error => {
+				// swal({
+				//     icon: 'error',
+				//     title: error.response.status,
+				//     text: error.response.statusText
+				// })
+			})
+			.finally(() => {
+				processing.value = false
+				// Cookies.remove('loggedIn')
+			})
+	}
 
-                can(permissions)
+	const getAbilities = async () => {
+		await axios.get('/api/abilities')
+			.then(response => {
+				const permissions = response.data
+				const { can, rules } = new AbilityBuilder(createMongoAbility)
 
-                ability.update(rules)
-            })
-    }
+				can(permissions)
 
-    return {
-        loginForm,
-        registerForm,
-        forgotForm,
-        resetForm,
-        validationErrors,
-        processing,
-        submitLogin,
-        submitRegister,
-        submitForgotPassword,
-        submitResetPassword,
-        user,
-        getUser,
-        logout,
-        getAbilities
-    }
+				ability.update(rules)
+			})
+	}
+
+	return {
+		loginForm,
+		registerForm,
+		forgotForm,
+		resetForm,
+		validationErrors,
+		processing,
+		submitLogin,
+		submitRegister,
+		submitForgotPassword,
+		submitResetPassword,
+		user,
+		getUser,
+		logout,
+		getAbilities
+	}
 }

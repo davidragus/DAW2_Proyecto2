@@ -14,11 +14,13 @@ class PendingValidationResource extends JsonResource
 	 */
 	public function toArray($request)
 	{
+		$test = $this->getMedia('pending_validations')[0]->getPath();
 		return [
 			'id' => $this->id,
 			'user' => $this->user,
 			'status' => $this->status,
-			'created_at' => $this->created_at->toDateString()
+			'created_at' => $this->created_at->toDateString(),
+			'image' => $this->getMedia('pending_validations')[0]->getFullUrl(),
 		];
 	}
 }

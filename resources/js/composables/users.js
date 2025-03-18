@@ -28,7 +28,6 @@ export default function useUsers() {
 			'&order_direction=' + order_direction)
 			.then(response => {
 				users.value = response.data;
-				console.log(users.value)
 			})
 	}
 
@@ -43,7 +42,6 @@ export default function useUsers() {
 		axios.get('/api/users/' + id)
 			.then(response => {
 				user.value = response.data.data;
-				console.log(user.value)
 			})
 	}
 
@@ -68,16 +66,26 @@ export default function useUsers() {
 		isLoading.value = true
 		validationErrors.value = {}
 
-		console.log(user);
-
-		let serializedPost = new FormData()
+		let serializedUser = new FormData()
 		for (let item in user) {
 			if (user.hasOwnProperty(item)) {
-				serializedPost.append(item, user[item])
+				if (Array.isArray(user[item]) && user[item].length > 0) {
+					user[item].forEach((value, index) => {
+						serializedUser.append(`${item}[${index}]`, value);
+					});
+				} else if (user[item]) {
+					serializedUser.append(item, user[item])
+				}
 			}
 		}
 
-		axios.post('/api/users', serializedPost)
+		axios.post('/api/users', serializedUser,
+			{
+				headers: {
+					'Content-Type': 'multipart/form-data'
+				}
+			}
+		)
 			.then(response => {
 				router.push({ name: 'users.index' })
 				swal({

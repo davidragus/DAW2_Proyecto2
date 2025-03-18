@@ -127,7 +127,7 @@
 							</div>
 						</div>
 					</div>
-					<legend>User details</legend>
+					<legend>Account details</legend>
 					<div class="row">
 						<div class="form-group col-4">
 							<label for="username">Username</label>
@@ -156,157 +156,33 @@
 								class="w-100" />
 						</div>
 					</div>
-					<div v-if="!editMode" class="row">
-						<div class="form-check verify-container">
-							<input class="form-check-input m-0" v-model="user.automaticValidation" type="checkbox"
-								value="" id="autoValidate" @change="toggleAutoVerify">
-							<label class="form-check-label my-0 ps-2 h-100 d-flex align-items-center"
-								for="autoValidate">
-								Validate this user at creation
-							</label>
+					<div class="row" v-if="!editMode">
+						<div class="col-3">
+							<div class="form-check ps-1">
+								<input class="form-check-input m-0" v-model="user.automaticValidation" type="checkbox"
+									value="" id="autoValidate" @change="toggleAutoVerify">
+								<label class="form-check-label my-0 ps-2 h-100 d-flex align-items-center"
+									for="autoValidate">
+									Validate this user at creation
+								</label>
+							</div>
 						</div>
-						<div v-if="autoVerify" class="col-3 p-0">
-							<input class="form-control" type="file" accept="image/png,image/jpeg,image/jpg"
-								id=" nationalCardImage" name="nationalCardImage" multiple>
-						</div>
-					</div>
-					<div class="row d-flex justify-content-end">
-						<div class="text-right col-2">
-							<button :disabled="isLoading" class="btn btn-primary w-100" @click="submitForm">
-								<div v-show="isLoading" class=""></div>
-								<span v-if="isLoading">Processing...</span>
-								<span v-else>Save user</span>
-							</button>
+						<div class="col-3" v-if="autoVerify">
+							<FileUpload @select="onSelectValidationImage" class="justify-content-start" mode="basic"
+								name="demo[]" accept="image/*" :maxFileSize="1000000" />
 						</div>
 					</div>
 				</div>
 			</div>
-			<!-- <div class="account-settings">
-				<div class="user-profile">
-					<div class="user-avatar">
-						<img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Maxwell Admin">
-
-						:fileLimit=1
-						<FileUpload name="picture" url="/api/users/updateimg" @before-upload="onBeforeUpload"
-							@upload="onTemplatedUpload($event)" accept="image/*" :maxFileSize="1500000"
-							@select="onSelectedFiles" pt:content:class="fu-content" pt:buttonbar:class="fu-header"
-							pt:root:class="fu" class="fu">
-
-							<template #header="{ chooseCallback, uploadCallback, clearCallback, files, uploadedFiles }">
-								<div class="flex flex-wrap justify-content-between align-items-center flex-1 gap-2">
-									<div class="flex gap-2">
-										<Button @click="chooseCallback()" icon="pi pi-images" rounded outlined></Button>
-										<Button @click="uploadEvent(uploadCallback, uploadedFiles)"
-											icon="pi pi-cloud-upload" rounded outlined severity="success"
-											:disabled="!files || files.length === 0"></Button>
-										<Button @click="clearCallback()" icon="pi pi-times" rounded outlined
-											severity="danger" :disabled="!files || files.length === 0"></Button>
-									</div>
-									<p class="mt-4 mb-0">Drag and drop files to here to upload.</p>
-								</div>
-							</template>
-
-<template #content="{ files, uploadedFiles, removeUploadedFileCallback, removeFileCallback }">
-								<img v-if="files.length > 0" v-for="(file, index) of files"
-									:key="file.name + file.type + file.size" role="presentation" :alt="file.name"
-									:src="file.objectURL" class="object-fit-cover w-100 h-100 img-profile" />
-								<div v-else>
-									<img v-if="uploadedFiles.length > 0"
-										:key="uploadedFiles[uploadedFiles.length - 1].name + uploadedFiles[uploadedFiles.length - 1].type + uploadedFiles[uploadedFiles.length - 1].size"
-										role="presentation" :alt="uploadedFiles[uploadedFiles.length - 1].name"
-										:src="uploadedFiles[uploadedFiles.length - 1].objectURL"
-										class="object-fit-cover w-100 h-100 img-profile" />
-								</div>
-							</template>
-
-<template #empty>
-								<img v-if="user.avatar" :src=user.avatar alt="Avatar"
-									class="object-fit-cover w-100 h-100 img-profile">
-								<img v-if="!user.avatar" src="https://bootdey.com/img/Content/avatar/avatar7.png"
-									alt="Avatar Default" class="object-fit-cover w-100 h-100 img-profile">
-							</template>
-</FileUpload>
-
-<div class="form-group">
-	<label for="roles">Roles</label>
-	<MultiSelect id="roles" v-model="user.role_id" display="chip" :options="roleList" optionLabel="name" dataKey="id"
-		placeholder="Seleciona los roles" appendTo="self" class="w-100" />
-</div>
-
-</div>
-
-<h5 class="user-name">{{ user.name }}</h5>
-<h6 class="user-email">{{ user.email }}</h6>
-</div>
-
-<div class="about">
-
-	<div class="form-group">
-		<label for="roles">Roles</label>
-		<MultiSelect id="roles" v-model="user.role_id" display="chip" :options="roleList" optionLabel="name"
-			dataKey="id" placeholder="Seleciona los roles" appendTo="self" class="w-100" />
-	</div>
-
-
-
-</div>
-</div>
-{{ user.avatar }}
-
-<div class="form-group">
-	<label for="name">Nombre</label>
-	<input v-model="user.name" type="text" class="form-control" id="name">
-	<div class="text-danger mt-1">{{ errors.name }}</div>
-	<div class="text-danger mt-1">
-		<div v-for="message in validationErrors?.name">
-			{{ message }}
 		</div>
 	</div>
-</div>
-
-<div class="form-group">
-	<label for="surname1">Apellido 1</label>
-	<input v-model="user.surname1" type="text" class="form-control" id="surname1">
-	<div class="text-danger mt-1">{{ errors.surname1 }}</div>
-	<div class="text-danger mt-1">
-		<div v-for="message in validationErrors?.surname1">
-			{{ message }}
-		</div>
-	</div>
-</div>
-
-<div class="form-group">
-	<label for="surname2">Apellido 2</label>
-	<input v-model="user.surname2" type="text" class="form-control" id="surname2">
-	<div class="text-danger mt-1">{{ errors.surname2 }}</div>
-	<div class="text-danger mt-1">
-		<div v-for="message in validationErrors?.surname2">
-			{{ message }}
-		</div>
-	</div>
-</div>
-
-<div class="form-group">
-	<label for="email">Email</label>
-	<input v-model="user.email" type="email" class="form-control" id="email">
-	<div class="text-danger mt-1">{{ errors.email }}</div>
-	<div class="text-danger mt-1">
-		<div v-for="message in validationErrors?.email">
-			{{ message }}
-		</div>
-	</div>
-</div>
-
-<div class="form-group">
-	<label for="password">Password</label>
-	<input v-model="user.password" type="password" class="form-control" id="password">
-	<div class="text-danger mt-1">{{ errors.password }}</div>
-	<div class="text-danger mt-1">
-		<div v-for="message in validationErrors?.password">
-			{{ message }}
-		</div>
-	</div>
-</div> -->
+	<div class="row d-flex justify-content-end mt-5">
+		<div class="text-right col-2">
+			<button :disabled="isLoading" class="btn btn-primary w-100" @click="submitForm">
+				<div v-show="isLoading" class=""></div>
+				<span v-if="isLoading">Processing...</span>
+				<span v-else>Save user</span>
+			</button>
 		</div>
 	</div>
 
@@ -328,6 +204,7 @@ const { updateUser, storeUser, getUser, user: postData, createUserDB, deleteUser
 
 import { useForm, useField, defineRule } from "vee-validate";
 import { required, min } from "@/validation/rules"
+import { FileUpload } from "primevue";
 defineRule('required', required)
 defineRule('min', min);
 
@@ -346,16 +223,16 @@ const schema = {
 // Create a form context with the validation schema
 const { validate, errors, resetForm } = useForm({ validationSchema: schema })
 // Define actual fields for validation
-const { value: name } = useField('name', null, { initialValue: '' });
-const { value: email } = useField('email', null, { initialValue: '' });
-const { value: surname1 } = useField('surname1', null, { initialValue: '' });
-const { value: surname2 } = useField('surname2', null, { initialValue: '' });
-const { value: dni } = useField('dni', null, { initialValue: '' });
-const { value: phone_number } = useField('phone_number', null, { initialValue: '' });
-const { value: birthdate } = useField('birthdate', null, { initialValue: '' });
-const { value: gender } = useField('gender', null, { initialValue: '' });
-const { value: role_id } = useField('role_id', null, { initialValue: '', label: 'role' });
-const { value: username } = useField('username', null, { initialValue: '', label: 'username' });
+const { value: name } = useField('name', null, { initialValue: null });
+const { value: email } = useField('email', null, { initialValue: null });
+const { value: surname1 } = useField('surname1', null, { initialValue: null });
+const { value: surname2 } = useField('surname2', null, { initialValue: null });
+const { value: dni } = useField('dni', null, { initialValue: null });
+const { value: phone_number } = useField('phone_number', null, { initialValue: null });
+const { value: birthdate } = useField('birthdate', null, { initialValue: null });
+const { value: gender } = useField('gender', null, { initialValue: null });
+const { value: role_id } = useField('role_id', null, { initialValue: null, label: 'role' });
+const { value: username } = useField('username', null, { initialValue: null, label: 'username' });
 const { value: automaticValidation } = useField('automaticValidation', null, { initialValue: false, label: 'automaticValidation' });
 
 const user = reactive({
@@ -369,7 +246,8 @@ const user = reactive({
 	gender,
 	birthdate,
 	username,
-	automaticValidation
+	automaticValidation,
+	validationImages: []
 })
 
 const route = useRoute()
@@ -420,9 +298,17 @@ const totalSizePercent = ref(0);
 const files = ref([]);
 const autoVerify = ref(false);
 
-function toggleAutoVerify() {
+// const limitMultiImage = () => {
+
+// };
+
+const toggleAutoVerify = () => {
 	autoVerify.value = !autoVerify.value;
 }
+
+const onSelectValidationImage = (event) => {
+	user.validationImages = event.files;
+};
 
 const onBeforeUpload = (event) => {
 	// console.log('onBeforeUpload')
@@ -441,7 +327,7 @@ const onClearTemplatingUpload = (clear) => {
 };
 
 const onSelectedFiles = (event) => {
-	console.log('onSelectedFiles');
+	console.log(event.files);
 	files.value = event.files;
 
 	if (event.files.length > 1) {
@@ -564,11 +450,7 @@ input[type="checkbox"] {
 	height: 1.5em;
 }
 
-.verify-container {
-	display: flex;
-	align-items: center;
-	flex: 0 0 auto;
-	padding: 0.5rem;
-	width: 20%;
+.p-fileupload-basic {
+	justify-content: flex-start !important;
 }
 </style>

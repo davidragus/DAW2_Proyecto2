@@ -19,95 +19,92 @@ use Spatie\Permission\Models\Role;
 
 class AuthenticatedSessionController extends Controller
 {
-    /**
-     * Display the login view.
-     *
-     * @return \Illuminate\View\View
-     */
-    public function create()
-    {
-        return view('auth.login');
-    }
+	/**
+	 * Display the login view.
+	 *
+	 * @return \Illuminate\View\View
+	 */
+	public function create()
+	{
+		return view('auth.login');
+	}
 
-    /**
-     * Handle an incoming authentication request.
-     *
-     * @param  \App\Http\Requests\Auth\LoginRequest  $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function login(LoginRequest $request)
-    {
-        $request->authenticate();
+	/**
+	 * Handle an incoming authentication request.
+	 *
+	 * @param  \App\Http\Requests\Auth\LoginRequest  $request
+	 * @return \Illuminate\Http\RedirectResponse
+	 */
+	public function login(LoginRequest $request)
+	{
+		$request->authenticate();
 
-//        $token = $request->session()->regenerate();
-        $token = $request->user()->createToken($request->userAgent())->plainTextToken;
-        //$user= $request->user();
-        //$user['rol']=User::find($user['id'])->load('roles')->roles[0]->name;
-        //return $user;
-        if ($request->wantsJson()) {
-            return response()->json(['user' => $request->user(), 'token' => $token]);
-        }
+		//        $token = $request->session()->regenerate();
+		$token = $request->user()->createToken($request->userAgent())->plainTextToken;
+		//$user= $request->user();
+		//$user['rol']=User::find($user['id'])->load('roles')->roles[0]->name;
+		//return $user;
+		if ($request->wantsJson()) {
+			return response()->json(['user' => $request->user(), 'token' => $token]);
+		}
 
-        return redirect()->intended(RouteServiceProvider::HOME);
-    }
+		return redirect()->intended(RouteServiceProvider::HOME);
+	}
 
-    /**
-     * Destroy an authenticated session.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function logout(Request $request)
-    {
-        Auth::guard('web')->logout();
+	/**
+	 * Destroy an authenticated session.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @return \Illuminate\Http\RedirectResponse
+	 */
+	public function logout(Request $request)
+	{
+		Auth::guard('web')->logout();
 
-        $request->session()->invalidate();
+		$request->session()->invalidate();
 
-        $request->session()->regenerateToken();
+		$request->session()->regenerateToken();
 
-        if ($request->wantsJson()) {
-            return response()->noContent();
-        }
+		if ($request->wantsJson()) {
+			return response()->noContent();
+		}
 
-        return redirect('/');
-    }
+		return redirect('/');
+	}
 
-    /**
-     * Create User
-     * @param RegisterRequest $request
-     * @return JsonResponse
-     */
-    public function register(RegisterRequest $request)
-    {
-        $user = User::where('email', $request['email'])->first();
-        if ($user) {
-            return response(['error' => 1, 'message' => 'user already exists'], 409);
-        }
+	/**
+	 * Create User
+	 * @param RegisterRequest $request
+	 * @return JsonResponse
+	 */
+	public function register(RegisterRequest $request)
+	{
+		$user = User::where('email', $request['email'])->first();
+		if ($user) {
+			return response(['error' => 1, 'message' => 'user already exists'], 409);
+		}
 
-        $user = User::create([
-            'username' => $request['username'],
-            'name' => $request['name'],
-            'surname1' => $request['surname1'],
-            'surname2' => $request['surname2'],
-            'email' => $request['email'],
-            'dni' => $request['dni'],
-            'gender' => $request['gender'],
-            'phone_number' => $request['phone_number'],
-            'password' => Hash::make($request['password']),
-            'birthdate' => $request['year'] . '-' . $request['month'] . '-' . $request['day'],
-            'country' => $request['country'],
-            'validated' => 0,
-        ]);
+		$user = User::create([
+			'username' => $request['username'],
+			'name' => $request['name'],
+			'surname1' => $request['surname1'],
+			'surname2' => $request['surname2'],
+			'email' => $request['email'],
+			'dni' => $request['dni'],
+			'gender' => $request['gender'],
+			'phone_number' => $request['phone_number'],
+			'password' => Hash::make($request['password']),
+			'birthdate' => $request['year'] . '-' . $request['month'] . '-' . $request['day'],
+			'country' => $request['country'],
+			'validated' => 0,
+		]);
 
-        $pendingValidation = PendingValidation::create([
-            'user_id' => $user->id,
-            'status' => 'PENDING',
-        ]);
 
-        if ($request->hasFile('idImage')) {
-            $pendingValidation->addMedia($request->file('idImage'))->toMediaCollection('pending_validation');
-        }
+		if ($request->hasFile('validationImages')) {
+			$validation = PendingValidation::create(['user_id' => $user->id, 'status' => 'PENDING']);
+			$validation->addMediaFromRequest('validationImages')->toMediaCollection('pending_validations');
+		}
 
-        return $this->successResponse($user, 'Registration Successfully');
-    }
+		return $this->successResponse($user, 'Registration Successfully');
+	}
 }
