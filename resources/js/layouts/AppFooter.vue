@@ -11,7 +11,7 @@ const logoUrl = computed(() => {
 
 <template>
     <div class="layout-footer">
-        <span class="font-medium ml-2">Ejemplo DAW2</span>
+        <span class="font-medium ml-2 text-white">Ejemplo DAW2</span>
     </div>
 </template>
 <style lang="scss" scoped></style>

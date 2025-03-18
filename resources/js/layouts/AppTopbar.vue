@@ -73,6 +73,10 @@ const topbarMenuClasses = computed(() => {
 </script>
 
 <style lang="scss" scoped>
+.layout-topbar{
+    background-color: #1F1F1F;
+    border-bottom: 2px solid red;
+}
 .layout-topbar-button-c,
 .layout-topbar-button-c:hover {
     width: auto;

@@ -16,7 +16,7 @@
             <div class="row d-flex justify-content-center">
                 <div class="col-11 container-category-title d-flex justify-content-between align-items-center">
                     <h5 class="category-title">FEATURED GAMES</h5>
-                    <div class="nav-arrows-container">
+                    <div v-show="!isMobile" class="nav-arrows-container">
                         <button class="nav-arrow" disabled>
                             <i class="fas fa-chevron-left"></i>
                         </button>
@@ -25,7 +25,7 @@
                         </button>
                     </div>
                 </div>
-                <div class="row d-flex justify-content-around mt-3">
+                <div class="row d-flex justify-content-around mt-3 games-row">
                     <a href="#" class="col-2 game-card">
                         <img src="/images/bingoGame.webp" alt="Bingo" class="game-image"/>
                         <p class="game-title">BINGO</p>
@@ -46,13 +46,13 @@
                         <p class="game-title">BLACKJACK</p>
                         <div class="bottom-game-line"></div>
                     </a>
-                    <div href="#" class="col-2 game-card"></div>
+                    <div v-show="!isMobile" href="#" class="col-2 game-card"></div>
                 </div>
             </div>
             <div class="row d-flex justify-content-center">
                 <div class="col-11 container-category-title d-flex justify-content-between align-items-center">
                     <h5 class="category-title">NEW CASINO GAMES</h5>
-                    <div class="nav-arrows-container">
+                    <div v-show="!isMobile" class="nav-arrows-container">
                         <button class="nav-arrow" disabled>
                             <i class="fas fa-chevron-left"></i>
                         </button>
@@ -61,7 +61,7 @@
                         </button>
                     </div>
                 </div>
-                <div class="row d-flex justify-content-around mt-3">
+                <div class="row d-flex justify-content-around mt-3 games-row">
                     <a href="#" class="col-2 game-card">
                         <img src="/images/bingoGame.webp" alt="Bingo" class="game-image"/>
                         <p class="game-title">BINGO</p>
@@ -75,14 +75,13 @@
                     <a href="#" class="col-2 game-card">
                         <img src="/images/pokerGame.webp" alt="Poker" class="game-image"/>
                         <p class="game-title">POKER</p>
-                        <div class="bottom-game-line"></div>
                     </a>
                     <a href="#" class="col-2 game-card">
                         <img src="/images/blackjackGame.webp" alt="Blackjack" class="game-image"/>
                         <p class="game-title">BLACKJACK</p>
                         <div class="bottom-game-line"></div>
                     </a>
-                    <div href="#" class="col-2 game-card"></div>
+                    <div v-show="!isMobile" href="#" class="col-2 game-card"></div>
                 </div>
             </div>
         </div>
@@ -91,6 +90,15 @@
 
 <script setup>
 import Button from '../../components/Button.vue';
+import { ref, onMounted, onUnmounted } from 'vue';
+const isMobile = ref(false);
+onMounted(() => {
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+});
+function checkMobile() {
+    isMobile.value = window.innerWidth <= 768;
+}
 </script>
 
 <style scoped>
@@ -198,5 +206,34 @@ import Button from '../../components/Button.vue';
         width: 30px;
         color: #717171;
         font-size: 16px;
+    }
+    @media (max-width: 768px) {
+        #mainContent {
+            padding-left: 0;
+        }
+        .banner-background {
+            height: 200px;
+        }
+        .banner-title {
+            font-size: 24px;
+            width: 100%;
+        }
+        .banner-text {
+            font-size: 16px;
+            width: 100%;
+        }
+        .banner-button {
+            font-size: 16px;
+            width: 100%;
+            text-align: center;
+        }
+        .games-row {
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .game-card {
+            flex: 0 0 auto;
+        }
     }
 </style>

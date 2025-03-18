@@ -9,12 +9,12 @@
 
 			<div class="card mb-2 bread">
 
-				<Breadcrumb :home="home" :model="crumbs">
+				<Breadcrumb :home="home" :model="crumbs" class="custom-breadcrumb" :style="{ backgroundColor: '#3A3A3A'}">
 					<template #item="{ item, props }">
 						<router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
 							<a :href="href" v-bind="props.action" class="btn btn-link" @click="navigate">
-								<span :class="[item.icon, 'text-color']" />
-								<span class="text-primary font-semibold">{{ item.label }}</span>
+								<span :class="[item.icon, 'text-white']" />
+								<span class="text-white font-semibold">{{ item.label }}</span>
 							</a>
 						</router-link>
 						<a v-else :href="item.url" :target="item.target" v-bind="props.action">
@@ -136,5 +136,10 @@ const isOutsideClicked = (event) => {
 <style lang="scss">
 .bread {
 	padding: .1rem;
+	background-color: #3A3A3A;
+	border-color: #3A3A3A;
+}
+.custom-breadcrumb {
+	background-color: #3A3A3A;
 }
 </style>
