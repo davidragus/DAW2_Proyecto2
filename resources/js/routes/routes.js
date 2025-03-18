@@ -270,6 +270,12 @@ export default [
 						component: () => import('../views/admin/validations/Index.vue'),
 						meta: { breadCrumb: 'Validations' }
 					},
+					{
+						name: 'validations.show',
+						path: 'show/:id',
+						component: () => import('../views/admin/validations/Show.vue'),
+						meta: { breadCrumb: 'Check validation' }
+					},
 				]
 			},
 
