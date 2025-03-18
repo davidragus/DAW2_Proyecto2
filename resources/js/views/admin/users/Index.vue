@@ -10,7 +10,7 @@
 				<!-- :globalFilterFields="['id', 'alias', 'name', 'surname1', 'surname2', 'email', 'created_at', 'type.name']" -->
 
 				<DataTable v-model:filters="filters" :value="users.data" paginator :rows="25" stripedRows dataKey="id"
-					size="small">
+					size="small" :class="'custom-datatable'">
 
 					<template #header>
 						<Toolbar pt:root:class="toolbar-table">
@@ -108,3 +108,9 @@ onMounted(() => {
 })
 
 </script>
+<style scoped>
+.custom-datatable div > table > tbody > tr > td {
+    background-color: #313131;
+    color: #fff;
+}
+</style>
