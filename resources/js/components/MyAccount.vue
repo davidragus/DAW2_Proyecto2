@@ -14,26 +14,30 @@
                     <h2 class="text-white">{{ userCopy.name }} {{ userCopy.surname1 }} {{ userCopy.surname2 }}</h2>
                 </div>
                 <div class="col-12 col-md-6">
-                    <form @submit.prevent="updateUser">
+                    <form @submit.prevent="submitForm">
                         <div class="mb-3">
                             <label for="name" class="form-label">Name</label>
-                            <input type="text" class="form-control" id="name" v-model="userCopy.name" required>
+                            <input type="text" class="form-control" id="name" v-model="userCopy.name" :class="{ 'is-invalid': errors.name }">
+                            <div v-if="errors.name" class="invalid-feedback">{{ errors.name }}</div>
                         </div>
                         <div class="mb-3">
                             <label for="surname" class="form-label">Surname</label>
-                            <input type="text" class="form-control" id="surname" v-model="userCopy.surname1" required>
+                            <input type="text" class="form-control" id="surname" v-model="userCopy.surname1" :class="{ 'is-invalid': errors.surname1 }">
+                            <div v-if="errors.surname1" class="invalid-feedback">{{ errors.surname1 }}</div>
                         </div>
                         <div class="mb-3">
                             <label for="lastSurname" class="form-label">Last surname (optional)</label>
-                            <input type="text" class="form-control" id="lastSurname" v-model="userCopy.surname2" required>
+                            <input type="text" class="form-control" id="lastSurname" v-model="userCopy.surname2" :class="{ 'is-invalid': errors.surname2 }">
+                            <div v-if="errors.surname2" class="invalid-feedback">{{ errors.surname2 }}</div>
                         </div>
                         <div class="mb-3">
                             <label for="birthdate" class="form-label">Birthdate</label>
-                            <input type="date" class="form-control" id="birthdate" v-model="userCopy.birthdate" required>
+                            <input type="date" class="form-control" id="birthdate" v-model="userCopy.birthdate" :class="{ 'is-invalid': errors.birthdate }">
+                            <div v-if="errors.birthdate" class="invalid-feedback">{{ errors.birthdate }}</div>
                         </div>
                         <div class="mb-3">
                             <label for="country" class="form-label">Country of residence</label>
-                            <select class="form-select" id="country" v-model="userCopy.country" required>
+                            <select class="form-select" id="country" v-model="userCopy.country" :class="{ 'is-invalid': errors.country }">
                                 <option>Spain</option>
                                 <option>USA</option>
                                 <option>UK</option>
@@ -41,18 +45,22 @@
                                 <option>Mexico</option>
                                 <option>Peru</option>
                             </select>
+                            <div v-if="errors.country" class="invalid-feedback">{{ errors.country }}</div>
                         </div>
                         <div class="mb-3">
                             <label for="username" class="form-label">Username</label>
-                            <input type="text" class="form-control" id="username" v-model="userCopy.username" required>
+                            <input type="text" class="form-control" id="username" v-model="userCopy.username" :class="{ 'is-invalid': errors.username }">
+                            <div v-if="errors.username" class="invalid-feedback">{{ errors.username }}</div>
                         </div>
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" v-model="userCopy.email" required>
+                            <input type="email" class="form-control" id="email" v-model="userCopy.email" :class="{ 'is-invalid': errors.email }">
+                            <div v-if="errors.email" class="invalid-feedback">{{ errors.email }}</div>
                         </div>
                         <div class="mb-3">
                             <label for="phone" class="form-label">Phone number</label>
-                            <input type="text" class="form-control" id="phone" v-model="userCopy.phone_number" required>
+                            <input type="text" class="form-control" id="phone" v-model="userCopy.phone_number" :class="{ 'is-invalid': errors.phone_number }">
+                            <div v-if="errors.phone_number" class="invalid-feedback">{{ errors.phone_number }}</div>
                         </div>
                         <button type="submit" class="btn btn-primary w-100 mb-3">SAVE DATA</button>
                         <button type="button" class="btn btn-secondary w-100">CHANGE PASSWORD</button>
@@ -67,10 +75,37 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { authStore } from "../store/auth";
 import Swal from 'sweetalert2';
+import * as yup from 'yup';
 
 const auth = authStore();
 const logedUser = computed(() => auth.user);
 const userCopy = ref({ ...logedUser.value });
+
+const schema = yup.object({
+    name: yup.string().required('Name is required'),
+    surname1: yup.string().required('Surname is required'),
+    surname2: yup.string().required('Last surname is required'),
+    birthdate: yup.date().required('Birthdate is required'),
+    country: yup.string().required('Country is required'),
+    username: yup.string().required('Username is required'),
+    email: yup.string().email('Email must be valid').required('Email is required'),
+    phone_number: yup.string().required('Phone number is required'),
+});
+
+const errors = ref({});
+
+const validateForm = async () => {
+    errors.value = {};
+    try {
+        await schema.validate(userCopy.value, { abortEarly: false });
+        return true;
+    } catch (validationErrors) {
+        validationErrors.inner.forEach(error => {
+            errors.value[error.path] = error.message;
+        });
+        return false;
+    }
+};
 
 const updateUser = async () => {
     try {
@@ -102,6 +137,13 @@ const updateUser = async () => {
             background: '#2A2A2A',
             color: '#ffffff'
         });
+    }
+};
+
+const submitForm = async () => {
+    const isValid = await validateForm();
+    if (isValid) {
+        await updateUser();
     }
 };
 
@@ -206,5 +248,12 @@ form {
   border-radius: 5px;
   background-color: #313131;
   color: white;
+}
+.is-invalid {
+    border-color: red;
+}
+.invalid-feedback {
+    color: red;
+    font-size: 0.875em;
 }
 </style>
