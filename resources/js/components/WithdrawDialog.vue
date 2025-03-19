@@ -4,8 +4,8 @@
             <form class="withdraw-container p-4" @submit.prevent="withdraw">
                 <h3>Amount of chips to withdraw:</h3>
                 <div class="withdraw-amount">
-                    <span class="chips-icon">🪙</span>
-                    <input type="number" v-model="chips" class="form-control chips-input" required />
+                    <img src="/images/chips2.png" alt="icon of chips" class="icon-24 me-2"> 
+                    <input type="number" v-model="chips" :max=authStore().user.chips min="0" class="form-control chips-input" required />
                     <span class="equals">=</span>
                     <span class="amount">{{ (chips * 0.1).toFixed(2) }}€</span>
                 </div>
@@ -43,7 +43,7 @@ const cvc = ref('');
 const confirmName = ref(false);
 
 const user = authStore().user;
-const userFullName = computed(() => `${user.name} ${user.surname1} ${user.surname2}`);
+const userFullName = computed(() => `${user.name} ${user.surname1} ${user.surname2 = null ? user.surname2 : ''}`);
 
 watch(() => props.show, (newVal) => {
     visible.value = newVal;
@@ -156,5 +156,9 @@ const onDialogClose = (newValue) => {
     border-color: #313131;
     outline: 0;
     box-shadow: 0 0 0 0.25rem #31313133;
+}
+.icon-24{
+    width: 24px;
+    height: 24px;
 }
 </style>

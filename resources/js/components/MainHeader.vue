@@ -19,6 +19,7 @@
                         <span class="text-white me-3 chips-number">{{ authStore().user.chips }}</span>
                     </div>
                     <CashierDialog :show="showCashierDialog"></CashierDialog>
+                    <WithdrawDialog :show="showWithdrawDialog"></WithdrawDialog>
                 </div>
                 <div ref="loginContainer" class="login-container gray-background p-2 rounded-circle" @click="toggleDropdown">
                     <i class="fa-regular fa-user icon-24"></i>
@@ -45,6 +46,7 @@ import useAuth from "@/composables/auth";
 import { authStore } from "../store/auth";
 import MyAccount from './MyAccount.vue';
 import CashierDialog from '../components/CashierDialog.vue';
+import WithdrawDialog from '../components/WithdrawDialog.vue';
 
 defineProps({ isMobile: Boolean });
 

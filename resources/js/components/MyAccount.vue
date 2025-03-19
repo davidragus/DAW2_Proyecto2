@@ -118,6 +118,7 @@ const updateUser = async () => {
             username: userCopy.value.username,
             email: userCopy.value.email,
             phone_number: userCopy.value.phone_number,
+            chips: logedUser.value.chips,
         });
         Swal.fire({
             icon: 'success',
