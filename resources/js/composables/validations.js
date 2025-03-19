@@ -52,7 +52,8 @@ export default function useValidations() {
 					background: '#2A2A2A',
 					color: '#ffffff'
 				})
-			});
+			})
+			.finally(() => isLoading.value = false);
 	};
 
 	const declineValidation = async (id) => {
@@ -72,7 +73,8 @@ export default function useValidations() {
 					background: '#2A2A2A',
 					color: '#ffffff'
 				})
-			});
+			})
+			.finally(() => isLoading.value = false);
 	};
 
 	return {

@@ -121,7 +121,7 @@ onMounted(() => {
 
 const checkApprovePermission = (id) => {
 	if (can('validation-approve')) {
-		isLoading.value = false;
+		isLoading.value = true;
 		approveValidation(id);
 	} else {
 		swal({
@@ -133,6 +133,7 @@ const checkApprovePermission = (id) => {
 
 const checkDeclinePermission = (id) => {
 	if (can('validation-decline')) {
+		isLoading.value = true;
 		declineValidation(id);
 	} else {
 		swal({
