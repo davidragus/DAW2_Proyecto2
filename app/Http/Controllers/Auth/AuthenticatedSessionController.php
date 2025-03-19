@@ -95,8 +95,7 @@ class AuthenticatedSessionController extends Controller
 			'phone_number' => $request['phone_number'],
 			'password' => Hash::make($request['password']),
 			'birthdate' => $request['year'] . '-' . $request['month'] . '-' . $request['day'],
-			'country' => $request['country'],
-			'validated' => 0,
+			'country' => $request['country']
 		]);
 
 

@@ -84,7 +84,7 @@ const userCopy = ref({ ...logedUser.value });
 const schema = yup.object({
     name: yup.string().required('Name is required'),
     surname1: yup.string().required('Surname is required'),
-    surname2: yup.string().required('Last surname is required'),
+    surname2: yup.string().nullable(),
     birthdate: yup.date().required('Birthdate is required'),
     country: yup.string().required('Country is required'),
     username: yup.string().required('Username is required'),
