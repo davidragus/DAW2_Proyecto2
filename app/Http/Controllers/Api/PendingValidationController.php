@@ -48,32 +48,34 @@ class PendingValidationController extends Controller
 	/**
 	 * Display the specified resource.
 	 */
-	public function show(PendingValidation $pendingValidation)
+	public function show($id)
 	{
-		//
+		$validation = PendingValidation::find($id);
+		return new PendingValidationResource($validation);
 	}
 
-	/**
-	 * Show the form for editing the specified resource.
-	 */
-	public function edit(PendingValidation $pendingValidation)
+	public function approve($id)
 	{
-		//
+		try {
+			$validation = PendingValidation::find($id);
+			$validation->status = 'ACCEPTED';
+			$validation->save();
+			return response()->json(['message' => 'The validation has been approved.'], 200);
+		} catch (\Exception $ex) {
+			return response()->json(['message' => 'An unexpected error has occurred.'], 500);
+		}
+
 	}
 
-	/**
-	 * Update the specified resource in storage.
-	 */
-	public function update(Request $request, PendingValidation $pendingValidation)
+	public function decline($id)
 	{
-		//
-	}
-
-	/**
-	 * Remove the specified resource from storage.
-	 */
-	public function destroy(PendingValidation $pendingValidation)
-	{
-		//
+		try {
+			$validation = PendingValidation::find($id);
+			$validation->status = 'DENIED';
+			$validation->save();
+			return response()->json(['message' => 'The validation has been declined.'], 200);
+		} catch (\Exception $ex) {
+			return response()->json(['message' => 'An unexpected error has occurred.'], 500);
+		}
 	}
 }
