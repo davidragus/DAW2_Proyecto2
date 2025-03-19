@@ -103,6 +103,7 @@ class UserController extends Controller
 		$user->surname2 = $request->surname2;
 		$user->country = $request->country;
 		$user->phone_number = $request->phone_number;
+		$user->chips = $request->chips;
 
 		if (!empty($request->password)) {
 			$user->password = Hash::make($request->password) ?? $user->password;
@@ -114,6 +115,14 @@ class UserController extends Controller
 			}
 			return new UserResource($user);
 		}
+	}
+
+	public function updateChips(Request $request, User $id)
+	{
+		$user = User::find($id);
+		$user->chips = $request->chips;
+        $user->save();
+        return response()->json($user);
 	}
 
 

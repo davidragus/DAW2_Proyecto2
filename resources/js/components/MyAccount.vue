@@ -109,7 +109,7 @@ const validateForm = async () => {
 
 const updateUser = async () => {
     try {
-        const response = await axios.put(`/api/users/${userCopy.value.id}`, {
+        const response = await axios.put(`/api/users/${logedUser.value.id}`, {
             name: userCopy.value.name,
             surname1: userCopy.value.surname1,
             surname2: userCopy.value.surname2,
