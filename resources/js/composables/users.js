@@ -142,8 +142,6 @@ export default function useUsers() {
 						.then(response => {
 							users.value.data.splice(index, 1);
 
-							//getUsers()
-							//router.push({name: 'users.index'})
 							swal({
 								icon: 'success',
 								title: 'User deleted successfully'
