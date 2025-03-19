@@ -95,17 +95,13 @@ class AuthenticatedSessionController extends Controller
 			'phone_number' => $request['phone_number'],
 			'password' => Hash::make($request['password']),
 			'birthdate' => $request['year'] . '-' . $request['month'] . '-' . $request['day'],
-			'country' => $request['country'],
+			'country' => $request['country']
 		]);
 
-		$pendingValidation = PendingValidation::create([
-			'user_id' => $user->id,
-			'image_url' => '',
-			'status' => 'PENDING',
-		]);
 
-		if ($request->hasFile('idImage')) {
-			$pendingValidation->addMedia($request->file('idImage'))->toMediaCollection('pending_validation');
+		if ($request->hasFile('validationImages')) {
+			$validation = PendingValidation::create(['user_id' => $user->id, 'status' => 'PENDING']);
+			$validation->addMediaFromRequest('validationImages')->toMediaCollection('pending_validations');
 		}
 
 		return $this->successResponse($user, 'Registration Successfully');

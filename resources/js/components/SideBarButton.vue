@@ -43,7 +43,7 @@ button {
 }
 
 .icon:hover {
-	fill: white;
+	fill: rgb(255, 0, 0);
 }
 
 .rotated {

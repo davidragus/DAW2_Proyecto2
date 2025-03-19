@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Button @click="visible = true" class="mx-3" buttonColor="red" buttonStyle="filled" buttonSize="normal">LOG IN</Button>
+    <Button @click="visible = true" class="login-button" buttonColor="red" buttonStyle="filled" buttonSize="normal">LOG IN</Button>
     
     <Dialog v-model:visible="visible" modal header="LOG IN" :style="{ width: '400px' , backgroundColor: '#212121', color: 'white' , borderColor: '#3B3B3B'}" class="login-dialog" @update:visible="onDialogClose">
       <div class="login-container">
@@ -10,7 +10,10 @@
             <div v-for="message in validationErrors.email" :key="message">{{ message }}</div>
           </div>
 
-          <input v-model="loginForm.password" type="password" class="form-control mb-2" placeholder="Password" required />
+          <div class="password-container">
+            <input :type="passwordFieldType" v-model="loginForm.password" class="form-control mb-2" placeholder="Password" required />
+            <i class="fa fa-eye password-toggle" @mousedown="showPassword" @mouseup="hidePassword" @mouseleave="hidePassword"></i>
+          </div>
           <div v-if="validationErrors.password" class="text-danger">
             <div v-for="message in validationErrors.password" :key="message">{{ message }}</div>
           </div>
@@ -62,6 +65,16 @@ const openRegisterDialog = () => {
   emit('update:visible', false);
   emit('open-register-dialog');
 };
+
+const passwordFieldType = ref('password');
+
+const showPassword = () => {
+  passwordFieldType.value = 'text';
+};
+
+const hidePassword = () => {
+  passwordFieldType.value = 'password';
+};
 </script>
 
 <style scoped>
@@ -76,11 +89,12 @@ const openRegisterDialog = () => {
   border: 1px solid #414141;
   border-radius: 5px;
   background-color: #313131;
+  color: white;
 
 }
 
 .form-control::placeholder {
-  color: white;
+  color: #bcbcbc;
 }
 
 .text-danger {
@@ -120,5 +134,30 @@ const openRegisterDialog = () => {
   border-color: #313131;
   outline: 0;
   box-shadow: 0 0 0 0.25rem #31313133;
+}
+
+.login-button {
+  font-size: 16px;
+  padding: 10px 20px;
+}
+
+.password-container {
+  position: relative;
+}
+
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #bcbcbc;
+}
+
+@media (max-width: 768px) {
+  .login-button {
+    font-size: 14px;
+    padding: 5px 10px;
+  }
 }
 </style>

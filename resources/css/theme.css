@@ -591,3 +591,21 @@ div.corner:after , div.corner:after {
 #root-dropdown-register>span{
     color: #bcbcbc !important;
 }
+body {
+    background-color: #2A2A2A !important;
+}
+.card{
+    background-color: #313131 !important;
+    color: white !important;
+}
+.card a{
+    color: white !important;
+    text-decoration: underline !important;
+}
+.p-breadcrumb-list{
+    border-radius: 10px !important;
+}
+.p-datatable.p-datatable-sm .p-datatable-tbody > tr > td , .p-datatable-header, .p-toolbar, .p-toolbar input , .p-datatable-thead tr th, .p-datatable-paginator-bottom div{
+    background-color: #313131 !important;
+    color: white !important;
+}

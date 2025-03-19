@@ -58,4 +58,15 @@ svg {
 	font-family: Radley-Regular, Radley;
 	font-size: 119px;
 }
+
+@media (max-width: 768px) {
+	svg {
+		width: 100px;
+	}
+}
+@media (max-width: 576px) {
+	svg {
+		width: 75px;
+	}
+}
 </style>

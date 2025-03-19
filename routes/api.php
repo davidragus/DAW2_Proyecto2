@@ -53,3 +53,6 @@ Route::get('get-category-posts/{id}', [PostControllerAdvance::class, 'getCategor
 Route::get('get-post/{id}', [PostControllerAdvance::class, 'getPost']);
 
 Route::apiResource('validations', PendingValidationController::class);
+Route::get('validation/{id}', [PendingValidationController::class, 'show']);
+Route::put('validation/approve/{id}', [PendingValidationController::class, 'approve']);
+Route::put('validation/decline/{id}', [PendingValidationController::class, 'decline']);
