@@ -6,7 +6,7 @@
 			:style="{ width: '400px', backgroundColor: '#212121', color: 'white', borderColor: '#3B3B3B' }"
 			:panelStyle="{ backgroundColor: 'red' }" @update:visible="onDialogClose">
 			<div class="signup-container p-4">
-				<form @submit.prevent="submitRegister">
+				<form @submit.prevent="submitRegisterYup">
 					<div class="mb-3">
 						<Dropdown v-model="registerForm.country" :options="countries" placeholder="Country of residence"
 							class="w-100"
@@ -132,18 +132,6 @@ const emit = defineEmits(['open-login-dialog', 'update:visible']);
 const onSelectValidationImage = (event) => {
 	registerForm.validationImages = event.files;
 };
-
-const register = async () => {
-	try {
-		await submitRegister();
-		visible.value = false;
-		emit('update:visible', false);
-		emit('open-login-dialog');
-	} catch (error) {
-		console.error('Error during registration:', error);
-	}
-};
-
 const openLoginDialog = () => {
 	visible.value = false;
 	emit('update:visible', false);

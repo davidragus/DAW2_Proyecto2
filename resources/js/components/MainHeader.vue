@@ -128,6 +128,9 @@ nav {
 }
 
 .icon-24 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     font-size: 24px;
     width: 24px;
     height: 24px;
