@@ -14,7 +14,6 @@ class PendingValidationResource extends JsonResource
 	 */
 	public function toArray($request)
 	{
-		$test = $this->getMedia('pending_validations')[0]->getPath();
 		return [
 			'id' => $this->id,
 			'user' => $this->user,
