@@ -8,8 +8,8 @@
 			<div class="signup-container p-4">
 				<form @submit.prevent="submitRegisterYup">
 					<div class="mb-3">
-						<Dropdown v-model="registerForm.country" :options="countries" placeholder="Country of residence"
-							class="w-100"
+						<Select v-model="registerForm.country" :options="countries" optionLabel="name"
+							optionValue="code" placeholder="Country of residence" class="w-100"
 							:style="{ backgroundColor: '#313131', color: 'white', borderColor: '#414141', placeholderColor: '' }"
 							pt:option:id="option-dropdown-register"
 							pt:listContainer:id="list-container-dropdown-register"
@@ -97,13 +97,15 @@
 </template>
 
 <script setup>
-import { ref, defineEmits, watch } from 'vue';
+import { ref, defineEmits, watch, onMounted } from 'vue';
 import * as yup from 'yup';
 import Dropdown from 'primevue/dropdown';
+import Select from 'primevue/select';
 import Button from '../components/Button.vue';
 import PrimeButton from 'primevue/button';
 import Dialog from 'primevue/dialog';
 import useAuth from '@/composables/auth';
+import useCountries from '@/composables/countries';
 
 const props = defineProps(['visible']);
 const visible = ref(props.visible);
@@ -111,6 +113,10 @@ const fileName = ref('');
 
 watch(() => props.visible, (newVal) => {
 	visible.value = newVal;
+});
+
+onMounted(() => {
+	getCountries();
 });
 
 const onDialogClose = (newValue) => {
@@ -121,7 +127,8 @@ const onDialogClose = (newValue) => {
 };
 
 const { registerForm, validationErrors, processing, submitRegister } = useAuth();
-const countries = ref(['Spain', 'USA', 'UK', 'France', 'Mexico', 'Peru']);
+// const countries = ref(['Spain', 'USA', 'UK', 'France', 'Mexico', 'Peru']);
+const { getCountries, countries } = useCountries();
 const emit = defineEmits(['open-login-dialog', 'update:visible']);
 
 // const handleFileUpload = (event) => {

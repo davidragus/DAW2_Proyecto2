@@ -101,7 +101,7 @@ class UserController extends Controller
 		$user->email = $request->email;
 		$user->surname1 = $request->surname1;
 		$user->surname2 = $request->surname2;
-		$user->country = $request->country;
+		$user->country_code = $request->country;
 		$user->phone_number = $request->phone_number;
 		$user->chips = $request->chips;
 
@@ -121,8 +121,8 @@ class UserController extends Controller
 	{
 		$user = User::find($id);
 		$user->chips = $request->chips;
-        $user->save();
-        return response()->json($user);
+		$user->save();
+		return response()->json($user);
 	}
 
 
