@@ -15,6 +15,10 @@ return new class extends Migration {
 			$table->string('name');
 			$table->timestamps();
 		});
+
+		Schema::table('users', function (Blueprint $table) {
+			$table->foreign('country_code')->references('code')->on('countries')->onDelete('cascade');
+		});
 	}
 
 	/**
@@ -23,5 +27,6 @@ return new class extends Migration {
 	public function down(): void
 	{
 		Schema::dropIfExists('countries');
+		Schema::dropColumns('countries', ['country_code']);
 	}
 };
