@@ -28,7 +28,7 @@ class User extends Authenticatable implements HasMedia
 		'phone_number',
 		'birthdate',
 		'password',
-		'country',
+		'country_code',
 		'validated',
 		'chips',
 	];
@@ -62,6 +62,10 @@ class User extends Authenticatable implements HasMedia
 		return $this->hasMany(PendingValidation::class);
 	}
 
+	public function country()
+	{
+		return $this->hasOne(Country::class, 'code', 'country_code');
+	}
 
 	public function registerMediaCollections(): void
 	{
