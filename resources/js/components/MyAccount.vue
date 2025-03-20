@@ -84,7 +84,7 @@ const userCopy = ref({ ...logedUser.value });
 const schema = yup.object({
     name: yup.string().required('Name is required'),
     surname1: yup.string().required('Surname is required'),
-    surname2: yup.string().required('Last surname is required'),
+    surname2: yup.string().nullable(),
     birthdate: yup.date().required('Birthdate is required'),
     country: yup.string().required('Country is required'),
     username: yup.string().required('Username is required'),
@@ -109,7 +109,7 @@ const validateForm = async () => {
 
 const updateUser = async () => {
     try {
-        const response = await axios.put(`/api/users/${userCopy.value.id}`, {
+        const response = await axios.put(`/api/users/${logedUser.value.id}`, {
             name: userCopy.value.name,
             surname1: userCopy.value.surname1,
             surname2: userCopy.value.surname2,
@@ -118,6 +118,7 @@ const updateUser = async () => {
             username: userCopy.value.username,
             email: userCopy.value.email,
             phone_number: userCopy.value.phone_number,
+            chips: logedUser.value.chips,
         });
         Swal.fire({
             icon: 'success',

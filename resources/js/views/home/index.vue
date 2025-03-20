@@ -1,5 +1,8 @@
 <template>
     <main id="mainContent" class="container-fluid pr-0">
+        <!--Mensajes de error en caso de que el user no tenga la validacion aceptada o que tenga la validacion denegada-->
+        <!--<Message severity="warn">Warn Message</Message>-->
+        <!--<Message severity="error">Error Message</Message>-->
         <div class="banner-background d-flex col-12">
             <div class="banner-filter"></div>
             <div class="container h-100 d-flex align-items-center">
