@@ -91,6 +91,7 @@ const deposit = async () => {
             let expiration_date_formatted = expiration_date_split[1] + '/' + expiration_date_split[0] + '/01';
             const response = await axios.post('/api/transactions', {
                 user_id: user.id,
+                type: 'DEPOSIT',
                 money: customDeposit.value,
                 chips: chipsNumber.value,
                 card_number: cardNumber.value,

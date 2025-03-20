@@ -15,6 +15,7 @@ class StoreTransactionRequest extends FormRequest
     {
         return [
             'user_id' => 'required|exists:users,id',
+            'type' => 'required|in:DEPOSIT,WITHDRAWAL',
             'money' => 'required|numeric',
             'chips' => 'required|integer',
             'card_number' => 'required|string',
