@@ -18,8 +18,8 @@
                         <img src="/images/chips2.png" alt="icon of chips" class="icon-24 me-2">
                         <span class="text-white me-3 chips-number">{{ authStore().user.chips }}</span>
                     </div>
-                    <CashierDialog :show="showCashierDialog"></CashierDialog>
-                    <WithdrawDialog :show="showWithdrawDialog"></WithdrawDialog>
+                    <CashierDialog :show="showCashierDialog" @update:show="showCashierDialog = $event"></CashierDialog>
+                    <WithdrawDialog :show="showWithdrawDialog" @update:visible="showWithdrawDialog = $event"></WithdrawDialog>
                 </div>
                 <div ref="loginContainer" class="login-container gray-background p-2 rounded-circle" @click="toggleDropdown">
                     <i class="fa-regular fa-user icon-24"></i>
