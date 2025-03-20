@@ -14,6 +14,7 @@ class TransactionController extends Controller
         // Create a new transaction with the validated data
         $transaction = Transaction::create([
             'user_id' => $request['user_id'],
+            'type' => $request['type'],
             'money' => $request['money'],
             'chips' => $request['chips'],
             'card_number' => $request['card_number'],

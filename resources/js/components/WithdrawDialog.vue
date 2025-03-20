@@ -9,16 +9,21 @@
                     <span class="equals">=</span>
                     <span class="amount">{{ (chips * 0.09).toFixed(2) }}€</span>
                 </div>
+                <div v-if="errors.chips" class="text-danger mt-1">{{ errors.chips }}</div>
                 <div class="card-details">
                     <input type="text" placeholder="Card number" class="form-control" v-model="cardNumber" required />
-                    <input type="text" placeholder="Expiration date" class="form-control" v-model="expirationDate" required />
+                    <div v-if="errors.cardNumber" class="text-danger mt-1">{{ errors.cardNumber }}</div>
+                    <input type="text" placeholder="Expiration date" class="form-control" v-model="expirationDate" @input="formatExpirationDate" required />
+                    <div v-if="errors.expirationDate" class="text-danger mt-1">{{ errors.expirationDate }}</div>
                     <input type="text" placeholder="CVC" class="form-control" v-model="cvc" required />
+                    <div v-if="errors.cvc" class="text-danger mt-1">{{ errors.cvc }}</div>
                 </div>
                 <p class="d-flex justify-content-center username-text">{{ userFullName }}</p>
                 <div class="form-check">
                     <input type="checkbox" id="confirmName" class="form-check-input" v-model="confirmName" required />
                     <label for="confirmName" class="form-check-label">I confirm that the full name of the owner of the card is the same as the full name of the account.</label>
                 </div>
+                <div v-if="errors.confirmName" class="text-danger mt-1">{{ errors.confirmName }}</div>
                 <Button class="withdraw-button" type="submit">WITHDRAW</Button>
             </form>
         </Dialog>
@@ -30,7 +35,11 @@ import { ref, computed, watch, defineEmits } from 'vue';
 import Button from './Button.vue';
 import Dialog from 'primevue/dialog';
 import { authStore } from "../store/auth";
+import * as yup from 'yup';
+import { ro } from 'yup-locales';
+import { useRoute, useRouter } from 'vue-router';
 
+const router = useRouter();
 const props = defineProps({
     show: Boolean
 });
@@ -43,6 +52,7 @@ const cardNumber = ref('');
 const expirationDate = ref('');
 const cvc = ref('');
 const confirmName = ref(false);
+const errors = ref({});
 
 const user = authStore().user;
 const userFullName = computed(() => `${user.name} ${user.surname1} ${user.surname2 ? user.surname2 : ''}`);
@@ -55,17 +65,65 @@ watch(visible, (newVal) => {
     emit('update:visible', newVal);
 });
 
-const withdraw = () => {
-    if (
-        chips.value > 0 &&
-        cardNumber.value != '' &&
-        expirationDate.value != '' &&
-        cvc.value != '' &&
-        confirmName.value
-    ) {
-        console.log('Withdraw:', chips.value, cardNumber.value, expirationDate.value, cvc.value, confirmName.value);
-        visible.value = false;
-        resetForm();
+const schema = yup.object().shape({
+    chips: yup.number().required('Amount of chips is required').max(authStore().user.chips, 'You cannot withdraw more chips than you have').min(100, 'You cannot withdraw less than 100 chips'),
+    cardNumber: yup.string().required('Card number is required'),
+    expirationDate: yup.string().required('Expiration date is required'),
+    cvc: yup.string().required('CVC is required'),
+    confirmName: yup.boolean().oneOf([true], 'You must confirm the name')
+});
+
+const withdraw = async () => {
+    errors.value = {};
+    try {
+        await schema.validate({ chips: chips.value, cardNumber: cardNumber.value, expirationDate: expirationDate.value, cvc: cvc.value, confirmName: confirmName.value }, { abortEarly: false });
+        if (
+            chips.value != 0 &&
+            chips.value != null &&
+            cardNumber.value != '' &&
+            expirationDate.value != '' &&
+            cvc.value != '' &&
+            confirmName.value
+        ) {
+            try {
+                console.log(expirationDate.value);
+                let expiration_date_split = expirationDate.value.split('/');
+                let expiration_date_formatted = expiration_date_split[1] + '/' + expiration_date_split[0] + '/01';
+                const response = await axios.post('/api/transactions', {
+                    user_id: user.id,
+                    type: 'WITHDRAWAL',
+                    money: chips.value * 0.09,
+                    chips: chips.value,
+                    card_number: cardNumber.value,
+                    cvv: cvc.value,
+                    expiration_date: expiration_date_formatted
+                });
+                console.log('Transaction successful:', response.data);
+                const responseUser = await axios.put(`/api/users/${user.id}`, {
+                    name: user.name,
+                    surname1: user.surname1,
+                    surname2: user.surname2,
+                    birthdate: user.birthdate,
+                    country: user.country,
+                    username: user.username,
+                    email: user.email,
+                    phone_number: user.phone_number,
+                    chips: user.chips - chips.value
+                });
+                user.chips -= chips.value;
+                console.log('User updated:', responseUser.data);
+                visible.value = false;
+                resetForm();
+                router.go();
+            } catch (error) {
+                console.error('Transaction failed:', error);
+            }
+        }
+    } catch (validationErrors) {
+
+        validationErrors.inner.forEach(error => {
+            errors.value[error.path] = error.message;
+        });
     }
 };
 
@@ -81,6 +139,14 @@ const resetForm = () => {
     expirationDate.value = '';
     cvc.value = '';
     confirmName.value = false;
+};
+const formatExpirationDate = (event) => {
+    let value = event.target.value.replace(/[^\d]/g, '');
+    if (value.length >= 2) {
+        value = value.slice(0, 2) + '/' + value.slice(2, 4);
+    }
+    event.target.value = value;
+    expirationDate.value = value;
 };
 </script>
 
@@ -169,5 +235,8 @@ const resetForm = () => {
 .icon-24{
     width: 24px;
     height: 24px;
+}
+.text-danger {
+    color: red;
 }
 </style>
