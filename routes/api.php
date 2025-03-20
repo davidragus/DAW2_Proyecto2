@@ -7,10 +7,12 @@ use App\Http\Controllers\Api\PostControllerAdvance;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\CountryController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\TransactionController;
 
 Route::post('forget-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('forget.password.post');
 Route::post('reset-password', [ResetPasswordController::class, 'reset'])->name('password.reset');
@@ -44,6 +46,11 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 			->values()
 			->toArray();
 	});
+
+	Route::apiResource('validations', PendingValidationController::class);
+	Route::get('validation/{id}', [PendingValidationController::class, 'show']);
+	Route::put('validation/approve/{id}', [PendingValidationController::class, 'approve']);
+	Route::put('validation/decline/{id}', [PendingValidationController::class, 'decline']);
 });
 
 Route::get('category-list', [CategoryController::class, 'getList']);
@@ -52,11 +59,6 @@ Route::get('get-posts', [PostControllerAdvance::class, 'getPosts']);
 Route::get('get-category-posts/{id}', [PostControllerAdvance::class, 'getCategoryByPosts']);
 Route::get('get-post/{id}', [PostControllerAdvance::class, 'getPost']);
 
-Route::apiResource('validations', PendingValidationController::class);
-Route::get('validation/{id}', [PendingValidationController::class, 'show']);
-Route::put('validation/approve/{id}', [PendingValidationController::class, 'approve']);
-Route::put('validation/decline/{id}', [PendingValidationController::class, 'decline']);
-
-use App\Http\Controllers\Api\TransactionController;
+Route::get('countries', [CountryController::class, 'getCountries']);
 
 Route::post('/transactions', [TransactionController::class, 'store']);
