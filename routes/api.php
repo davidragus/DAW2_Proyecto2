@@ -56,3 +56,7 @@ Route::apiResource('validations', PendingValidationController::class);
 Route::get('validation/{id}', [PendingValidationController::class, 'show']);
 Route::put('validation/approve/{id}', [PendingValidationController::class, 'approve']);
 Route::put('validation/decline/{id}', [PendingValidationController::class, 'decline']);
+
+use App\Http\Controllers\Api\TransactionController;
+
+Route::post('/transactions', [TransactionController::class, 'store']);
