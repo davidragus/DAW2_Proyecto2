@@ -86,7 +86,7 @@
 					</div>
 
 					<PrimeButton type="submit" label="SIGN UP" class="w-100 register-button" :disabled="processing"
-						:style="{ backgroundColor: 'red', color: 'white', borderColor: 'red' }" />
+						:style="{ backgroundColor: 'red', color: 'white', borderColor: 'red' }" @click="submitRegister"/>
 
 					<p class="text-center mt-3">Are you already registered? <a href="#" class="login ms-2"
 							@click.prevent="openLoginDialog">Log in</a></p>

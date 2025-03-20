@@ -9,26 +9,26 @@
                 </div>
                 <div class="custom-deposit">
                     <label for="customDeposit">Custom deposit:</label>
-                    <input type="number" id="customDeposit" v-model="customDeposit" class="form-control" @input="selectButton" required />
+                    <input type="number" id="customDeposit" min="10" v-model="customDeposit" class="form-control" @input="selectButton" required />
                 </div>
                 <div class="card-details">
                     <input type="text" placeholder="Card number" class="form-control" v-model="cardNumber" required />
-                    <input type="text" placeholder="Expiration date" class="form-control" v-model="expirationDate" required />
-                    <input type="text" placeholder="CVC" class="form-control" v-model="cvc" required />
+                    <input type="text" id="expiration_date" placeholder="Expiration date" class="form-control" v-model="expirationDate" @input="formatExpirationDate" required />
+                    <input type="text" placeholder="CVV" class="form-control" v-model="cvv" required />
                 </div>
                 <p class="d-flex justify-content-center username-text">{{ userFullName }}</p>
                 <div class="form-check">
                     <input type="checkbox" id="confirmName" class="form-check-input" v-model="confirmName" required />
                     <label for="confirmName" class="form-check-label">I confirm that the full name of the owner of the card is the same as the full name of the account.</label>
                 </div>
-                <Button class="deposit-button" type="submit">DEPOSIT</Button>
+                <Button class="deposit-button" type="submit">DEPOSIT {{ chipsNumber }}</Button>
             </form>
         </Dialog>
     </div>
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import Button from './Button.vue';
 import Dialog from 'primevue/dialog';
 import { authStore } from "../store/auth";
@@ -38,14 +38,17 @@ const props = defineProps({
 });
 
 const visible = ref(false);
-const customDeposit = ref(0);
+const customDeposit = ref(10);
 const cardNumber = ref('');
 const expirationDate = ref('');
-const cvc = ref('');
+const cvv = ref('');
 const confirmName = ref(false);
-
+const chipsNumber = ref(customDeposit.value);
+watch(() => customDeposit.value, (newVal) => {
+    chipsNumber.value = newVal*10;
+});
 const user = authStore().user;
-const userFullName = computed(() => `${user.name} ${user.surname1} ${user.surname2}`);
+const userFullName = computed(() => `${user.name} ${user.surname1} ${user.surname2 != null ? user.surname2 : ''}`);
 
 watch(() => props.show, (newVal) => {
     visible.value = newVal;
@@ -73,22 +76,52 @@ const selectButton = () => {
     }
 };
 
-const deposit = () => {
+const deposit = async () => {
     if (
         customDeposit.value != 0 &&
         customDeposit.value != null &&
         cardNumber.value != '' &&
         expirationDate.value != '' &&
-        cvc.value != '' &&
+        cvv.value != '' &&
         confirmName.value
     ) {
-        console.log('Deposit:', customDeposit.value, cardNumber.value, expirationDate.value, cvc.value, confirmName.value);
-        visible.value = false;
-        customDeposit.value = 0;
-        cardNumber.value = '';
-        expirationDate.value = '';
-        cvc.value = '';
-        confirmName.value = false;
+        try {
+            console.log(expirationDate.value);
+            let expiration_date_split = expirationDate.value.split('/');
+            let expiration_date_formatted = expiration_date_split[1] + '/' + expiration_date_split[0] + '/01';
+            const response = await axios.post('/api/transactions', {
+                user_id: user.id,
+                money: customDeposit.value,
+                chips: chipsNumber.value,
+                card_number: cardNumber.value,
+                cvv: cvv.value,
+                expiration_date: expiration_date_formatted
+            });
+            console.log('Transaction successful:', response.data);
+            const responseUser = await axios.put(`/api/users/${user.id}`, {
+                name: user.name,
+                surname1: user.surname1,
+                surname2: user.surname2,
+                birthdate: user.birthdate,
+                country: user.country,
+                username: user.username,
+                email: user.email,
+                phone_number: user.phone_number,
+                chips: user.chips + chipsNumber.value
+            });
+            user.chips += chipsNumber.value;
+            console.log('User updated:', responseUser.data);
+            visible.value = false;
+            customDeposit.value = 10;
+            cardNumber.value = '';
+            expirationDate.value = '';
+            expiration_date_split = '';
+            expiration_date_formatted = '';
+            cvv.value = '';
+            confirmName.value = false;
+        } catch (error) {
+            console.error('Transaction failed:', error);
+        }
     }
 };
 
@@ -96,6 +129,14 @@ const onDialogClose = (newValue) => {
     if (!newValue) {
         visible.value = false;
     }
+};
+const formatExpirationDate = (event) => {
+    let value = event.target.value.replace(/[^\d]/g, '');
+    if (value.length >= 2) {
+        value = value.slice(0, 2) + '/' + value.slice(2, 4);
+    }
+    event.target.value = value;
+    expirationDate.value = value;
 };
 </script>
 

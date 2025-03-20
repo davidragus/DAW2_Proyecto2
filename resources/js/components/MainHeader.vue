@@ -16,9 +16,10 @@
                 <div class="d-flex align-items-center me-4">
                     <div class="d-flex align-items-center">
                         <img src="/images/chips2.png" alt="icon of chips" class="icon-24 me-2">
-                        <span class="text-white me-3 chips-number">{{ chipsNumber }}</span>
+                        <span class="text-white me-3 chips-number">{{ authStore().user.chips }}</span>
                     </div>
-                    <CashierDialog :show="showCashierDialog"></CashierDialog>
+                    <CashierDialog :show="showCashierDialog" @update:show="showCashierDialog = $event"></CashierDialog>
+                    <WithdrawDialog :show="showWithdrawDialog" @update:visible="showWithdrawDialog = $event"></WithdrawDialog>
                 </div>
                 <div ref="loginContainer" class="login-container gray-background p-2 rounded-circle" @click="toggleDropdown">
                     <i class="fa-regular fa-user icon-24"></i>
@@ -45,6 +46,7 @@ import useAuth from "@/composables/auth";
 import { authStore } from "../store/auth";
 import MyAccount from './MyAccount.vue';
 import CashierDialog from '../components/CashierDialog.vue';
+import WithdrawDialog from '../components/WithdrawDialog.vue';
 
 defineProps({ isMobile: Boolean });
 
