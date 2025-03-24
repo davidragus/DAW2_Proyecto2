@@ -113,7 +113,7 @@ const deposit = async () => {
                 phone_number: user.phone_number,
                 chips: user.chips + chipsNumber.value
             });
-            user.chips += chipsNumber.value;
+            authStore().user.chips += chipsNumber.value;
             console.log('User updated:', responseUser.data);
             visible.value = false;
             customDeposit.value = 10;
@@ -123,7 +123,7 @@ const deposit = async () => {
             expiration_date_formatted = '';
             cvv.value = '';
             confirmName.value = false;
-            router.go();
+            //router.go();
         } catch (error) {
             console.error('Transaction failed:', error);
         }

@@ -23,9 +23,9 @@
 					</WithdrawDialog>
 				</div>
 				<div ref="loginContainer" class="login-container" @click="toggleDropdown">
-					<img v-if="user.avatar" :src=user.avatar alt="Avatar"
+					<img v-if="authStore().user.avatar" :src=authStore().user.avatar alt="Avatar"
 						class="object-fit-cover w-100 h-100 img-profile">
-					<img v-if="!user.avatar" src="/images/EmptyAvatar.webp" alt="Avatar Default"
+					<img v-if="!authStore().user.avatar" src="/images/EmptyAvatar.webp" alt="Avatar Default"
 						class="object-fit-cover w-100 h-100 img-profile rounded-circle">
 				</div>
 				<div v-show="dropdownVisible" class="dropdown-menu">
