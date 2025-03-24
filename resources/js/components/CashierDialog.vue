@@ -32,6 +32,7 @@ import { ref, computed, watch, onMounted } from 'vue';
 import Button from './Button.vue';
 import Dialog from 'primevue/dialog';
 import { authStore } from "../store/auth";
+import { useRoute, useRouter } from 'vue-router';   
 
 const props = defineProps({
     show: Boolean
@@ -44,6 +45,8 @@ const expirationDate = ref('');
 const cvv = ref('');
 const confirmName = ref(false);
 const chipsNumber = ref(customDeposit.value);
+
+const router = useRouter();
 watch(() => customDeposit.value, (newVal) => {
     chipsNumber.value = newVal*10;
 });
@@ -120,6 +123,7 @@ const deposit = async () => {
             expiration_date_formatted = '';
             cvv.value = '';
             confirmName.value = false;
+            router.go();
         } catch (error) {
             console.error('Transaction failed:', error);
         }

@@ -76,6 +76,7 @@ const schema = yup.object().shape({
 const withdraw = async () => {
     errors.value = {};
     try {
+        console.log(errors.value);
         await schema.validate({ chips: chips.value, cardNumber: cardNumber.value, expirationDate: expirationDate.value, cvc: cvc.value, confirmName: confirmName.value }, { abortEarly: false });
         if (
             chips.value != 0 &&
@@ -116,6 +117,7 @@ const withdraw = async () => {
                 resetForm();
                 router.go();
             } catch (error) {
+                console.log(errors.value);
                 console.error('Transaction failed:', error);
             }
         }
