@@ -9,7 +9,7 @@
 					<span :class="{ 'd-none': !visible }">ROULETTE</span>
 				</a>
 			</li>
-			<li @mouseover="optionHover('bingo')" @mouseleave="optionHover('bingo')">
+			<li @mouseover="optionHover('bingo')" @mouseleave="optionHoverLeave('bingo')">
 				<a href="" class="d-flex container-fluid align-items-center">
 					<iBingo :activeHover="hoverBingo" class="icon"></iBingo>
 					<span class="icon-text" :class="{ 'd-none': !visible }">BINGO</span>
@@ -55,7 +55,16 @@ const languages = ref([
 function optionHover(name) {
 	switch (name) {
 		case 'bingo':
-			hoverBingo.value = !hoverBingo.value;
+			hoverBingo.value = true;
+			break;
+		default:
+			break;
+	}
+};
+function optionHoverLeave(name) {
+	switch (name) {
+		case 'bingo':
+			hoverBingo.value = false;
 			break;
 		default:
 			break;

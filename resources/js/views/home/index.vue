@@ -165,6 +165,10 @@ function checkMobile() {
         text-align: center;
         margin: 10px;
     }
+    .game-card:hover{
+        transform: scale(1.1);
+        transition: transform 0.1s;
+    }
     .game-image {
         width: 100%;
         object-fit: cover;

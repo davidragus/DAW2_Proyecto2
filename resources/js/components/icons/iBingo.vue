@@ -95,13 +95,11 @@ const props = defineProps({
 });
 watch(() => props.activeHover, (newVal) => {
     if (newVal) {
-        addActiveHover();
+        document.querySelector('svg').classList.add('activeHover');
+    } else{
+        document.querySelector('svg').classList.remove('activeHover');
     }
 });
-
-function addActiveHover() {
-    document.querySelector('svg').classList.add('activeHover');
-}
 </script>
 
 <style scoped>
