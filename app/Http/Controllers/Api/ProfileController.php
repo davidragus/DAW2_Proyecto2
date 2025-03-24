@@ -10,31 +10,31 @@ use Illuminate\Validation\ValidationException;
 
 class ProfileController extends Controller
 {
-    /**
-     * @throws ValidationException
-     */
-    public function update(UpdateProfileRequest $request)
-    {
-        $profile = Auth::user();
-        $profile->name = $request->name;
-        $profile->email = $request->email;
+	/**
+	 * @throws ValidationException
+	 */
+	public function update(UpdateProfileRequest $request)
+	{
+		$profile = Auth::user();
+		$profile->name = $request->name;
+		$profile->email = $request->email;
 
-        if ($profile->save()) {
-            return $this->successResponse($profile, 'User updated');;
-        }
-        return response()->json(['status' => 403, 'success' => false]);
-    }
+		if ($profile->save()) {
+			return $this->successResponse($profile, 'User updated');
+		}
+		return response()->json(['status' => 403, 'success' => false]);
+	}
 
-    public function user(Request $request)
-    {
-        $user = $request->user()->load('roles');
-        $avatar = '';
-        if (count($user->media) > 0) {
-            $avatar = $user->media[0]->original_url;
-        }
-        $user->avatar = $avatar;
+	public function user(Request $request)
+	{
+		$user = $request->user()->load('roles');
+		$avatar = null;
+		if (count($user->media) > 0) {
+			$avatar = $user->media[0]->original_url;
+		}
+		$user->avatar = $avatar;
 
 
-        return $this->successResponse($user, 'User found');
-    }
+		return $this->successResponse($user, 'User found');
+	}
 }
