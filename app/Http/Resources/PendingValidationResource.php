@@ -23,7 +23,7 @@ class PendingValidationResource extends JsonResource
 				'dni' => $this->user->dni,
 				'birthdate' => $this->user->birthdate,
 				'gender' => $this->user->gender,
-				'country' => $this->user->country->name,
+				'country' => $this->user->country ? $this->user->country->name : null,
 				'email' => $this->user->email,
 			],
 			'status' => $this->status,
