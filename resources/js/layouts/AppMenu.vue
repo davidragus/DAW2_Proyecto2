@@ -2,7 +2,8 @@
 	<button
 		class="relative overflow-hidden w-full p-link flex align-items-center p-2 pl-0 text-color hover:surface-200 border-noround">
 
-		<Avatar :image="authStore().user?.avatar" class="mr-3" shape="circle" />
+		<Avatar :image="authStore().user.avatar ? authStore().user.avatar : '/images/EmptyAvatar.webp'" class="mr-3"
+			shape="circle" />
 		<span class="inline-flex flex-column">
 			<span class="font-bold">{{ authStore().user?.name }}</span>
 			<span>

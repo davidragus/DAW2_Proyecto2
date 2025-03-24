@@ -7,22 +7,17 @@
 		<div class="col-12 card">
 			<div class="row">
 				<div class="col-3">
-					<FileUpload name="picture" url="/api/users/updateimg" @before-upload="onBeforeUpload"
-						@upload="onTemplatedUpload($event)" accept="image/*" :maxFileSize="1500000"
-						@select="onSelectedFiles" pt:content:class="fu-content" pt:buttonbar:class="fu-header"
-						pt:root:class="fu" class="fu">
+					<FileUpload name="avatar" accept="image/*" :maxFileSize="1500000" @select="onSelectedFiles"
+						pt:content:class="fu-content" pt:buttonbar:class="fu-header" pt:root:class="fu" class="fu">
 
-						<template #header="{ chooseCallback, uploadCallback, clearCallback, files, uploadedFiles }">
+						<template #header="{ chooseCallback, clearCallback, files }">
 							<div class="flex flex-wrap justify-content-between align-items-center flex-1 gap-2">
 								<div class="flex gap-2">
 									<Button @click="chooseCallback()" icon="pi pi-images" rounded outlined></Button>
-									<Button @click="uploadEvent(uploadCallback, uploadedFiles)"
-										icon="pi pi-cloud-upload" rounded outlined severity="success"
-										:disabled="!files || files.length === 0"></Button>
 									<Button @click="clearCallback()" icon="pi pi-times" rounded outlined
 										severity="danger" :disabled="!files || files.length === 0"></Button>
 								</div>
-								<p class="mt-4 mb-0">Drag and drop files to here to upload.</p>
+								<p>Drag and drop files to here to upload.</p>
 							</div>
 						</template>
 
@@ -42,8 +37,8 @@
 						<template #empty>
 							<img v-if="user.avatar" :src=user.avatar alt="Avatar"
 								class="object-fit-cover w-100 h-100 img-profile">
-							<img v-if="!user.avatar" src="https://bootdey.com/img/Content/avatar/avatar7.png"
-								alt="Avatar Default" class="object-fit-cover w-100 h-100 img-profile">
+							<img v-if="!user.avatar" src="/images/EmptyAvatar.webp" alt="Avatar Default"
+								class="object-fit-cover w-100 h-100 img-profile">
 						</template>
 					</FileUpload>
 				</div>
