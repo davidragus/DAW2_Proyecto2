@@ -17,10 +17,13 @@ use App\Http\Controllers\Api\TransactionController;
 Route::post('forget-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('forget.password.post');
 Route::post('reset-password', [ResetPasswordController::class, 'reset'])->name('password.reset');
 
+Route::get('users', [UserController::class, 'index']);
+Route::post('users/{user}', [UserController::class, 'update']);
+
 Route::group(['middleware' => 'auth:sanctum'], function () {
 
-	Route::apiResource('users', UserController::class);
 
+	Route::apiResource('users', UserController::class);
 	Route::post('users/updateimg', [UserController::class, 'updateimg']); //Listar
 
 	Route::apiResource('posts', PostControllerAdvance::class);

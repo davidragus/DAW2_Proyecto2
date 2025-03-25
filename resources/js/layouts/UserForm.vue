@@ -7,7 +7,7 @@
 		<div class="col-12 card">
 			<div class="row">
 				<div class="col-3">
-					<FileUpload name="avatar" accept="image/*" :maxFileSize="1500000" @select="onSelectedFiles"
+					<FileUpload name="avatar" accept="image/*" :maxFileSize="1500000" @select="onSelectedAvatar"
 						pt:content:class="fu-content" pt:buttonbar:class="fu-header" pt:root:class="fu" class="fu">
 
 						<template #header="{ chooseCallback, clearCallback, files }">
@@ -126,7 +126,7 @@
 					<div class="row">
 						<div class="form-group col-4">
 							<label for="username">Username</label>
-							<input v-model="user.username" type="username" class="form-control" id="username">
+							<input v-model="user.username" type="text" class="form-control" id="username">
 							<div class="text-danger mt-1">{{ errors.username }}</div>
 							<div class="text-danger mt-1">
 								<div v-for="message in validationErrors?.username">
@@ -242,7 +242,8 @@ const user = reactive({
 	birthdate,
 	username,
 	automaticValidation,
-	validationImages: []
+	validationImages: [],
+	avatar: []
 })
 
 const route = useRoute()
@@ -286,6 +287,8 @@ watchEffect(() => {
 	user.dni = postData.value.dni
 	user.phone_number = postData.value.phone_number
 	user.gender = postData.value.gender
+	user.username = postData.value.username
+	user.birthdate = postData.value.birthdate
 })
 
 const totalSize = ref(0);
@@ -321,26 +324,8 @@ const onClearTemplatingUpload = (clear) => {
 	totalSizePercent.value = 0;
 };
 
-const onSelectedFiles = (event) => {
-	console.log(event.files);
-	files.value = event.files;
-
-	if (event.files.length > 1) {
-		event.files = event.files.splice(0, event.files.length - 1);
-	}
-
-	files.value.forEach((file) => {
-		totalSize.value += parseInt(formatSize(file.size));
-	});
-};
-
-const uploadEvent = async (callback, uploadedFiles) => {
-	console.log('uploadEvent');
-	totalSizePercent.value = totalSize.value / 10;
-	await callback();
-	// if (uploadedFiles.length > 1) {
-	//     uploadedFiles = uploadedFiles.splice(0, uploadedFiles.length - 1);
-	// }
+const onSelectedAvatar = (event) => {
+	user.avatar = event.files;
 };
 
 const createUserDBView = async (id) => {
