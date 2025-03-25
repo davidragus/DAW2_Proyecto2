@@ -9,7 +9,12 @@
 					<span :class="{ 'd-none': !visible }">ROULETTE</span>
 				</a>
 			</li>
-			<li><a href="" class="d-block container-fluid">icono<span :class="{ 'd-none': !visible }">BINGO</span></a></li>
+			<li @mouseover="optionHover('bingo')" @mouseleave="optionHoverLeave('bingo')">
+				<a href="" class="d-flex container-fluid align-items-center">
+					<iBingo :activeHover="hoverBingo" class="icon"></iBingo>
+					<span class="icon-text" :class="{ 'd-none': !visible }">BINGO</span>
+				</a>
+			</li>
 			<li>
 				<a href="" class="d-flex container-fluid align-items-center">
 					<iBlackJack class="icon"></iBlackJack>
@@ -33,17 +38,39 @@ import { ref } from 'vue';
 import LocaleSwitcher from './LocaleSwitcher.vue';
 import iRoulette from './iRoulette.vue';
 import iBlackJack from './iBlackJack.vue';
+import iBingo from './icons/iBingo.vue';
  
 defineProps({ visible: Boolean });
  
 // Estado para el modal de idiomas
 const showModal = ref(false);
+const hoverBingo = ref(false);
  
 const languages = ref([
 	"English", "Español", "Français", "Deutsch",
 	"Italiano", "Português", "Nederlands", "中文",
 	"日本語", "한국어", "Русский", "العربية"
 ]);
+
+function optionHover(name) {
+	switch (name) {
+		case 'bingo':
+			hoverBingo.value = true;
+			break;
+		default:
+			break;
+	}
+};
+function optionHoverLeave(name) {
+	switch (name) {
+		case 'bingo':
+			hoverBingo.value = false;
+			break;
+		default:
+			break;
+	}
+};
+
 </script>
  
 <style scoped>
@@ -67,10 +94,10 @@ a {
 	font-size: 18px;
 }
  
-a:hover {
+li:hover .icon-text, li:hover .icon {
 	color: red;
 }
- 
+
 .icon {
 	width: 24px;
 	height: 24px;
