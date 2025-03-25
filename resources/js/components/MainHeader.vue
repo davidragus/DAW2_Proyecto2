@@ -23,10 +23,12 @@
 					</WithdrawDialog>
 				</div>
 				<div ref="loginContainer" class="login-container" @click="toggleDropdown">
-					<img v-if="user.avatar" :src=user.avatar alt="Avatar"
-						class="object-fit-cover w-100 h-100 img-profile">
-					<img v-if="!user.avatar" src="/images/EmptyAvatar.webp" alt="Avatar Default"
-						class="object-fit-cover w-100 h-100 img-profile rounded-circle">
+					<div class="avatar">
+						<Avatar v-if="authStore().user.avatar" :image="authStore().user.avatar" size="xlarge"
+							shape="circle" />
+						<Avatar v-if="!authStore().user.avatar" :label="authStore().user.name.substring(0, 1)"
+							size="large" shape="circle" />
+					</div>
 				</div>
 				<div v-show="dropdownVisible" class="dropdown-menu">
 					<router-link to="/my-account" class="dropdown-item">My account</router-link>
@@ -174,6 +176,27 @@ nav {
 
 .chips-number {
 	font-size: 15px;
+}
+
+img {
+	display: block;
+	width: 100%;
+	height: auto;
+	border-radius: 50%;
+	/* Hace que la imagen sea redonda */
+	object-fit: cover;
+	/* Asegura que la imagen se ajuste correctamente */
+}
+
+.avatar {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	/* Hace que el contenedor del avatar sea redondo */
+	overflow: hidden;
 }
 
 @media (max-width: 768px) {

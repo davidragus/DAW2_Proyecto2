@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Api;
+
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
@@ -24,8 +25,7 @@ class UserController extends Controller
 		if (!in_array($orderDirection, ['asc', 'desc'])) {
 			$orderDirection = 'desc';
 		}
-		$users = User::
-			when(request('search_id'), function ($query) {
+		$users = User::when(request('search_id'), function ($query) {
 				$query->where('id', request('search_id'));
 			})
 			->when(request('search_title'), function ($query) {
@@ -35,7 +35,6 @@ class UserController extends Controller
 				$query->where(function ($q) {
 					$q->where('id', request('search_global'))
 						->orWhere('name', 'like', '%' . request('search_global') . '%');
-
 				});
 			})
 			->orderBy($orderColumn, $orderDirection)
@@ -132,6 +131,16 @@ class UserController extends Controller
 		return response()->json($user);
 	}
 
+
+	public function updateimg(Request $request)
+	{
+		$user = User::find($request->id);
+		// Delete previous image
+		$user->clearMediaCollection('user_avatar');
+		$user->addMediaFromRequest('file')->toMediaCollection('user_avatar');
+		return new UserResource($user);
+	}
+
 	public function destroy(User $user)
 	{
 		$this->authorize('user-delete');
@@ -139,6 +148,4 @@ class UserController extends Controller
 
 		return response()->noContent();
 	}
-
-
 }
