@@ -107,10 +107,30 @@ export default function useUsers() {
 		isLoading.value = true
 		validationErrors.value = {}
 
-		axios.put('/api/users/' + user.id, user)
-			.then(response => {
-				//router.push({name: 'users.index'})
+		console.log(user);
 
+		let serializedUser = new FormData()
+		for (let item in user) {
+			if (user.hasOwnProperty(item)) {
+				if (Array.isArray(user[item]) && user[item].length > 0) {
+					user[item].forEach((value, index) => {
+						serializedUser.append(`${item}[${index}]`, value);
+					});
+				} else if (user[item]) {
+					serializedUser.append(item, user[item])
+				}
+			}
+		}
+
+		console.log(serializedUser);
+
+		axios.post('/api/users/' + user.id, serializedUser,
+			{
+				headers: {
+					'Content-Type': 'multipart/form-data'
+				}
+			})
+			.then(response => {
 				swal({
 					icon: 'success',
 					title: 'User updated successfully'

@@ -60,9 +60,10 @@ class UserController extends Controller
 
 		$user->password = Hash::make('test1234');
 
-		$test = public_path();
-
 		if ($user->save()) {
+			if ($request->hasFile('avatar')) {
+				$user->addMediaFromRequest('avatar')->toMediaCollection('user_avatar');
+			}
 			if ($role) {
 				$user->assignRole($role);
 			}
@@ -95,18 +96,24 @@ class UserController extends Controller
 	 */
 	public function update(UpdateUserRequest $request, User $user)
 	{
+
 		$role = Role::find($request->role_id);
 
 		$user->name = $request->name;
 		$user->email = $request->email;
 		$user->surname1 = $request->surname1;
 		$user->surname2 = $request->surname2;
+		$user->dni = $request->dni;
 		$user->country_code = $request->country;
 		$user->phone_number = $request->phone_number;
-		$user->chips = $request->chips;
 
 		if (!empty($request->password)) {
 			$user->password = Hash::make($request->password) ?? $user->password;
+		}
+
+		if ($request->hasFile('avatar')) {
+			$user->clearMediaCollection('user_avatar');
+			$user->addMediaFromRequest('avatar')->toMediaCollection('user_avatar');
 		}
 
 		if ($user->save()) {
@@ -123,21 +130,6 @@ class UserController extends Controller
 		$user->chips = $request->chips;
 		$user->save();
 		return response()->json($user);
-	}
-
-
-	public function updateimg(Request $request)
-	{
-
-		$user = User::find($request->id);
-
-		if ($request->hasFile('picture')) {
-			$user->media()->delete();
-			$media = $user->addMediaFromRequest('picture')->preservingOriginal()->toMediaCollection('images-users');
-
-		}
-		$user = User::with('media')->find($request->id);
-		return $user;
 	}
 
 	public function destroy(User $user)
