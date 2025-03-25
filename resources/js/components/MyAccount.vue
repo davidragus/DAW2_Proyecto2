@@ -10,16 +10,17 @@
         <div class="container">
             <div class="row justify-content-center ">
                 <div class="col-11 text-center">
-                    <div>
-                        <img v-if="authStore().user.avatar" :src=authStore().user.avatar alt="Avatar" class="user-icon">
-                        <img v-if="!authStore().user.avatar" src="/images/EmptyAvatar.webp" alt="Avatar Default"
-                            class="user-icon">
-                        <div class="card flex flex-col items-center gap-6">
+                    <div class="d-flex justify-content-center align-items-center flex-column gap-4">
+                        <Avatar v-if="authStore().user.avatar" :image="authStore().user.avatar" size="xlarge"
+                            shape="circle" class="user-icon" />
+                        <Avatar v-else :label="authStore().user.name.substring(0, 1)" size="xlarge" shape="circle"
+                            class="user-icon" />
+                        <div
+                            class="card flex flex-col items-center gap-6 w-100 justify-content-center align-items-center">
                             <FileUpload mode="basic" @select="onFileSelect" customUpload auto severity="secondary"
                                 class="p-button-outlined" />
-                            <img v-if="src" :src="src" alt="Image" class="user-icon"
-                                style="filter: grayscale(100%)" />
-                            <Button v-if="src" label="Upload" @click="uploadImage" class="image-button"/>
+                            <img v-if="src" :src="src" alt="Image" class="user-icon" style="filter: grayscale(100%)" />
+                            <Button v-if="src" label="Upload" @click="uploadImage" class="image-button" />
                         </div>
                     </div>
                     <h2 class="text-white">{{ userCopy.name }} {{ userCopy.surname1 }} {{ userCopy.surname2 }}</h2>
@@ -193,7 +194,7 @@ function onFileSelect(event) {
     reader.readAsDataURL(file.value);
 }
 async function uploadImage() {
-    try {   
+    try {
         let formData = new FormData();
         formData.append("file", file.value);
         formData.append("id", authStore().user.id);
@@ -261,11 +262,24 @@ async function uploadImage() {
 }
 
 .user-icon {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
     display: block;
-    margin: 0 auto 10px;
+    width: 100px;
+    /* Ajusta el ancho del avatar */
+    height: 100px;
+    /* Ajusta la altura del avatar */
+    border-radius: 50%;
+    /* Asegura que sea redondo */
+    overflow: hidden;
+    /* Recorta cualquier contenido que sobresalga */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 50px;
+    /* Ajusta el tamaño de la inicial si no hay imagen */
+    background-color: #ccc;
+    /* Color de fondo para avatares sin imagen */
+    color: #fff;
+    /* Color del texto */
 }
 
 h2 {
@@ -326,6 +340,7 @@ form {
     color: red;
     font-size: 0.875em;
 }
+
 .image-button {
     background-color: #ff0000;
     color: white;
@@ -335,6 +350,7 @@ form {
     width: 100%;
     text-align: center;
 }
+
 .image-button:hover {
     background-color: #c00000 !important;
     color: white !important;
