@@ -36,7 +36,11 @@ class PermissionTableSeeder extends Seeder
 			'post-create',
 			'post-edit',
 			'post-all',
-			'post-delete'
+			'post-delete',
+			'achievement-create',
+			'achievement-edit',
+			'achievement-delete',
+			'achievement-list',
 		];
 
 		foreach ($permissions as $permission) {

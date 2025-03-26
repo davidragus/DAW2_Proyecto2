@@ -33,6 +33,7 @@
                     <img
                         :src="achievement.image"
                         class="achievement-img"
+                        style="filter: grayscale(100%);"
                         :alt="achievement.name"
                         @click="openAchievementDialog(achievement)"
                     />
@@ -45,7 +46,8 @@
         <div v-if="selectedAchievement" class="modal-overlay" @click.self="closeAchievementDialog">
             <div class="modal-content">
                 <div class="d-flex justify-content-center">
-                    <img :src="selectedAchievement.image" class="achievement-modal-img" :alt="selectedAchievement.name+' achievement image'" />
+                    <!-- Si el selectedAchivement no tiene obtained date la imagen en blanco y neggro -->
+                    <img :src="selectedAchievement.image" class="achievement-modal-img" :style="!selectedAchievement.obtained_date ? 'filter: grayscale(100%);' : ''" :alt="selectedAchievement.name+' achievement image'" />
                 </div>
                 <h2 class="text-white">{{ selectedAchievement.name }}</h2>
                 <p class="text-white">{{ selectedAchievement.description }}</p>
