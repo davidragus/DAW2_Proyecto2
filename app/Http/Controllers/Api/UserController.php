@@ -26,8 +26,8 @@ class UserController extends Controller
 			$orderDirection = 'desc';
 		}
 		$users = User::when(request('search_id'), function ($query) {
-				$query->where('id', request('search_id'));
-			})
+			$query->where('id', request('search_id'));
+		})
 			->when(request('search_title'), function ($query) {
 				$query->where('name', 'like', '%' . request('search_title') . '%');
 			})
@@ -123,12 +123,14 @@ class UserController extends Controller
 		}
 	}
 
-	public function updateChips(Request $request, User $id)
+	public function updateChips(Request $request, $id)
 	{
+		// TODO: Refactor when possible (front and back)
 		$user = User::find($id);
 		$user->chips = $request->chips;
-		$user->save();
-		return response()->json($user);
+		if ($user->update()) {
+			return response()->json($user);
+		}
 	}
 
 
