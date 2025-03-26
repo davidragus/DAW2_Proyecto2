@@ -5,6 +5,7 @@
                 <li class="active"><a href="#">ACCOUNT DETAILS</a></li>
                 <li><a href="#">BALANCE HISTORY</a></li>
                 <li><a href="#">GAME HISTORY</a></li>
+                <li><a><router-link to="/achievements" class="dropdown-item">ACHIEVEMENTS</router-link></a></li>
             </ul>
         </aside>
         <div class="container">
@@ -225,6 +226,12 @@ async function uploadImage() {
             color: '#ffffff'
         });
     }
+}
+
+// Routes 
+const routeToAchivements = () => {
+    console.log('routeToAchivements');
+    router.push('/achievements');
 }
 </script>
 

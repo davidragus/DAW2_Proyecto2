@@ -3,9 +3,6 @@ import { authStore } from "../store/auth";
 const AuthenticatedLayout = () => import('../layouts/Authenticated.vue')
 const AuthenticatedUserLayout = () => import('../layouts/AuthenticatedUser.vue')
 const MainLayout = () => import('../layouts/MainLayout.vue');
-const PostsIndex = () => import('../views/admin/posts/Index.vue');
-const PostsCreate = () => import('../views/admin/posts/Create.vue');
-const PostsEdit = () => import('../views/admin/posts/Edit.vue');
 
 async function requireLogin(to, from, next) {
 	const auth = authStore();
@@ -112,6 +109,12 @@ export default [
 				component: () => import('../components/MyAccount.vue'),
 				beforeEnter: requireLogin,
 			},
+			{
+				path: 'achievements',
+				name: 'auth.achievements',
+				component: () => import('../components/Achievements.vue'),
+				beforeEnter: requireLogin,
+			},
 		]
 	},
 
@@ -147,24 +150,6 @@ export default [
 				path: 'profile',
 				component: () => import('../views/admin/profile/index.vue'),
 				meta: { breadCrumb: 'Profile' }
-			},
-			{
-				name: 'posts.index',
-				path: 'posts',
-				component: PostsIndex,
-				meta: { breadCrumb: 'Posts' }
-			},
-			{
-				name: 'posts.create',
-				path: 'posts/create',
-				component: PostsCreate,
-				meta: { breadCrumb: 'Add new post' }
-			},
-			{
-				name: 'posts.edit',
-				path: 'posts/edit/:id',
-				component: PostsEdit,
-				meta: { breadCrumb: 'Edit post' }
 			},
 			{
 				name: 'categories',
@@ -231,7 +216,7 @@ export default [
 			{
 				name: 'users',
 				path: 'users',
-				meta: { breadCrumb: 'Usuarios' },
+				meta: { breadCrumb: 'Users' },
 				children: [
 					{
 						name: 'users.index',
@@ -244,7 +229,7 @@ export default [
 						path: 'create',
 						component: () => import('../views/admin/users/Create.vue'),
 						meta: {
-							breadCrumb: 'Crear Usuario',
+							breadCrumb: 'Create User',
 							linked: false
 						}
 					},
@@ -253,7 +238,7 @@ export default [
 						path: 'edit/:id',
 						component: () => import('../views/admin/users/Edit.vue'),
 						meta: {
-							breadCrumb: 'Editar Usuario',
+							breadCrumb: 'Edit User',
 							linked: false
 						}
 					}
@@ -275,6 +260,31 @@ export default [
 						path: 'show/:id',
 						component: () => import('../views/admin/validations/Show.vue'),
 						meta: { breadCrumb: 'Check validation' }
+					},
+				]
+			},
+			{
+				name: 'achievements',
+				path: 'achievements',
+				meta: { breadCrumb: 'Achievements' },
+				children: [
+					{
+						name: 'achievements.index',
+						path: '',
+						component: () => import('../views/admin/achievements/Index.vue'),
+						meta: { breadCrumb: 'Achievements' }
+					},
+					{
+						name: 'achievements.create',
+						path: 'create',
+						component: () => import('../views/admin/achievements/Create.vue'),
+						meta: { breadCrumb: 'Create achievement' }
+					},
+					{
+						name: 'achievements.edit',
+						path: 'achievements/edit/:id',
+						component: () => import('../views/admin/achievements/Edit.vue'),
+						meta: { breadCrumb: 'Edit achievement' }
 					},
 				]
 			},

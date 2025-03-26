@@ -2,7 +2,7 @@
     <div>
         <Button class="cashier-button" buttonColor="yellow" buttonStyle="filled" @click="visible = true">CASHIER</Button>
         <Dialog v-model:visible="visible" modal header="ADD CHIPS" :style="{ width: '400px' , backgroundColor: '#212121', color: 'white' , borderColor: '#3B3B3B'}" @update:visible="onDialogClose">
-            <form class="cashier-container p-4" @submit.prevent="deposit">
+            <form class="cashier-container p-4" @submit.prevent="submitForm">
                 <h3>Pick your deposit:</h3>
                 <div class="deposit-options">
                     <Button v-for="amount in [10, 25, 50, 100, 200]" :key="amount" :id="amount" :class="['deposit-button', { 'selected': customDeposit.value === amount }]" @click="setDeposit($event, amount)">{{ amount }}€</Button>
@@ -10,16 +10,21 @@
                 <div class="custom-deposit">
                     <label for="customDeposit">Custom deposit:</label>
                     <input type="number" id="customDeposit" min="10" v-model="customDeposit" class="form-control" @input="selectButton" required />
+                    <span v-if="errors.customDeposit" class="error-text">{{ errors.customDeposit }}</span>
                 </div>
                 <div class="card-details">
                     <input type="text" placeholder="Card number" class="form-control" v-model="cardNumber" required />
+                    <span v-if="errors.cardNumber" class="error-text">{{ errors.cardNumber }}</span>
                     <input type="text" id="expiration_date" placeholder="Expiration date" class="form-control" v-model="expirationDate" @input="formatExpirationDate" required />
+                    <span v-if="errors.expirationDate" class="error-text">{{ errors.expirationDate }}</span>
                     <input type="text" placeholder="CVV" class="form-control" v-model="cvv" required />
+                    <span v-if="errors.cvv" class="error-text">{{ errors.cvv }}</span>
                 </div>
                 <p class="d-flex justify-content-center username-text">{{ userFullName }}</p>
                 <div class="form-check">
                     <input type="checkbox" id="confirmName" class="form-check-input" v-model="confirmName" required />
                     <label for="confirmName" class="form-check-label">I confirm that the full name of the owner of the card is the same as the full name of the account.</label>
+                    <span v-if="errors.confirmName" class="error-text">{{ errors.confirmName }}</span>
                 </div>
                 <Button class="deposit-button" type="submit">DEPOSIT {{ chipsNumber }}</Button>
             </form>
@@ -33,6 +38,7 @@ import Button from './Button.vue';
 import Dialog from 'primevue/dialog';
 import { authStore } from "../store/auth";
 import { useRoute, useRouter } from 'vue-router';   
+import * as yup from 'yup';
 
 const props = defineProps({
     show: Boolean
@@ -44,7 +50,7 @@ const cardNumber = ref('');
 const expirationDate = ref('');
 const cvv = ref('');
 const confirmName = ref(false);
-const chipsNumber = ref(customDeposit.value);
+const chipsNumber = ref(customDeposit.value*10);
 
 const router = useRouter();
 watch(() => customDeposit.value, (newVal) => {
@@ -143,6 +149,35 @@ const formatExpirationDate = (event) => {
     event.target.value = value;
     expirationDate.value = value;
 };
+
+const schema = yup.object({
+    customDeposit: yup.number().required('Custom deposit is required').min(10, 'Minimum deposit is 10€').max(10000, 'Maximum deposit is 10000€'),
+    cardNumber: yup.string().required('Card number is required').max(255),
+    expirationDate: yup.string().required('Expiration date is required').max(255),
+    cvv: yup.string().required('CVV is required').max(255),
+    confirmName: yup.boolean().required('You must confirm that the full name of the owner of the card is the same as the full name of the account.')
+});
+const errors = ref({});
+const validateForm = async () => {
+    errors.value = {};
+    try {
+        await schema.validate(userCopy.value, { abortEarly: false });
+        return true;
+    } catch (validationErrors) {
+        validationErrors.inner.forEach(error => {
+            errors.value[error.path] = error.message;
+        });
+        return false;
+    }
+};
+
+const submitForm = async () => {
+    const isValid = await validateForm();
+    if (isValid) {
+        await deposit();
+    }
+};
+
 </script>
 
 <style scoped>

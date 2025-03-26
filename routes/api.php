@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AchievementController;
 use App\Http\Controllers\Api\PendingValidationController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\PermissionController;
@@ -66,3 +67,10 @@ Route::get('get-post/{id}', [PostControllerAdvance::class, 'getPost']);
 Route::get('countries', [CountryController::class, 'getCountries']);
 
 Route::post('/transactions', [TransactionController::class, 'store']);
+
+Route::get('achievements', [AchievementController::class, 'index']);
+Route::get('achievements/{achievement}', [AchievementController::class, 'show']);
+Route::post('achievements/{achievement}', [AchievementController::class, 'update']);
+Route::post('achievements', [AchievementController::class, 'store']);
+
+Route::get('/users/{userId}/achievements', [UserController::class, 'getUserAchievements']);

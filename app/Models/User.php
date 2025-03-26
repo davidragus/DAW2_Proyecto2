@@ -67,6 +67,13 @@ class User extends Authenticatable implements HasMedia
 		return $this->hasOne(Country::class, 'code', 'country_code');
 	}
 
+	public function achievements()
+	{
+		return $this->belongsToMany(Achievement::class, 'users_has_achievements')
+			->withPivot('obtained_date') 
+			->withTimestamps(); 
+	}
+
 	public function registerMediaCollections(): void
 	{
 		$this->addMediaCollection('images/user_avatar')

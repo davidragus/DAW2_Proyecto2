@@ -26,8 +26,8 @@ class UserController extends Controller
 			$orderDirection = 'desc';
 		}
 		$users = User::when(request('search_id'), function ($query) {
-				$query->where('id', request('search_id'));
-			})
+			$query->where('id', request('search_id'));
+		})
 			->when(request('search_title'), function ($query) {
 				$query->where('name', 'like', '%' . request('search_title') . '%');
 			})
@@ -147,5 +147,25 @@ class UserController extends Controller
 		$user->delete();
 
 		return response()->noContent();
+	}
+
+	public function getUserAchievements($userId)
+	{
+		$user = User::with('achievements')->findOrFail($userId);
+
+		return response()->json([
+			'achievements' => $user->achievements->map(function ($achievement) {
+				return [
+					'id' => $achievement->id,
+					'name' => $achievement->name,
+					'description' => $achievement->description,
+					//'image' => $achievement->getFirstMediaUrl('images/Achievements'), // Obtén la URL de la imagen
+					'achievement_type' => $achievement->achievement_type,
+					'amount' => $achievement->amount,
+					'reward_amount' => $achievement->reward_amount,
+					'obtained_date' => $achievement->pivot->obtained_date, // Datos de la tabla intermedia
+				];
+			}),
+		]);
 	}
 }
