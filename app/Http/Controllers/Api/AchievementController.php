@@ -70,4 +70,14 @@ class AchievementController extends Controller
             'achievement' => new AchievementResource($achievement),
         ]);
     }
+
+    public function destroy($id)
+    {
+        $achievement = Achievement::findOrFail($id);
+        $achievement->delete();
+
+        return response()->json([
+            'message' => 'Achievement deleted successfully',
+        ]);
+    }
 }

@@ -159,7 +159,7 @@ class UserController extends Controller
 					'id' => $achievement->id,
 					'name' => $achievement->name,
 					'description' => $achievement->description,
-					//'image' => $achievement->getFirstMediaUrl('images/Achievements'), // Obtén la URL de la imagen
+					'image' => $achievement->getFirstMediaUrl('Achievements'), // Obtén la URL de la imagen
 					'achievement_type' => $achievement->achievement_type,
 					'amount' => $achievement->amount,
 					'reward_amount' => $achievement->reward_amount,

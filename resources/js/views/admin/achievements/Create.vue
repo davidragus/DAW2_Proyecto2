@@ -83,7 +83,7 @@
                         <div class="card-body text-center">
                             <h6 class="mb-3">Achievement Image</h6>
                             <!-- Componente DropZone para cargar una nueva imagen -->
-                            <DropZone v-model="achievement.image" :style="{backgroundColor: '#313131', color: 'white' , borderColor: '#414141'}"/>
+                            <DropZone v-model="achievement.image" :style="{backgroundColor: '#313131', color: 'white' , borderColor: '#414141'}" @onDrop="onDrop"/>
                             <div class="text-danger mt-1">{{ errors.image }}</div>
                         </div>
                     </div>
@@ -128,6 +128,12 @@ const submitForm = async () => {
         errors.value = validationErrors.value;
     }
 };
+
+// Cuando se arrastra un archivo a la DropZone
+const onDrop = (file) => {
+    achievement.image = file;
+};
+
 </script>
 
 <style scoped>

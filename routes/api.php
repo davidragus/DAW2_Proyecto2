@@ -72,5 +72,6 @@ Route::get('achievements', [AchievementController::class, 'index']);
 Route::get('achievements/{achievement}', [AchievementController::class, 'show']);
 Route::post('achievements/{achievement}', [AchievementController::class, 'update']);
 Route::post('achievements', [AchievementController::class, 'store']);
+Route::delete('achievements/{achievement}', [AchievementController::class, 'destroy']);
 
 Route::get('/users/{userId}/achievements', [UserController::class, 'getUserAchievements']);
