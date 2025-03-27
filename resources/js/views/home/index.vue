@@ -29,11 +29,11 @@
                     </div>
                 </div>
                 <div class="row d-flex justify-content-around mt-3 games-row">
-                    <a href="#" class="col-2 game-card">
+                    <RouterLink class="col-2 game-card" to="/games/bingo">
                         <img src="/images/bingoGame.webp" alt="Bingo" class="game-image"/>
                         <p class="game-title">BINGO</p>
                         <div class="bottom-game-line"></div>
-                    </a>
+                    </RouterLink>
                     <a href="#" class="col-2 game-card">
                         <img src="/images/rouletteGame.webp" alt="Roulette" class="game-image"/>
                         <p class="game-title">ROULETTE</p>
@@ -92,6 +92,7 @@
 </template>
 
 <script setup>
+import { RouterLink } from 'vue-router';
 import Button from '../../components/Button.vue';
 import { ref, onMounted, onUnmounted } from 'vue';
 const isMobile = ref(false);

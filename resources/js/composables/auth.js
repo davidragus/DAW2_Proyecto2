@@ -112,6 +112,12 @@ export default function useAuth() {
 			.then(async response => {
 				// await store.dispatch('auth/getUser')
 				// await loginUser()
+				console.log("push route");
+				await router.replace({
+					path: '/',
+					query: { closeModal: 'register'}
+				})	
+				
 				swal({
 					icon: 'success',
 					title: 'Registration successfully',
@@ -120,7 +126,6 @@ export default function useAuth() {
 					background: '#2A2A2A',
 					color: '#ffffff'
 				})
-				// await router.push({ name: 'auth.login' })
 			})
 			.catch(error => {
 				if (error.response?.data) {

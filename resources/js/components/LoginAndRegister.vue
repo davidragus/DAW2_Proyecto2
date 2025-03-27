@@ -6,7 +6,8 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
+import { useRoute , useRouter } from 'vue-router';
 import Login from "../components/LoginDialog.vue";
 import Register from "../components/RegisterDialog.vue";
 
@@ -28,6 +29,35 @@ const updateRegisterDialogVisible = (newValue) => {
 const updateLoginDialogVisible = (newValue) => {
   loginDialogVisible.value = newValue;
 };
+
+const route = useRoute();
+const router = useRouter();
+watch(
+  () => route.query.openModal,
+  (newValue) => {
+    if (newValue === 'login') {
+      router.push('/')
+      openLoginDialog();
+    } else if (newValue === 'register') {
+      router.push('/')
+      openRegisterDialog();
+    }
+  },
+  { immediate: true }
+);
+watch(
+  () => route.query.closeModal,
+  (newValue) => {
+    if (newValue === 'login') {
+      updateLoginDialogVisible(false);
+      router.push({ query: { ...route.query, closeModal: undefined } });
+    } else if (newValue === 'register') {
+      updateRegisterDialogVisible(false);
+      router.push({ query: { ...route.query, closeModal: undefined } });
+    }
+  },
+  { immediate: true }
+);
 </script>
 
 <style scoped>

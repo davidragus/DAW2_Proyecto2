@@ -38,6 +38,7 @@
 
 <script setup>
 import { ref, defineEmits, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import Button from "../components/Button.vue";
 import PrimeButton from 'primevue/button';
 import Dialog from 'primevue/dialog';
@@ -49,6 +50,9 @@ const visible = ref(props.visible);
 watch(() => props.visible, (newVal) => {
   visible.value = newVal;
 });
+
+const route = useRoute();
+const router = useRouter();
 
 const onDialogClose = (newValue) => {
   if (!newValue) {
@@ -75,6 +79,7 @@ const showPassword = () => {
 const hidePassword = () => {
   passwordFieldType.value = 'password';
 };
+
 </script>
 
 <style scoped>

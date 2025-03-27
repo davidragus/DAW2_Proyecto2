@@ -30,6 +30,7 @@ class UserResource extends JsonResource
 			'gender' => $this->gender,
 			'birthdate' => $this->birthdate,
 			'avatar' => count($this->getMedia('*')) > 0 ? $this->getMedia('*')[0]->getUrl() : null,
+			'validated' => $this->validated,
 			'created_at' => $this->created_at->toDateString()
 		];
 	}
