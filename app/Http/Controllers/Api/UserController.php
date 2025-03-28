@@ -150,4 +150,24 @@ class UserController extends Controller
 
 		return response()->noContent();
 	}
+
+	public function getUserAchievements($userId)
+	{
+		$user = User::with('achievements')->findOrFail($userId);
+
+		return response()->json([
+			'achievements' => $user->achievements->map(function ($achievement) {
+				return [
+					'id' => $achievement->id,
+					'name' => $achievement->name,
+					'description' => $achievement->description,
+					'image' => $achievement->getFirstMediaUrl('Achievements'), // Obtén la URL de la imagen
+					'achievement_type' => $achievement->achievement_type,
+					'amount' => $achievement->amount,
+					'reward_amount' => $achievement->reward_amount,
+					'obtained_date' => $achievement->pivot->obtained_date, // Datos de la tabla intermedia
+				];
+			}),
+		]);
+	}
 }

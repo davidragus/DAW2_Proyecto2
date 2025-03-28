@@ -46,9 +46,9 @@ const model = ref([
 		]
 	},
 	{
-		label: 'Posts',
+		label: 'Achievements',
 		items: [
-			{ label: 'Posts', icon: 'pi pi-fw pi-id-card', to: '/admin/posts', permision: 'post-list' },
+			{ label: 'Achievements', icon: 'pi pi-fw pi-id-card', to: '/admin/achievements', permision: 'achievement-list' },
 			{ label: 'Categorias', icon: 'pi pi-fw pi-id-card', to: '/admin/categories', permision: 'category-list' }
 
 		]

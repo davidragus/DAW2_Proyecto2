@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('description');
-            $table->string('image_path');
             $table->enum('achievement_type',['games','chips','wins']);
             $table->integer('amount');
             $table->integer('reward_amount');

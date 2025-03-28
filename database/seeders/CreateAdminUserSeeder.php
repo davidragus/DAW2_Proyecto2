@@ -38,7 +38,11 @@ class CreateAdminUserSeeder extends Seeder
             'post-create',
             'post-edit',
             'post-delete',
-            'post-list'
+            'post-list',
+            'achievement-create',
+			'achievement-edit',
+			'achievement-delete',
+			'achievement-list',
         ];
         $role2->syncPermissions($permissions);
 
