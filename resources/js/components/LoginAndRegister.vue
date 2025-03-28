@@ -6,7 +6,8 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import Login from "../components/LoginDialog.vue";
 import Register from "../components/RegisterDialog.vue";
 

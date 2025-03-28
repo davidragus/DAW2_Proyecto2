@@ -226,14 +226,14 @@ const schema = yup.object({
 				image: yup.mixed().required(),
 			})
 		)
-		.min(3, 'You must adjunt 3 photos')
-		.max(3, 'You must adjunt 3 photos')
+		.test('len', 'El array debe contener exactamente 3 objetos', (val) => val && val.length === 3)
 });
 
 function submitRegisterYup() {
 	validationErrors.value = {}; // Reset errors
 	schema.validate(registerForm, { abortEarly: false })
 		.then(() => {
+			console.log("entra en submitRegister")
 			submitRegister();
 		})
 		.catch((err) => {
