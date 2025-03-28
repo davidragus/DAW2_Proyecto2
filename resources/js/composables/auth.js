@@ -92,7 +92,7 @@ export default function useAuth() {
 	const submitRegister = async () => {
 		if (processing.value) return
 
-		processing.value = true
+		processing.value = false
 		validationErrors.value = {}
 
 		let serializedUser = new FormData()
@@ -107,11 +107,11 @@ export default function useAuth() {
 				}
 			}
 		}
-
 		await axios.post('/register', serializedUser)
 			.then(async response => {
 				// await store.dispatch('auth/getUser')
 				// await loginUser()
+				router.replace({ path: '/', query: {closeModal: 'register'} })
 				swal({
 					icon: 'success',
 					title: 'Registration successfully',

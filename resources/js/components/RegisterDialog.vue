@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<Button @click="visible = true" class="register-button" buttonColor="yellow" buttonStyle="outlined"
+		<Button @click="openRegisterDialog" class="register-button" buttonColor="yellow" buttonStyle="outlined"
 			buttonSize="normal">REGISTER</Button>
 		<Dialog v-model:visible="visible" modal header="Sign Up"
 			:style="{ width: '400px', backgroundColor: '#212121', color: 'white', borderColor: '#3B3B3B' }"
@@ -10,33 +10,42 @@
 					<div class="mb-3">
 						<Select v-model="registerForm.country" :options="countries" optionLabel="name"
 							optionValue="code" placeholder="Country of residence" class="w-100"
-							:style="{ backgroundColor: '#313131', color: 'white', borderColor: '#414141', placeholderColor: '' }"
-							pt:option:id="option-dropdown-register"
-							pt:listContainer:id="list-container-dropdown-register"
-							pt:overlay:id="overlay-dropdown-register" pt:root:id="root-dropdown-register" />
+							:style="{ backgroundColor: '#313131', color: 'white', borderColor: '#414141' }" />
+						<p v-if="validationErrors.country" class="text-danger mt-1">{{ validationErrors.country }}</p>
 					</div>
-					<input v-model="registerForm.dni" type="text" class="form-control mb-3"
-						placeholder="National Identity Card Number" required />
+					<div class="mb-3">
+						<input v-model="registerForm.dni" type="text" class="form-control"
+							placeholder="National Identity Card Number" />
+						<p v-if="validationErrors.dni" class="text-danger mt-1">{{ validationErrors.dni }}</p>
+					</div>
 
 					<div class="mb-3">
-						<FileUpload @select="onSelectValidationImage" mode="basic">
+						<h6 class="text-white">Upload DNI Images</h6>
 
-						</FileUpload>
-						<!-- <input id=" idImage" type="file" @change="handleFileUpload"
-							class="form-control image-input" required />
-						<label for="idImage" class="form-control mb-3"><span class="file-span">Choose a
-								file</span>Upload your ID image</label>
-						<p v-if="fileName" class="text-white mt-2">Selected file: {{ fileName }}</p> -->
+						<!-- Imagen frontal del DNI -->
+						<FileUpload mode="basic" name="dni_front" accept="image/*" chooseLabel="Upload DNI Front"
+							@select="onSelectValidationImage($event, 'front')" />
+
+						<!-- Imagen trasera del DNI -->
+						<FileUpload mode="basic" name="dni_back" accept="image/*" chooseLabel="Upload DNI Back"
+							@select="onSelectValidationImage($event, 'back')" />
+
+						<!-- Imagen del rostro -->
+						<FileUpload mode="basic" name="face_image" accept="image/*" chooseLabel="Upload Face Image"
+							@select="onSelectValidationImage($event, 'face')" />
+						<p v-if="validationErrors.validationImages" class="text-danger mt-1">{{ validationErrors.validationImages }}</p>
 					</div>
 					<div class="border rounded name-container">
 						<input v-model="registerForm.name" type="text"
-							class="form-control first-name-rounded border-0 border-bottom" placeholder="Name"
-							required />
+							class="form-control first-name-rounded border-0 border-bottom" placeholder="Name" />
 						<input v-model="registerForm.surname1" type="text"
-							class="form-control rounded-0 border-0 border-bottom" placeholder="Surname" required />
+							class="form-control rounded-0 border-0 border-bottom" placeholder="Surname" />
 						<input v-model="registerForm.surname2" type="text" class="form-control border-0"
 							placeholder="Second surname (optional)" />
 					</div>
+					<p v-if="validationErrors.name" class="text-danger mt-1">{{ validationErrors.name }}</p>
+					<p v-if="validationErrors.surname1" class="text-danger mt-1">{{ validationErrors.surname1 }}</p>
+					<p v-if="validationErrors.surname2" class="text-danger mt-1">{{ validationErrors.surname2 }}</p>
 					<div class="d-flex justify-content-center rounded border my-3 gender-container">
 						<div class="gender-option left-gender" @click="registerForm.gender = 'M'"
 							:class="{ active: registerForm.gender === 'M' }">
@@ -51,42 +60,55 @@
 							⚧
 						</div>
 					</div>
+					<p v-if="validationErrors.gender" class="text-danger mt-1">{{ validationErrors.gender }}</p>
 
 					<div class="d-flex mb-3">
-						<input v-model="registerForm.day" type="text" class="form-control me-1" placeholder="Day (dd)"
-							required />
+						<input v-model="registerForm.day" type="text" class="form-control me-1"
+							placeholder="Day (dd)" />
 						<input v-model="registerForm.month" type="text" class="form-control mx-1"
-							placeholder="Month (mm)" required />
+							placeholder="Month (mm)" />
 						<input v-model="registerForm.year" type="text" class="form-control ms-1"
-							placeholder="Year (yyyy)" required />
+							placeholder="Year (yyyy)" />
 					</div>
+					<p v-if="validationErrors.day || validationErrors.month || validationErrors.year"
+						class="text-danger mt-1">
+						{{ validationErrors.day || validationErrors.month || validationErrors.year }}
+					</p>
 
 					<input v-model="registerForm.phone_number" type="text" class="form-control mb-3"
-						placeholder="Phone number" required />
-					<input v-model="registerForm.email" type="email" class="form-control mb-3" placeholder="Email"
-						required />
-					<input v-model="registerForm.username" type="text" class="form-control mb-3" placeholder="Username"
-						required />
+						placeholder="Phone number" />
+					<p v-if="validationErrors.phone_number" class="text-danger mt-1">{{ validationErrors.phone_number }}
+					</p>
+					<input v-model="registerForm.email" type="email" class="form-control mb-3" placeholder="Email" />
+					<p v-if="validationErrors.email" class="text-danger mt-1">{{ validationErrors.email }}</p>
+					<input v-model="registerForm.username" type="text" class="form-control mb-3"
+						placeholder="Username" />
+					<p v-if="validationErrors.username" class="text-danger mt-1">{{ validationErrors.username }}</p>
 
 					<div class="d-flex mb-3">
 						<div class="password-container me-1">
 							<input v-model="registerForm.password" :type="passwordFieldType" class="form-control"
-								placeholder="Password" required />
+								placeholder="Password" />
 							<i class="fa fa-eye password-toggle" @mousedown="showPassword" @mouseup="hidePassword"
 								@mouseleave="hidePassword"></i>
 						</div>
 						<input v-model="registerForm.password_confirmation" type="password" class="form-control ms-1"
-							placeholder="Confirm password" required />
+							placeholder="Confirm password" />
 					</div>
+					<p v-if="validationErrors.password" class="text-danger mt-1">{{ validationErrors.password }}</p>
+					<p v-if="validationErrors.password_confirmation" class="text-danger mt-1">
+						{{ validationErrors.password_confirmation }}
+					</p>
 
 					<div class="form-check mb-3">
-						<input v-model="registerForm.terms" type="checkbox" class="form-check-input" required />
+						<input v-model="registerForm.terms" type="checkbox" class="form-check-input" />
 						<label class="form-check-label">I confirm that I am over the majority age of my country and that
 							I accept the Terms and Conditions and the Privacy Policy</label>
 					</div>
+					<p v-if="validationErrors.terms" class="text-danger mt-1">{{ validationErrors.terms }}</p>
 
 					<PrimeButton type="submit" label="SIGN UP" class="w-100 register-button" :disabled="processing"
-						:style="{ backgroundColor: 'red', color: 'white', borderColor: 'red' }" @click="submitRegister"/>
+						:style="{ backgroundColor: 'red', color: 'white', borderColor: 'red' }" />
 
 					<p class="text-center mt-3">Are you already registered? <a href="#" class="login ms-2"
 							@click.prevent="openLoginDialog">Log in</a></p>
@@ -109,7 +131,6 @@ import useCountries from '@/composables/countries';
 
 const props = defineProps(['visible']);
 const visible = ref(props.visible);
-const fileName = ref('');
 
 watch(() => props.visible, (newVal) => {
 	visible.value = newVal;
@@ -127,18 +148,14 @@ const onDialogClose = (newValue) => {
 };
 
 const { registerForm, validationErrors, processing, submitRegister } = useAuth();
-// const countries = ref(['Spain', 'USA', 'UK', 'France', 'Mexico', 'Peru']);
 const { getCountries, countries } = useCountries();
 const emit = defineEmits(['open-login-dialog', 'update:visible']);
 
-// const handleFileUpload = (event) => {
-// 	registerForm.idImage = event.target.files[0];
-// 	fileName.value = event.target.files[0].name;
-// };
-
-const onSelectValidationImage = (event) => {
-	registerForm.validationImages = event.files;
+const openRegisterDialog = () => {
+	visible.value = true;
+	emit('update:visible', true);
 };
+
 const openLoginDialog = () => {
 	visible.value = false;
 	emit('update:visible', false);
@@ -155,22 +172,84 @@ const hidePassword = () => {
 	passwordFieldType.value = 'password';
 };
 
+const onSelectValidationImage = (event, type) => {
+	let index;
+
+	// Determinar el índice según el tipo de imagen
+	if (type === 'front') {
+		index = 0;
+	} else if (type === 'back') {
+		index = 1;
+	} else if (type === 'face') {
+		index = 2;
+	} else {
+		console.error('Invalid image type');
+		return;
+	}
+
+	// Reemplazar o agregar la imagen en el índice correspondiente
+	if (event.files && event.files[0]) {
+		registerForm.validationImages[index] = event.files[0];
+		console.log(`Validation Images:`, JSON.stringify(registerForm.validationImages, null, 2));
+	}
+};
+
 const schema = yup.object({
-	username: yup.string().required('Username is required').max(255),
+	username: yup.string().required('Username is required').max(255).min(9),
 	name: yup.string().required('Name is required').max(255),
 	surname1: yup.string().required('First surname is required').max(255),
 	surname2: yup.string().nullable().max(255),
-	email: yup.string().required('Email is required').email('Email must be valid').max(255),
-	dni: yup.string().required('DNI is required').max(255),
+	email: yup
+		.string()
+		.required('Email is required')
+		.email('Email must be valid')
+		.max(255),
+	dni: yup
+		.string()
+		.required('DNI is required')
+		.matches(/^\d{8}[A-Za-z]$/, 'DNI must have 8 digits followed by a letter')
+		.max(9, 'DNI must be exactly 9 characters'),
 	gender: yup.string().required('Gender is required').oneOf(['N', 'M', 'F']),
 	phone_number: yup.string().required('Phone number is required').max(255),
-	password: yup.string().required('Password is required').min(8, 'Password must be at least 8 characters'),
-	password_confirmation: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match'),
+	password: yup
+		.string()
+		.required('Password is required')
+		.min(8, 'Password must be at least 8 characters'),
+	password_confirmation: yup
+		.string()
+		.oneOf([yup.ref('password'), null], 'Passwords must match'),
 	country: yup.string().required('Country is required').max(255),
+	terms: yup.boolean().oneOf([true], 'You must accept the terms and conditions'),
+	validationImages: yup.array().of(
+			yup.object().shape({
+				type: yup.string().required(),
+				image: yup.mixed().required(),
+			})
+		)
+		.min(3, 'You must adjunt 3 photos')
+		.max(3, 'You must adjunt 3 photos')
 });
+
+function submitRegisterYup() {
+	validationErrors.value = {}; // Reset errors
+	schema.validate(registerForm, { abortEarly: false })
+		.then(() => {
+			submitRegister();
+		})
+		.catch((err) => {
+			err.inner.forEach((error) => {
+				validationErrors.value[error.path] = error.message;
+			});
+		});
+}
 </script>
 
 <style scoped>
+.text-danger {
+	color: red;
+	font-size: 0.875rem;
+}
+
 .signup-container {
 	padding: 20px;
 }
