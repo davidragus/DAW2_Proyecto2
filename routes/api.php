@@ -20,13 +20,15 @@ Route::post('reset-password', [ResetPasswordController::class, 'reset'])->name('
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
 
-	Route::get('users', [UserController::class, 'index']);
-	Route::get('users/{user}', [UserController::class, 'show']);
-	Route::post('users', [UserController::class, 'store']);
+	Route::apiResource('users', UserController::class);
+	// Route::get('users', [UserController::class, 'index']);
+	// Route::get('users/{user}', [UserController::class, 'show']);
+	// Route::post('users', [UserController::class, 'store']);
 	Route::post('users/{user}', [UserController::class, 'update']);
-	Route::delete('users/{user}', [UserController::class, 'destroy']);
+	// Route::delete('users/{user}', [UserController::class, 'destroy']);
 
 	Route::post('users/updateimg', [UserController::class, 'updateimg']); //Listar
+	Route::put('users/updateChips/{id}', [UserController::class, 'updateChips']); //Listar
 
 	Route::apiResource('posts', PostControllerAdvance::class);
 	Route::apiResource('categories', CategoryController::class);

@@ -37,11 +37,12 @@ import { ref, computed, watch, onMounted } from 'vue';
 import Button from './Button.vue';
 import Dialog from 'primevue/dialog';
 import { authStore } from "../store/auth";
+
 import { useRoute, useRouter } from 'vue-router';   
 import * as yup from 'yup';
 
 const props = defineProps({
-    show: Boolean
+	show: Boolean
 });
 
 const visible = ref(false);
@@ -54,100 +55,101 @@ const chipsNumber = ref(customDeposit.value*10);
 
 const router = useRouter();
 watch(() => customDeposit.value, (newVal) => {
-    chipsNumber.value = newVal*10;
+	chipsNumber.value = newVal * 10;
 });
 const user = authStore().user;
 const userFullName = computed(() => `${user.name} ${user.surname1} ${user.surname2 != null ? user.surname2 : ''}`);
 
 watch(() => props.show, (newVal) => {
-    visible.value = newVal;
-    props.show = false;
+	visible.value = newVal;
+	props.show = false;
 });
 
 const setDeposit = (event, amount) => {
-    event.preventDefault();
-    customDeposit.value = amount;
-    deselectButtons();
-    document.getElementById(amount).classList.add('selected');
+	event.preventDefault();
+	customDeposit.value = amount;
+	deselectButtons();
+	document.getElementById(amount).classList.add('selected');
 };
 
 const deselectButtons = () => {
-    const buttons = document.getElementsByClassName('deposit-button');
-    for (let i = 0; i < buttons.length; i++) {
-        buttons[i].classList.remove('selected');
-    }
+	const buttons = document.getElementsByClassName('deposit-button');
+	for (let i = 0; i < buttons.length; i++) {
+		buttons[i].classList.remove('selected');
+	}
 };
 
 const selectButton = () => {
-    deselectButtons();
-    if ([10, 25, 50, 100, 200].includes(customDeposit.value)) {
-        document.getElementById(customDeposit.value).classList.add('selected');
-    }
+	deselectButtons();
+	if ([10, 25, 50, 100, 200].includes(customDeposit.value)) {
+		document.getElementById(customDeposit.value).classList.add('selected');
+	}
 };
 
 const deposit = async () => {
-    if (
-        customDeposit.value != 0 &&
-        customDeposit.value != null &&
-        cardNumber.value != '' &&
-        expirationDate.value != '' &&
-        cvv.value != '' &&
-        confirmName.value
-    ) {
-        try {
-            console.log(expirationDate.value);
-            let expiration_date_split = expirationDate.value.split('/');
-            let expiration_date_formatted = expiration_date_split[1] + '/' + expiration_date_split[0] + '/01';
-            const response = await axios.post('/api/transactions', {
-                user_id: user.id,
-                type: 'DEPOSIT',
-                money: customDeposit.value,
-                chips: chipsNumber.value,
-                card_number: cardNumber.value,
-                cvv: cvv.value,
-                expiration_date: expiration_date_formatted
-            });
-            console.log('Transaction successful:', response.data);
-            const responseUser = await axios.put(`/api/users/${user.id}`, {
-                name: user.name,
-                surname1: user.surname1,
-                surname2: user.surname2,
-                birthdate: user.birthdate,
-                country: user.country,
-                username: user.username,
-                email: user.email,
-                phone_number: user.phone_number,
-                chips: user.chips + chipsNumber.value
-            });
-            authStore().user.chips += chipsNumber.value;
-            console.log('User updated:', responseUser.data);
-            visible.value = false;
-            customDeposit.value = 10;
-            cardNumber.value = '';
-            expirationDate.value = '';
-            expiration_date_split = '';
-            expiration_date_formatted = '';
-            cvv.value = '';
-            confirmName.value = false;
-            //router.go();
-        } catch (error) {
-            console.error('Transaction failed:', error);
-        }
-    }
+	if (
+		customDeposit.value != 0 &&
+		customDeposit.value != null &&
+		cardNumber.value != '' &&
+		expirationDate.value != '' &&
+		cvv.value != '' &&
+		confirmName.value
+	) {
+		try {
+			// console.log(expirationDate.value);
+			let expiration_date_split = expirationDate.value.split('/');
+			let expiration_date_formatted = expiration_date_split[1] + '/' + expiration_date_split[0] + '/01';
+			const response = await axios.post('/api/transactions', {
+				user_id: user.id,
+				type: 'DEPOSIT',
+				money: customDeposit.value,
+				chips: chipsNumber.value,
+				card_number: cardNumber.value,
+				cvv: cvv.value,
+				expiration_date: expiration_date_formatted
+			});
+			console.log('Transaction successful:', response.data);
+			console.log(`${user.chips} - ${chipsNumber.value}`);
+			const responseUser = await axios.put(`/api/users/updateChips/${user.id}`, {
+				// name: user.name,
+				// surname1: user.surname1,
+				// surname2: user.surname2,
+				// birthdate: user.birthdate,
+				// country: user.country,
+				// username: user.username,
+				// email: user.email,
+				// phone_number: user.phone_number,
+				chips: user.chips + chipsNumber.value
+			});
+			authStore().user.chips += chipsNumber.value;
+			console.log('User updated:', responseUser.data);
+			visible.value = false;
+			customDeposit.value = 10;
+			cardNumber.value = '';
+			expirationDate.value = '';
+			expiration_date_split = '';
+			expiration_date_formatted = '';
+			cvv.value = '';
+			confirmName.value = false;
+			//router.go();
+		} catch (error) {
+			console.error('Transaction failed:', error);
+		}
+	}
 };
 
 const onDialogClose = (newValue) => {
-    if (!newValue) {
-        visible.value = false;
-    }
+	if (!newValue) {
+		visible.value = false;
+	}
 };
 const formatExpirationDate = (event) => {
-    let value = event.target.value.replace(/[^\d]/g, '');
-    if (value.length >= 2) {
-        value = value.slice(0, 2) + '/' + value.slice(2, 4);
-    }
-    event.target.value = value;
-    expirationDate.value = value;
+	let value = event.target.value.replace(/[^\d]/g, '');
+	if (value.length >= 2) {
+		value = value.slice(0, 2) + '/' + value.slice(2, 4);
+	}
+	event.target.value = value;
+	expirationDate.value = value;
 };
 
 const schema = yup.object({
@@ -182,89 +184,89 @@ const submitForm = async () => {
 
 <style scoped>
 .cashier-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: 900;
-    cursor: pointer;
+	padding: 10px 20px;
+	font-size: 16px;
+	font-weight: 900;
+	cursor: pointer;
 }
 
 .cashier-container {
-    padding: 20px;
+	padding: 20px;
 }
 
 .deposit-options {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 10px;
 }
 
 .deposit-button {
-    background-color: #f0f0f0;
-    color: black;
-    border: 1px solid #ccc;
-    padding: 10px;
-    cursor: pointer;
+	background-color: #f0f0f0;
+	color: black;
+	border: 1px solid #ccc;
+	padding: 10px;
+	cursor: pointer;
 }
 
 .deposit-button.selected {
-    background-color: #3A3A3A;
+	background-color: #3A3A3A;
 }
 
 .custom-deposit {
-    margin-bottom: 10px;
+	margin-bottom: 10px;
 }
 
 .card-details {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 10px;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	margin-bottom: 10px;
 }
 
 .form-control {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #414141;
-  border-radius: 5px;
-  background-color: #313131;
-  color: white;
+	width: 100%;
+	padding: 10px;
+	border: 1px solid #414141;
+	border-radius: 5px;
+	background-color: #313131;
+	color: white;
 }
 
 .form-control::placeholder {
-  color: #bcbcbc;
+	color: #bcbcbc;
 }
 
 .form-check {
-    margin-bottom: 10px;
+	margin-bottom: 10px;
 }
 
 .deposit-button {
-    background-color: #ff0000;
-    color: white;
-    border: none;
-    padding: 10px;
-    cursor: pointer;
-    width: 100%;
-    text-align: center;
+	background-color: #ff0000;
+	color: white;
+	border: none;
+	padding: 10px;
+	cursor: pointer;
+	width: 100%;
+	text-align: center;
 }
 
 .username-text {
-    font-size: 20px;
+	font-size: 20px;
 }
 
 .form-check-input {
-    background-color: #414141;
-    border-color: #313131;
+	background-color: #414141;
+	border-color: #313131;
 }
 
 .form-check-input:checked {
-    background-color: red;
-    border-color: #cb0000;
+	background-color: red;
+	border-color: #cb0000;
 }
 
 .form-check-input:focus {
-    border-color: #313131;
-    outline: 0;
-    box-shadow: 0 0 0 0.25rem #31313133;
+	border-color: #313131;
+	outline: 0;
+	box-shadow: 0 0 0 0.25rem #31313133;
 }
 </style>

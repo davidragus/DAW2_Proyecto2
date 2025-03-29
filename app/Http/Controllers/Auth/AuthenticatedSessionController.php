@@ -97,11 +97,25 @@ class AuthenticatedSessionController extends Controller
 			'birthdate' => $request['year'] . '-' . $request['month'] . '-' . $request['day'],
 			'country_code' => $request['country']
 		]);
+		$user->assignRole(Role::findByName('user'));
 
-
-		if ($request->hasFile('validationImages')) {
+		if ($request['validationImages']->hasFile('validationImages')) {
 			$validation = PendingValidation::create(['user_id' => $user->id, 'status' => 'PENDING']);
-			$validation->addMediaFromRequest('validationImages')->toMediaCollection('pending_validations');
+	
+			foreach ($request->file('validationImages') as $index => $image) {
+				// Asignar un nombre descriptivo a cada imagen
+				$imageName = match ($index) {
+					0 => 'dni_front',
+					1 => 'dni_back',
+					2 => 'face_image',
+					default => 'unknown_image',
+				};
+	
+				// Guardar la imagen en la colección 'pending_validations'
+				$validation->addMedia($image)
+					->usingFileName($imageName . '.' . $image->getClientOriginalExtension())
+					->toMediaCollection('pending_validations');
+			}
 		}
 
 		return $this->successResponse($user, 'Registration Successfully');
