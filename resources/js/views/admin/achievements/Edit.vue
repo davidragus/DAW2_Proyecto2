@@ -75,7 +75,7 @@
                             </div>
 
                             <!-- Componente DropZone para cargar una nueva imagen -->
-                            <DropZone v-model="achievement.image" :style="{backgroundColor: '#313131', color: 'white' , borderColor: '#414141'}" />
+                            <DropZone v-model="achievement.image" :style="{backgroundColor: '#313131', color: 'white' , borderColor: '#414141'}" @onDrop="onDrop" />
                             <div class="text-danger mt-1">
                                 {{ errors.image }}
                             </div>
@@ -118,6 +118,10 @@ const submitForm = async () => {
 onMounted(async () => {
     getAchievement(route.params.id);
 });
+
+const onDrop = (file) => {
+    achievement.image = file;
+};
 </script>
 
 <style scoped>
