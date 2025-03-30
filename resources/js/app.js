@@ -59,6 +59,9 @@ import MeterGroup from 'primevue/metergroup';
 import Tooltip from 'primevue/tooltip';
 import FloatLabel from 'primevue/floatlabel';
 import Message from 'primevue/message';
+import Echo from 'laravel-echo';
+import Pusher from 'pusher-js';
+
 /*STYLES */
 import "primeflex/primeflex.css";
 import "primeicons/primeicons.css";
@@ -66,9 +69,9 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 import '../css/theme.css';
 
 const app = createApp({
-    created() {
-        useAuth().getUser()
-    }
+	created() {
+		useAuth().getUser()
+	}
 });
 
 const pinia = createPinia()
@@ -85,23 +88,23 @@ app.use(ConfirmationService);
 const i18n = installI18n(app);
 const l = langStore();
 l.$subscribe((_, state) => {
-    console.info('state: '+ state.locale);
-    loadMessages(state.locale)
+	console.info('state: ' + state.locale);
+	loadMessages(state.locale)
 });
 
 /**PRIMEVUE */
 import Aura from '@primevue/themes/aura';
 
 app.use(PrimeVue, {
-    ripple: true,
-    theme: {
-        preset: Aura,
-        options: {
-            prefix: 'p',
-            darkModeSelector: '.p-dark', //dark
-            cssLayer: false
-        }
-    }
+	ripple: true,
+	theme: {
+		preset: Aura,
+		options: {
+			prefix: 'p',
+			darkModeSelector: '.p-dark', //dark
+			cssLayer: false
+		}
+	}
 });
 
 
