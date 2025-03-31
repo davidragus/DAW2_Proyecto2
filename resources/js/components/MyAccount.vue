@@ -196,8 +196,7 @@ async function uploadImage() {
     try {
         let formData = new FormData();
         formData.append("file", file.value);
-        formData.append("id", authStore().user.id);
-        const response = await axios.post('/api/users/updateimg', formData, {
+        const response = await axios.post('/api/users/updateImg/'+authStore().user.id, formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
             },
