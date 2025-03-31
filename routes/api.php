@@ -18,6 +18,9 @@ use App\Http\Controllers\Api\TransactionController;
 Route::post('forget-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('forget.password.post');
 Route::post('reset-password', [ResetPasswordController::class, 'reset'])->name('password.reset');
 
+Route::get('getMessages', [\App\Http\Controllers\Api\LiveChatController::class, 'getMessages']);
+Route::post('sendMessage', [\App\Http\Controllers\Api\LiveChatController::class, 'sendMessage']);
+
 Route::group(['middleware' => 'auth:sanctum'], function () {
 
 	Route::apiResource('users', UserController::class);
