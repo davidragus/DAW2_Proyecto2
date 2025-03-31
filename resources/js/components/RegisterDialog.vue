@@ -6,7 +6,7 @@
 			:style="{ width: '400px', backgroundColor: '#212121', color: 'white', borderColor: '#3B3B3B' }"
 			:panelStyle="{ backgroundColor: 'red' }" @update:visible="onDialogClose">
 			<div class="signup-container p-4">
-				<form @submit.prevent="submitRegisterYup">
+				<form @submit.prevent="submitRegister">
 					<div class="mb-3">
 						<Select v-model="registerForm.country" :options="countries" optionLabel="name"
 							optionValue="code" placeholder="Country of residence" class="w-100"
@@ -231,6 +231,7 @@ const schema = yup.object({
 
 function submitRegisterYup() {
 	validationErrors.value = {}; // Reset errors
+	console.log("entra en submitRegisterYup")
 	schema.validate(registerForm, { abortEarly: false })
 		.then(() => {
 			console.log("entra en submitRegister")
@@ -238,6 +239,7 @@ function submitRegisterYup() {
 		})
 		.catch((err) => {
 			err.inner.forEach((error) => {
+				console.log("entra en error", error);
 				validationErrors.value[error.path] = error.message;
 			});
 		});

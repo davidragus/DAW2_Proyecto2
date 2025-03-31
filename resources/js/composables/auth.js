@@ -107,7 +107,11 @@ export default function useAuth() {
 				}
 			}
 		}
-		await axios.post('/register', serializedUser)
+		await axios.post('/register', serializedUser,{
+				headers: {
+					'Content-Type': 'multipart/form-data'
+				}
+		})
 			.then(async response => {
 				// await store.dispatch('auth/getUser')
 				// await loginUser()

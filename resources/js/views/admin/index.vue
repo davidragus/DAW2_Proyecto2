@@ -7,7 +7,7 @@
         <div class="info-section">
             <div class="info-card">
                 <h2>Usuarios</h2>
-                <p>Actualmente hay <span class="highlight">{{ userCount }}</span> usuarios registrados.</p>
+                <p>Actualmente hay <span class="highlight">{{ usersCount }}</span> usuarios registrados.</p>
             </div>
             <div class="info-card">
                 <h2>Logros</h2>
@@ -22,11 +22,14 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
+import useUsers from "../../composables/users";
+import useAchievements from "../../composables/achievements";
 
-// Datos simulados (puedes reemplazarlos con datos reales de tu API)
-const userCount = ref(1200);
-const achievementsCount = ref(45);
+const { achievements, getAllAchievements } = useAchievements();
+const { users, getUsers, deleteUser, resetUserDB } = useUsers();
+const usersCount = ref(0);
+const achievementsCount = ref(0);
 const gamesCount = ref(10);
 
 // Mensaje dinámico
@@ -44,10 +47,23 @@ function updateWelcomeMessage() {
     messageIndex = (messageIndex + 1) % messages.length;
 }
 
+watch(users, (newUsers) => {
+    usersCount.value = newUsers.data.length;
+    console.log(users.value);
+    console.log(achievements.value);
+});
+
+watch(achievements, (newAchievements) => {
+    achievementsCount.value = newAchievements.data.length;
+})
+
 onMounted(() => {
+    getAllAchievements();
+    getUsers();
     updateWelcomeMessage();
     setInterval(updateWelcomeMessage, 8000); 
 });
+
 </script>
 
 <style scoped>

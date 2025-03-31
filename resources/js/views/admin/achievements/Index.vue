@@ -7,7 +7,7 @@
                 </div>
                 <DataTable
                     v-model:filters="filters"
-                    :value="achievements"
+                    :value="achievements.data"
                     paginator
                     :rows="25"
                     stripedRows

@@ -28,7 +28,7 @@ class PendingValidationResource extends JsonResource
 			],
 			'status' => $this->status,
 			'created_at' => $this->created_at->toDateString(),
-			'image' => $this->getMedia('pending_validations')[0]->getFullUrl(),
+			'images' => $this->getMedia('pending_validations'),
 		];
 	}
 }

@@ -65,20 +65,10 @@
 						<div class="card">
 							<legend>Images</legend>
 							<div class="row">
-								<div class="col-4">
-									<img class="col-12" :src="validation.image" alt="">
+								<div v-for="image in validation.images" class="col-4">
+									<img class="col-12" :src="image.original_url" alt="">
 									<!--TODO: Añadir alt a la imagen-->
-									<p class="col-12 text-center">Image name</p>
-								</div>
-								<div class="col-4">
-									<img class="col-12" :src="validation.image" alt="">
-									<!--TODO: Añadir alt a la imagen-->
-									<p class="col-12 text-center">Image name</p>
-								</div>
-								<div class="col-4">
-									<img class="col-12" :src="validation.image" alt="">
-									<!--TODO: Añadir alt a la imagen-->
-									<p class="col-12 text-center">Image name</p>
+									<p class="col-12 text-center">{{ image.file_name }}</p>
 								</div>
 							</div>
 						</div>

@@ -99,7 +99,7 @@ class AuthenticatedSessionController extends Controller
 		]);
 		$user->assignRole(Role::findByName('user'));
 
-		if ($request['validationImages']->hasFile('validationImages')) {
+		if ($request->hasFile('validationImages')) {
 			$validation = PendingValidation::create(['user_id' => $user->id, 'status' => 'PENDING']);
 	
 			foreach ($request->file('validationImages') as $index => $image) {
