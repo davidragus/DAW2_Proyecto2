@@ -29,8 +29,16 @@ class AchievementsSeeder extends Seeder
                 'reward_amount' => 20
             ]
         ];
+        $images = [
+            'First Game' => 'first_game.png',
+            'First win' => 'first_game.png'
+        ];
         foreach ($achievements as $achievement) {
-            Achievement::create($achievement);
+            $newAchievement = Achievement::create($achievement);
+        
+            // Usa addMedia para archivos locales
+            $newAchievement->addMedia('images/' . $images[$achievement['name']])
+                ->toMediaCollection('Achievements');
         }
     }
 }
