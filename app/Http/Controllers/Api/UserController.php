@@ -170,4 +170,28 @@ class UserController extends Controller
 			}),
 		]);
 	}
+	public function createNewValidation(Request $request, $id)
+	{
+		$user = User::find($id);
+		if ($user) {
+			$validation = PendingValidation::create(['user_id' => $user->id, 'status' => 'PENDING']);
+			foreach ($request->file('validationImages') as $index => $image) {
+				// Asignar un nombre descriptivo a cada imagen
+				$imageName = match ($index) {
+					0 => 'dni_front',
+					1 => 'dni_back',
+					2 => 'face_image',
+					default => 'unknown_image',
+				};
+	
+				// Guardar la imagen en la colección 'pending_validations'
+				$validation->addMedia($image)
+					->usingFileName($imageName . '.' . $image->getClientOriginalExtension())
+					->toMediaCollection('pending_validations');
+			}
+			return response()->json(['message' => $request->files], 200);
+		} else {
+			return response()->json(['message' => 'User not found'], 404);
+		}
+	}
 }

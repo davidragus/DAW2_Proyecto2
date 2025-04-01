@@ -26,7 +26,7 @@
                 <li :class="{ 'clickable': isMobile }" class="li-title" @click="toggleList(3)"><strong>Real money</strong></li>
                 <li v-show="isListVisible[3] || !isMobile"><a href="">Payments</a></li>
                 <li v-show="isListVisible[3] || !isMobile"><a href="">Charges</a></li>
-                <li v-show="isListVisible[3] || !isMobile"><a href="">Verify identity</a></li>
+                <li v-show="isListVisible[3] || !isMobile"><a href="" @click.prevent="routeVerifyIndentity">Verify identity</a></li>
             </ul>
             <ul>
                 <li class="li-title"><strong>Royal Flush Casino</strong></li>
@@ -41,7 +41,9 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const isListVisible = ref([false, false, false, false]);
 const isMobile = ref(false);
 
@@ -59,6 +61,10 @@ onMounted(() => {
     checkMobile();
     window.addEventListener('resize', checkMobile);
 });
+function routeVerifyIndentity() {
+    console.log("pushing")
+    router.push({ path: '/verify-identity'})
+}
 </script>
 
 <style scoped>

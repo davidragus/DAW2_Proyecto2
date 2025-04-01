@@ -22,14 +22,13 @@ async function requireValidation(to, from, next) {
 	requireLogin(to, from, next);
 	const { user, getUser } = useUsers();
 	const auth = authStore();
-
 	if(auth.id != null){
 		await getUser(auth.user.id);
-		if (user.value.validation_status == 'pending') {
+		if (user.value.validation_status == 'PENDING') {
 			next('/')
-		} else if (user.value.validation_status == 'approved') {
+		} else if (user.value.validation_status == 'ACEPTED') {
 			next()
-		} else if (user.value.validation_status == 'rejected') {
+		} else if (user.value.validation_status == 'DENIED') {
 			next('/')
 		} else {
 			next('/')
@@ -72,7 +71,7 @@ async function requireAdmin(to, from, next) {
 			next('/')
 		}
 	} else {
-		next('/login')
+		next('/?openModal=login')
 	}
 }
 
@@ -153,6 +152,13 @@ export default [
 						beforeEnter: requireValidation,
 					},
 				]
+			},
+			{
+				path: 'verify-identity',
+				name: 'auth.verify-identity',
+				component: () => import('../components/VerifyIdentity.vue'),
+				beforeEnter: requireLogin,
+				beforeEnter: requireValidation,
 			},
 		]
 	},
