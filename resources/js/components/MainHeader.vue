@@ -31,6 +31,8 @@
 					</div>
 				</div>
 				<div v-show="dropdownVisible" class="dropdown-menu">
+					<router-link v-if="authStore().user.roles.some(user => user.name === 'admin')" to="/admin" class="dropdown-item">Admin panel</router-link>
+					<div v-if="authStore().user.roles.some(user => user.name === 'admin')" class="dropdown-divider"></div>
 					<router-link to="/my-account" class="dropdown-item">My account</router-link>
 					<div class="dropdown-divider"></div>
 					<a href="#" class="dropdown-item" @click="openCashierDialog">Add chips</a>
@@ -78,6 +80,7 @@ function handleClickOutside(event) {
 }
 
 onMounted(() => {
+	console.log(authStore().user);
 	document.addEventListener('click', handleClickOutside);
 });
 

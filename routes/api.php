@@ -57,6 +57,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 			->toArray();
 	});
 
+	Route::post('/user/{id}/submit-validation', [UserController::class, 'createNewValidation']);
 	Route::apiResource('validations', PendingValidationController::class);
 	Route::get('validation/{id}', [PendingValidationController::class, 'show']);
 	Route::put('validation/approve/{id}', [PendingValidationController::class, 'approve']);

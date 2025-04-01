@@ -172,6 +172,54 @@ export default function useUsers() {
 				}
 			})
 	}
+	const submitVerifyIdentity = async (id, validationImages) => {
+		const formData = new FormData();
+	
+		// Agregar las imágenes al FormData
+		validationImages.forEach((file, index) => {
+			if (file) {
+				formData.append(`validationImages[${index}]`, file);
+			}
+		});
+	
+		try {
+			// Enviar la solicitud al backend
+			const response = await axios.post(`/api/user/${id}/submit-validation`, formData, {
+				headers: {
+					"Content-Type": "multipart/form-data",
+				},
+			});
+	
+			// Mostrar mensaje de éxito
+			swal({
+				icon: "success",
+				title: "Validation submitted successfully!",
+				showConfirmButton: false,
+				timer: 1500,
+				background: "#2A2A2A",
+				color: "#ffffff",
+			});
+	
+			// Actualizar los datos del usuario
+			await getUser(id);
+	
+			return response.data; // Devolver la respuesta si es necesario
+		} catch (error) {
+			// Manejar errores y asignar mensajes de error si existen
+			if (error.response?.data?.errors) {
+				validationErrors.value = error.response.data.errors;
+			} else {
+				swal({
+					icon: "error",
+					title: "Something went wrong",
+					text: error,
+					background: "#2A2A2A",
+					color: "#ffffff",
+				});
+			}
+			throw error; // Relanzar el error para manejarlo en el componente si es necesario
+		}
+	};
 
 	return {
 		users,
@@ -187,6 +235,7 @@ export default function useUsers() {
 		updateUser,
 		deleteUser,
 		validationErrors,
-		isLoading
+		isLoading,
+		submitVerifyIdentity
 	}
 }

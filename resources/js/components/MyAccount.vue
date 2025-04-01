@@ -6,6 +6,7 @@
                 <li><a href="#">BALANCE HISTORY</a></li>
                 <li><a href="#">GAME HISTORY</a></li>
                 <li><a><router-link to="/achievements" class="dropdown-item">ACHIEVEMENTS</router-link></a></li>
+                <li><a><router-link to="/verify-identity" class="dropdown-item">VERIFY IDENTITY</router-link></a></li>
             </ul>
         </aside>
         <div class="container">

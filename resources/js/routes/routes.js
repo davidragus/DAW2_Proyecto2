@@ -19,20 +19,22 @@ async function requireLogin(to, from, next) {
 }
 
 async function requireValidation(to, from, next) {
-	requireLogin(to, from, next);
 	const { user, getUser } = useUsers();
 	const auth = authStore();
-
-	if(auth.id != null){
+	if(auth.user.id != null){
 		await getUser(auth.user.id);
-		if (user.value.validation_status == 'pending') {
-			next('/')
-		} else if (user.value.validation_status == 'approved') {
+		while (!user.value || !user.value.validation_status) {
+            await new Promise((resolve) => setTimeout(resolve, 50)); 
+        }
+
+		if (user.value.validation_status == 'PENDING') {
+			next('/?toast=pending')
+		} else if (user.value.validation_status == "ACCEPTED") {
 			next()
-		} else if (user.value.validation_status == 'rejected') {
-			next('/')
+		} else if (user.value.validation_status == 'DENIED') {
+			next('/?toast=denied')
 		} else {
-			next('/')
+			next('/?toast=error')
 		}
 	}else{
 		next('/?openModal=login')
@@ -72,7 +74,7 @@ async function requireAdmin(to, from, next) {
 			next('/')
 		}
 	} else {
-		next('/login')
+		next('/?openModal=login')
 	}
 }
 
@@ -153,6 +155,12 @@ export default [
 						beforeEnter: requireValidation,
 					},
 				]
+			},
+			{
+				path: 'verify-identity',
+				name: 'auth.verify-identity',
+				component: () => import('../components/VerifyIdentity.vue'),
+				beforeEnter: requireLogin,
 			},
 		]
 	},
