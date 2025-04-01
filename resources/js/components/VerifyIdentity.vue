@@ -1,6 +1,16 @@
 <template>
     <div id="mainContent">
-        <div class="main-content-validation">
+        <aside class="sidebar">
+            <ul>
+                <li><a><router-link to="/my-account" class="dropdown-item">ACCOUNT DETAILS</router-link></a></li>
+                <li><a href="#">BALANCE HISTORY</a></li>
+                <li><a href="#">GAME HISTORY</a></li>
+                <li><a><router-link to="/achievements" class="dropdown-item">ACHIEVEMENTS</router-link></a></li>
+                <li class="active"><a href="#">VERIFY IDENTITY</a></li>
+            </ul>
+        </aside>
+        <div>
+            <div class="main-content-validation">
             <div v-if="user.validation_status === 'ACCEPTED'" class="status-card accepted">
                 <h2>Validation Accepted</h2>
                 <p>Your identity has been successfully verified.</p>
@@ -50,6 +60,7 @@
                 </form>
             </div>
         </Dialog>
+        </div>
     </div>
 </template>
 
@@ -132,6 +143,42 @@ async function handleSubmit() {
 </script>
 
 <style scoped>
+#mainContent {
+    padding-top: 20px;
+    margin-left: 20px;
+}
+.sidebar {
+    width: 200px;
+    margin-right: 20px;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin-bottom: 10px;
+}
+
+.sidebar ul li a {
+    text-decoration: none;
+    color: #ffffff;
+}
+
+.sidebar ul li a:hover {
+    text-decoration: none;
+    color: #ffffff;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.active {
+    text-decoration: underline;
+    color: #ffffff;
+    font-weight: bold;
+}
+
 .main-content-validation {
     min-height: 80vh;
     display: flex;

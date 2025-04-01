@@ -2,6 +2,7 @@
 	<main id="mainContent" class="container-fluid pr-0">
 		<!--Mensajes de error en caso de que el user no tenga la validacion aceptada o que tenga la validacion denegada-->
 		<!--<Message severity="warn">Warn Message</Message>-->
+		<Toast />
 		<!--<Message severity="error">Error Message</Message>-->
 		<div class="banner-background d-flex col-12">
 			<div class="banner-filter"></div>
@@ -95,8 +96,13 @@
 <script setup>
 import { RouterLink } from 'vue-router';
 import Button from '../../components/Button.vue';
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { useToast } from 'primevue';
 const isMobile = ref(false);
+const route = useRoute();
+const router = useRouter();
+const toast = useToast();
 onMounted(() => {
 	checkMobile();
 	window.addEventListener('resize', checkMobile);
@@ -104,6 +110,24 @@ onMounted(() => {
 function checkMobile() {
 	isMobile.value = window.innerWidth <= 768;
 }
+
+watch(() => route.query.toast, (newValue) => {
+	router.push('/')
+	showSticky(newValue);
+})
+
+const showSticky = (toastValue) => {
+	// toast.add({ severity: 'success', summary: 'Success Message', detail: 'Message Content', life: 3000 });
+    if(toastValue == 'denied'){
+        toast.add({ severity: 'error', summary: 'Validation status denied', detail: 'Your validation status is DENIED, You can repeat the verification in "My Account -> Verify Identity".', life: 5000 });
+    } else if(toastValue == 'pending'){
+        toast.add({ severity: 'warn', summary: 'Validation status pending', detail: 'Your validation status is PENDING', life: 2000 });
+	} else if(toastValue == 'error'){
+		toast.add({ severity: 'error', summary: 'Validation status not valid', detail: 'Your validation status have an error', life: 2000 });
+	}
+
+}
+
 </script>
 
 <style scoped>

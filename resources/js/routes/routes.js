@@ -19,19 +19,22 @@ async function requireLogin(to, from, next) {
 }
 
 async function requireValidation(to, from, next) {
-	requireLogin(to, from, next);
 	const { user, getUser } = useUsers();
 	const auth = authStore();
-	if(auth.id != null){
+	if(auth.user.id != null){
 		await getUser(auth.user.id);
+		while (!user.value || !user.value.validation_status) {
+            await new Promise((resolve) => setTimeout(resolve, 50)); 
+        }
+
 		if (user.value.validation_status == 'PENDING') {
-			next('/')
-		} else if (user.value.validation_status == 'ACEPTED') {
+			next('/?toast=pending')
+		} else if (user.value.validation_status == "ACCEPTED") {
 			next()
 		} else if (user.value.validation_status == 'DENIED') {
-			next('/')
+			next('/?toast=denied')
 		} else {
-			next('/')
+			next('/?toast=error')
 		}
 	}else{
 		next('/?openModal=login')
@@ -158,7 +161,6 @@ export default [
 				name: 'auth.verify-identity',
 				component: () => import('../components/VerifyIdentity.vue'),
 				beforeEnter: requireLogin,
-				beforeEnter: requireValidation,
 			},
 		]
 	},
