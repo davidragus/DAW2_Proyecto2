@@ -1,6 +1,6 @@
 <template>
 	<div class="h-100">
-		<div class="chat-container d-flex flex-column-reverse overflow-scroll mb-3">
+		<div class="chat-container d-flex flex-column-reverse overflow-y-scroll overflow-x-hidden text-break mb-3">
 			<div class="message-container d-flex mb-3" v-for="message in messages" :key="message.id">
 				<Avatar v-if="message.user.avatar" :image="message.user.avatar" size="xlarge" shape="circle" />
 				<Avatar v-if="!message.user.avatar" :label="message.user.username.substring(0, 1)" size="large"
@@ -16,9 +16,10 @@
 			</div>
 		</div>
 		<div class="form-container">
-			<form @submit.prevent="sendMessage" class="d-flex">
-				<input v-model="message.message" class="form-control me-3" type="text" name="" id="">
-				<button>SEND</button>
+			<form @submit.prevent="sendMessage" class="d-flex justify-content-between">
+				<input v-model="message.message" class="form-control col-8" type="text">
+				<PrimeButton type="submit" label="SEND" icon="pi pi-send" class="p-button-primary col-3"
+					:disabled="isLoading" :style="{ backgroundColor: 'red', color: 'white', borderColor: 'red' }" />
 			</form>
 		</div>
 	</div>
@@ -30,9 +31,9 @@ import { onMounted } from 'vue';
 import Echo from "laravel-echo";
 import useChat from '@/composables/chat';
 import useAuth from '@/composables/auth';
+import PrimeButton from 'primevue/button';
 
-
-const { message, messages, getMessages, sendMessage } = useChat();
+const { message, messages, getMessages, sendMessage, isLoading } = useChat();
 const { user } = useAuth();
 
 window.Echo = new Echo({
@@ -61,11 +62,23 @@ onMounted(() => {
 }
 
 .form-container {
-	height: 8%;
+	height: 10%;
 }
 
 .message-date {
 	font-size: 0.8rem;
 	color: #999;
+}
+
+.form-control {
+	padding: 10px;
+	border: 1px solid #414141;
+	border-radius: 5px;
+	background-color: #313131;
+	color: white;
+}
+
+.form-control::placeholder {
+	color: #bcbcbc;
 }
 </style>
