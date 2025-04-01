@@ -92,7 +92,7 @@ export default function useAuth() {
 	const submitRegister = async () => {
 		if (processing.value) return
 
-		processing.value = true
+		processing.value = false
 		validationErrors.value = {}
 
 		let serializedUser = new FormData()
@@ -107,17 +107,15 @@ export default function useAuth() {
 				}
 			}
 		}
-
-		await axios.post('/register', serializedUser)
+		await axios.post('/register', serializedUser,{
+				headers: {
+					'Content-Type': 'multipart/form-data'
+				}
+		})
 			.then(async response => {
 				// await store.dispatch('auth/getUser')
 				// await loginUser()
-				console.log("push route");
-				await router.replace({
-					path: '/',
-					query: { closeModal: 'register'}
-				})	
-				
+				router.replace({ path: '/', query: {closeModal: 'register'} })
 				swal({
 					icon: 'success',
 					title: 'Registration successfully',
@@ -126,6 +124,7 @@ export default function useAuth() {
 					background: '#2A2A2A',
 					color: '#ffffff'
 				})
+				// await router.push({ name: 'auth.login' })
 			})
 			.catch(error => {
 				if (error.response?.data) {

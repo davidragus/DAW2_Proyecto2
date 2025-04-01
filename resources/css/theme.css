@@ -609,3 +609,6 @@ body {
     background-color: #313131 !important;
     color: white !important;
 }
+.p-select-label{
+    color: white !important;
+}

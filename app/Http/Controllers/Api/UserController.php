@@ -134,9 +134,9 @@ class UserController extends Controller
 	}
 
 
-	public function updateimg(Request $request)
+	public function updateImg(Request $request, $id)
 	{
-		$user = User::find($request->id);
+		$user = User::find($id);
 		// Delete previous image
 		$user->clearMediaCollection('user_avatar');
 		$user->addMediaFromRequest('file')->toMediaCollection('user_avatar');

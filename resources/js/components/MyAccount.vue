@@ -54,15 +54,9 @@
                         </div>
                         <div class="mb-3">
                             <label for="country" class="form-label">Country of residence</label>
-                            <select class="form-select" id="country" v-model="userCopy.country"
-                                :class="{ 'is-invalid': errors.country }">
-                                <option>Spain</option>
-                                <option>USA</option>
-                                <option>UK</option>
-                                <option>France</option>
-                                <option>Mexico</option>
-                                <option>Peru</option>
-                            </select>
+                            <Select v-model="userCopy.country" :options="countries" optionLabel="name"
+                                optionValue="code" placeholder="Country of residence" class="w-100"
+                                :style="{ backgroundColor: '#313131', color: 'white', borderColor: '#414141',  }" />
                             <div v-if="errors.country" class="invalid-feedback">{{ errors.country }}</div>
                         </div>
                         <div class="mb-3">
@@ -95,12 +89,15 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { authStore } from "../store/auth";
+import useCountries from '@/composables/countries';
 import Swal from 'sweetalert2';
 import * as yup from 'yup';
 
 const auth = authStore();
 const logedUser = computed(() => auth.user);
 const userCopy = ref({ ...logedUser.value });
+
+const { getCountries, countries } = useCountries();
 
 const schema = yup.object({
     name: yup.string().required('Name is required'),
@@ -139,7 +136,7 @@ const updateUser = async () => {
             username: userCopy.value.username,
             email: userCopy.value.email,
             phone_number: userCopy.value.phone_number,
-            chips: logedUser.value.chips,
+            dni: logedUser.value.dni,
         });
         Swal.fire({
             icon: 'success',
@@ -170,6 +167,7 @@ const submitForm = async () => {
 };
 
 onMounted(() => {
+    getCountries();
     document.getElementById('mainContent').classList.add('ml-4');
     if (window.innerWidth <= 768) {
         document.getElementById('mainContent').style.paddingLeft = '0';
@@ -198,8 +196,7 @@ async function uploadImage() {
     try {
         let formData = new FormData();
         formData.append("file", file.value);
-        formData.append("id", authStore().user.id);
-        const response = await axios.post('/api/users/updateimg', formData, {
+        const response = await axios.post('/api/users/updateImg/'+authStore().user.id, formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
             },

@@ -163,12 +163,23 @@ const errors = ref({});
 const validateForm = async () => {
     errors.value = {};
     try {
-        await schema.validate(userCopy.value, { abortEarly: false });
+        await schema.validate(
+            {
+                customDeposit: customDeposit.value,
+                cardNumber: cardNumber.value,
+                expirationDate: expirationDate.value,
+                cvv: cvv.value,
+                confirmName: confirmName.value,
+            },
+            { abortEarly: false }
+        );
         return true;
     } catch (validationErrors) {
-        validationErrors.inner.forEach(error => {
-            errors.value[error.path] = error.message;
-        });
+        if (Array.isArray(validationErrors.inner)) {
+            validationErrors.inner.forEach((error) => {
+                errors.value[error.path] = error.message;
+            });
+        }
         return false;
     }
 };
@@ -176,6 +187,7 @@ const validateForm = async () => {
 const submitForm = async () => {
     const isValid = await validateForm();
     if (isValid) {
+		console.log("entrando a deposit")
         await deposit();
     }
 };

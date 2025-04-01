@@ -11,9 +11,9 @@ export default function useAchievements() {
 
     const getAllAchievements = async () => {
         try {
-            const response = await axios.get("/api/achievements");
-            achievements.value = response.data.data;
-            console.log(achievements.value);
+            const response = await axios.get("/api/achievements").then(response => {
+                achievements.value = response.data;
+            })
         } catch (error) {
             console.error("Error fetching achievements:", error);
         }

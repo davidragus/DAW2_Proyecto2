@@ -30,7 +30,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 	Route::post('users/{user}', [UserController::class, 'update']);
 	// Route::delete('users/{user}', [UserController::class, 'destroy']);
 
-	Route::post('users/updateimg', [UserController::class, 'updateimg']); //Listar
+	Route::post('users/updateImg/{id}', [UserController::class, 'updateImg']); //Listar
 	Route::put('users/updateChips/{id}', [UserController::class, 'updateChips']); //Listar
 
 	Route::apiResource('posts', PostControllerAdvance::class);

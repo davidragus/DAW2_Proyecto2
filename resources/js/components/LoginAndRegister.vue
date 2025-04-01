@@ -7,7 +7,7 @@
 
 <script setup>
 import { ref, watch } from 'vue';
-import { useRoute , useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import Login from "../components/LoginDialog.vue";
 import Register from "../components/RegisterDialog.vue";
 
@@ -20,6 +20,10 @@ const openRegisterDialog = () => {
 
 const openLoginDialog = () => {
   loginDialogVisible.value = true;
+};
+
+const closeRegisterDialog = () => {
+  registerDialogVisible.value = false;
 };
 
 const updateRegisterDialogVisible = (newValue) => {
@@ -52,7 +56,8 @@ watch(
       updateLoginDialogVisible(false);
       router.push({ query: { ...route.query, closeModal: undefined } });
     } else if (newValue === 'register') {
-      updateRegisterDialogVisible(false);
+      console.log("cerrandoRegister")
+      closeRegisterDialog();
       router.push({ query: { ...route.query, closeModal: undefined } });
     }
   },
