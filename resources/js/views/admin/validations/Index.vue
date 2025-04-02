@@ -56,9 +56,10 @@
 								:to="{ name: 'users.edit', params: { id: slotProps.data.id } }">
 								<Button icon="pi pi-pencil" severity="info" size="small" class="mr-1" />
 							</router-link> -->
-
+							<router-link v-if="can('validation-delete')">
 							<Button icon="pi pi-trash" severity="danger" v-if="can('user-delete')"
 								@click.prevent="deleteValidation(slotProps.data.id, slotProps.index)" size="small" />
+							</router-link>
 
 						</template>
 					</Column>
