@@ -78,4 +78,14 @@ class PendingValidationController extends Controller
 			return response()->json(['message' => 'An unexpected error has occurred.'], 500);
 		}
 	}
+	public function destroy($id){
+		try {
+			$validation = PendingValidation::find($id);
+			$validation->delete();
+			return response()->json(['message' => 'The validation has been deleted.', 'data' => $validation], 200);
+		} catch (\Exception $ex) {
+			return response()->json(['message' => 'An unexpected error has occurred.'], 500);
+		}
+	
+	}
 }

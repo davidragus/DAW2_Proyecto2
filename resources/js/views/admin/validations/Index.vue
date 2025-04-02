@@ -57,8 +57,8 @@
 								<Button icon="pi pi-pencil" severity="info" size="small" class="mr-1" />
 							</router-link> -->
 
-							<!-- <Button icon="pi pi-trash" severity="danger" v-if="can('user-delete')"
-								@click.prevent="deleteUser(slotProps.data.id, slotProps.index)" size="small" /> -->
+							<Button icon="pi pi-trash" severity="danger" v-if="can('user-delete')"
+								@click.prevent="deleteValidation(slotProps.data.id, slotProps.index)" size="small" />
 
 						</template>
 					</Column>
@@ -78,7 +78,7 @@ import { useAbility } from '@casl/vue'
 import { FilterMatchMode, FilterService } from "@primevue/core/api";
 
 
-const { validations, getValidations } = useValidations();
+const { validations, getValidations, deleteValidation } = useValidations();
 const { can } = useAbility()
 
 // const filters = ref({
