@@ -44,6 +44,9 @@ export default function useValidations() {
 					background: '#2A2A2A',
 					color: '#ffffff'
 				})
+				.then(() => {
+					validation.value.status = response.data.data.status;
+				})
 			})
 			.catch(error => {
 				swal({
@@ -64,6 +67,9 @@ export default function useValidations() {
 					title: response.data.message,
 					background: '#2A2A2A',
 					color: '#ffffff'
+				})
+				.then(() => {
+					validation.value.status = response.data.data.status;
 				})
 			})
 			.catch(error => {

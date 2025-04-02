@@ -26,7 +26,7 @@
                     <label for="confirmName" class="form-check-label">I confirm that the full name of the owner of the card is the same as the full name of the account.</label>
                     <span v-if="errors.confirmName" class="error-text">{{ errors.confirmName }}</span>
                 </div>
-                <Button class="deposit-button" type="submit">DEPOSIT {{ chipsNumber }}</Button>
+                <Button class="deposit-button-submit" type="submit">DEPOSIT {{ chipsNumber }}</Button>
             </form>
         </Dialog>
     </div>
@@ -213,15 +213,47 @@ const submitForm = async () => {
 }
 
 .deposit-button {
-	background-color: #f0f0f0;
-	color: black;
-	border: 1px solid #ccc;
+	background-color: #3A3A3A;
+	color: white;
+	border: none;
 	padding: 10px;
 	cursor: pointer;
+	width: 100%;
+	text-align: center;
+}
+
+.deposit-button:hover {
+	background-color: #3A3A3A;
+	color: yellow;
+	border: 1px solid yellow;
+	padding: 10px;
+	cursor: pointer;
+	width: 100%;
+	text-align: center;
 }
 
 .deposit-button.selected {
-	background-color: #3A3A3A;
+	background-color: #ff0000;
+}
+
+.deposit-button.selected:hover {
+	background-color: #ff0000;
+	color: white;
+	border: none;
+	padding: 10px;
+	cursor: pointer;
+	width: 100%;
+	text-align: center;
+}
+
+.deposit-button-submit {
+	background-color: #ff0000;
+	color: white;
+	border: none;
+	padding: 10px;
+	cursor: pointer;
+	width: 100%;
+	text-align: center;
 }
 
 .custom-deposit {
@@ -250,16 +282,6 @@ const submitForm = async () => {
 
 .form-check {
 	margin-bottom: 10px;
-}
-
-.deposit-button {
-	background-color: #ff0000;
-	color: white;
-	border: none;
-	padding: 10px;
-	cursor: pointer;
-	width: 100%;
-	text-align: center;
 }
 
 .username-text {

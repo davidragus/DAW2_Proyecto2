@@ -18,9 +18,9 @@
                         <Avatar v-else :label="authStore().user.name.substring(0, 1)" size="xlarge" shape="circle"
                             class="user-icon" />
                         <div
-                            class="card flex flex-col items-center gap-6 w-100 justify-content-center align-items-center">
+                            class="card flex flex-col items-center gap-5 w-100 justify-content-center align-items-center image-container">
                             <FileUpload mode="basic" @select="onFileSelect" customUpload auto severity="secondary"
-                                class="p-button-outlined" />
+                                :style="{borderColor: 'yellow', backgroundColor: 'yellow', color: 'black'}" />
                             <img v-if="src" :src="src" alt="Image" class="user-icon" style="filter: grayscale(100%)" />
                             <Button v-if="src" label="Upload" @click="uploadImage" class="image-button" />
                         </div>
@@ -78,8 +78,8 @@
                                 :class="{ 'is-invalid': errors.phone_number }">
                             <div v-if="errors.phone_number" class="invalid-feedback">{{ errors.phone_number }}</div>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100 mb-3">SAVE DATA</button>
-                        <button type="button" class="btn btn-secondary w-100">CHANGE PASSWORD</button>
+                        <button type="submit" class="btn background-red w-100 mb-3">SAVE DATA</button>
+                        <button type="button" class="btn background-yellow w-100">CHANGE PASSWORD</button>
                     </form>
                 </div>
             </div>
@@ -236,11 +236,13 @@ const routeToAchivements = () => {
 <style scoped>
 #mainContent {
     display: flex;
-    padding: 20px;
     background-color: #2A2A2A;
+    padding: 0 20px 0 20px;
 }
 
 .sidebar {
+    padding: 20px 0 20px 0;
+    border-right: 1px solid #3B3B3B;
     width: 200px;
     margin-right: 20px;
 }
@@ -359,5 +361,19 @@ form {
 .image-button:hover {
     background-color: #c00000 !important;
     color: white !important;
+}
+.background-red{
+    background-color: red;
+    color: white;
+}
+.background-yellow{
+    background-color: yellow;
+    color: black;
+}
+.container{
+    padding: 20px 0 20px 0;
+}
+.image-container{
+    border: 1px solid #414141;
 }
 </style>

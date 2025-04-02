@@ -215,7 +215,7 @@ export default function useAuth() {
 				user.email = ''
 				auth.logout()
 				//store.dispatch('auth/logout')
-				router.push({ name: 'auth.login' })
+				router.push({ path: '/?openModal=login' })
 			})
 			.catch(error => {
 				// swal({

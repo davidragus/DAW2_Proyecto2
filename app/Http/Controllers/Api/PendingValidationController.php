@@ -60,7 +60,7 @@ class PendingValidationController extends Controller
 			$validation = PendingValidation::find($id);
 			$validation->status = 'ACCEPTED';
 			$validation->save();
-			return response()->json(['message' => 'The validation has been approved.'], 200);
+			return response()->json(['message' => 'The validation has been approved.', 'data' => $validation], 200);
 		} catch (\Exception $ex) {
 			return response()->json(['message' => 'An unexpected error has occurred.'], 500);
 		}
@@ -73,7 +73,7 @@ class PendingValidationController extends Controller
 			$validation = PendingValidation::find($id);
 			$validation->status = 'DENIED';
 			$validation->save();
-			return response()->json(['message' => 'The validation has been declined.'], 200);
+			return response()->json(['message' => 'The validation has been declined.', 'data' => $validation], 200);
 		} catch (\Exception $ex) {
 			return response()->json(['message' => 'An unexpected error has occurred.'], 500);
 		}
