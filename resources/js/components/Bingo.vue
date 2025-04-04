@@ -1,27 +1,66 @@
 <template>
-    <div class="bingo-container">
-        <h1 class="text-center">Bingo</h1>
-        <div class="bingo-board">
-            <div
-                v-for="(number, index) in board"
-                :key="index"
-                :class="['bingo-cell', { selected: selectedNumbers.includes(number) }]"
-            >
-                {{ number }}
+    <div id="mainContent">
+        <div class="mt-3">
+    <h5>Números salidos:</h5>
+    <div class="d-flex flex-wrap">
+        <div
+            v-for="ball in drawnBalls"
+            :key="ball"
+            class="bingo-cell"
+            style="width: 30px; height: 30px"
+        >
+            {{ ball }}
+        </div>
+    </div>
+</div>
+<div class="bola-actual" v-if="currentBall !== null" :class="{ 'fade-out': isFading }">
+    {{ currentBall }}
+</div>
+
+
+<button @click="drawBall" class="btn btn-success">
+    Sacar bola
+</button>
+        <div class="container mt-3">
+            <div class="row justify-content-center mb-3">
+                <div class="col-auto">
+                    <input
+                        type="number"
+                        v-model.number="numCartones"
+                        min="1"
+                        max="10"
+                        class="form-control"
+                        placeholder="Número de cartones"
+                    />
+                </div>
+                <div class="col-auto">
+                    <button @click="generateBingoCards" class="btn btn-primary">
+                        Generar Cartones
+                    </button>
+                </div>
             </div>
-        </div>
-        <div class="controls">
-            <button class="btn btn-primary" @click="drawNumber" :disabled="selectedNumbers.length >= board.length">
-                Draw Number
-            </button>
-            <p v-if="selectedNumbers.length >= board.length" class="text-center mt-3">All numbers have been drawn!</p>
-        </div>
-        <div class="selected-numbers mt-4">
-            <h3>Selected Numbers:</h3>
-            <div class="selected-list">
-                <span v-for="(number, index) in selectedNumbers" :key="index" class="selected-number">
-                    {{ number }}
-                </span>
+            <div class="row">
+                <div
+                    v-for="(card, cardIndex) in bingoCards"
+                    :key="cardIndex"
+                    class="col-md-4 col-lg-3 mb-3"
+                >
+                    <div class="card p-2">
+                        <div
+                            v-for="(row, rowIndex) in card"
+                            :key="rowIndex"
+                            class="d-flex justify-content-center"
+                        >
+                            <div
+                                v-for="(cell, colIndex) in row"
+                                :key="colIndex"
+                                class="bingo-cell"
+                            >
+                                {{ cell }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -29,6 +68,7 @@
 
 <script setup>
 import { ref } from "vue";
+import { useSpeechSynthesis } from '@vueuse/core'
 
 const numCartones = ref(1);
 const bingoCards = ref([]);
@@ -53,6 +93,7 @@ const generateBingoCard = () => {
         [80, 90],
     ];
 
+    // Función auxiliar para obtener 'count' números aleatorios únicos en el rango, ordenados ascendentemente.
     const getRandomNumbers = (start, end, count) => {
         const pool = Array.from(
             { length: end - start + 1 },
@@ -66,10 +107,13 @@ const generateBingoCard = () => {
         return nums.sort((a, b) => a - b);
     };
 
+    // Generar un patrón válido (matriz de booleans de 3x9)
+    // Cada fila tendrá 5 "true" (rellenos) y se verificará que cada columna tenga 1 o 2 "true".
     let pattern;
     while (true) {
         pattern = Array.from({ length: 3 }, () => Array(9).fill(false));
 
+        // Para cada fila, elegimos 5 columnas al azar
         for (let r = 0; r < 3; r++) {
             const availableCols = [...Array(9).keys()];
             for (let i = 0; i < 5; i++) {
@@ -79,6 +123,7 @@ const generateBingoCard = () => {
             }
         }
 
+        // Validar que cada columna tenga 1 o 2 celdas "true" (nunca 0 ni 3)
         let valid = true;
         for (let c = 0; c < 9; c++) {
             const colCount = pattern.reduce(
@@ -93,18 +138,23 @@ const generateBingoCard = () => {
         if (valid) break;
     }
 
+    // Creamos la matriz del cartón (3x9) inicializada en ''.
     const card = Array.from({ length: 3 }, () => Array(9).fill(""));
 
+    // Para cada columna, asignamos los números correspondientes a las celdas marcadas.
     for (let c = 0; c < 9; c++) {
+        // Obtenemos las filas en las que se deben colocar números en esta columna.
         const rowsWithNumber = [];
         for (let r = 0; r < 3; r++) {
             if (pattern[r][c]) rowsWithNumber.push(r);
         }
+        // Se obtienen 'count' números aleatorios dentro del rango de la columna, ordenados.
         const nums = getRandomNumbers(
             columnRanges[c][0],
             columnRanges[c][1],
             rowsWithNumber.length
         );
+        // Para respetar la regla de orden ascendente en la columna, asignamos los números a las filas ordenadas.
         rowsWithNumber.sort((a, b) => a - b);
         rowsWithNumber.forEach((r, i) => {
             card[r][c] = nums[i];
@@ -113,89 +163,91 @@ const generateBingoCard = () => {
 
     return card;
 };
+
+const allBalls = ref(Array.from({ length: 90 }, (_, i) => i + 1));
+const drawnBalls = ref([]);
+const currentBall = ref(null);
+const isFading = ref(false);
+
+const drawBall = () => {
+    if (allBalls.value.length === 0) return;
+
+    const randomNumber = Math.floor(Math.random() * allBalls.value.length);
+    const ball = allBalls.value.splice(randomNumber, 1)[0];
+    currentBall.value = ball;
+    drawnBalls.value.push(ball);
+    isFading.value = false;
+
+    speakBall(ball);
+
+    setTimeout(() => {
+        isFading.value = true;
+        setTimeout(() => {
+            currentBall.value = null;
+        }, 500);
+    }, 3000);
+};
+
+
+
+const textToSpeak = ref("");  
+const { speak, isSupported } = useSpeechSynthesis(textToSpeak, { lang: "en-EN", rate: 0.9 });
+
+const speakBall = (number) => {
+    if (!isSupported.value) {
+        console.warn("Speech synthesis not supported");
+        return;
+    }
+
+    textToSpeak.value = `${number}`;
+    speak();
+};
+
 </script>
 
 <style scoped>
-.bingo-container {
-    max-width: 600px;
-    margin: 0 auto;
-    text-align: center;
-    color: white;
-    background-color: #2a2a2a;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+#mainContent {
+    width: 100%;
 }
-
-.bingo-board {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 10px;
-    margin: 20px 0;
-}
-
 .bingo-cell {
-    width: 60px;
-    height: 60px;
+    width: 40px;
+    height: 40px;
+    border: 1px solid black;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #313131;
-    color: white;
-    font-size: 1.2rem;
-    font-weight: bold;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    transition: background-color 0.3s, transform 0.2s;
-}
-
-.bingo-cell.selected {
-    background-color: #007bff;
-    color: white;
-    transform: scale(1.1);
-}
-
-.controls {
-    margin-top: 20px;
-}
-
-.btn {
-    padding: 10px 20px;
-    font-size: 1rem;
-    font-weight: bold;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.btn-primary {
-    background-color: #007bff;
+    background-color: #4a4a4a;
+    margin: 2px;
     color: white;
 }
 
-.btn-primary:disabled {
-    background-color: #6c757d;
-    cursor: not-allowed;
-}
-
-.selected-numbers {
-    margin-top: 20px;
-    text-align: left;
-}
-
-.selected-list {
+.bola-actual {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: red;
+    color: white;
+    font-size: 2rem;
     display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 10px;
+    justify-content: center;
+    align-items: center;
+    margin: 1rem auto;
+    animation: bounce-in 0.4s ease;
 }
 
-.selected-number {
-    background-color: #007bff;
-    color: white;
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-size: 1rem;
+@keyframes bounce-in {
+    0% { transform: scale(0.5); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.fade-out {
+    animation: shrink-out 0.5s ease forwards;
+}
+
+@keyframes shrink-out {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(0); }
 }
 </style>
