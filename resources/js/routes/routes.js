@@ -21,11 +21,11 @@ async function requireLogin(to, from, next) {
 async function requireValidation(to, from, next) {
 	const { user, getUser } = useUsers();
 	const auth = authStore();
-	if(auth.user.id != null){
+	if (auth.user.id != null) {
 		await getUser(auth.user.id);
 		while (!user.value || !user.value.validation_status) {
-            await new Promise((resolve) => setTimeout(resolve, 50)); 
-        }
+			await new Promise((resolve) => setTimeout(resolve, 50));
+		}
 
 		if (user.value.validation_status == 'PENDING') {
 			next('/?toast=pending')
@@ -36,7 +36,7 @@ async function requireValidation(to, from, next) {
 		} else {
 			next('/?toast=error')
 		}
-	}else{
+	} else {
 		next('/?openModal=login')
 	}
 }
@@ -105,30 +105,30 @@ export default [
 				name: 'category-posts.index',
 				component: () => import('../views/category/posts.vue'),
 			},
-			{
-				path: 'login',
-				name: 'auth.login',
-				component: () => import('../views/login/Login.vue'),
-				beforeEnter: guest,
-			},
-			{
-				path: 'register',
-				name: 'auth.register',
-				component: () => import('../views/register/index.vue'),
-				beforeEnter: guest,
-			},
-			{
-				path: 'forgot-password',
-				name: 'auth.forgot-password',
-				component: () => import('../views/auth/passwords/Email.vue'),
-				beforeEnter: guest,
-			},
-			{
-				path: 'reset-password/:token',
-				name: 'auth.reset-password',
-				component: () => import('../views/auth/passwords/Reset.vue'),
-				beforeEnter: guest,
-			},
+			// {
+			// 	path: 'login',
+			// 	name: 'auth.login',
+			// 	component: () => import('../views/login/Login.vue'),
+			// 	beforeEnter: guest,
+			// },
+			// {
+			// 	path: 'register',
+			// 	name: 'auth.register',
+			// 	component: () => import('../views/register/index.vue'),
+			// 	beforeEnter: guest,
+			// },
+			// {
+			// 	path: 'forgot-password',
+			// 	name: 'auth.forgot-password',
+			// 	component: () => import('../views/auth/passwords/Email.vue'),
+			// 	beforeEnter: guest,
+			// },
+			// {
+			// 	path: 'reset-password/:token',
+			// 	name: 'auth.reset-password',
+			// 	component: () => import('../views/auth/passwords/Reset.vue'),
+			// 	beforeEnter: guest,
+			// },
 			{
 				path: 'my-account',
 				name: 'auth.my-account',
@@ -181,7 +181,7 @@ export default [
 		path: '/admin',
 		component: AuthenticatedLayout,
 		redirect: {
-		    name: 'admin.index'
+			name: 'admin.index'
 		},
 		beforeEnter: requireAdmin,
 		meta: { breadCrumb: 'Dashboard' },
