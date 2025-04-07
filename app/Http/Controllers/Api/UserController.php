@@ -123,6 +123,16 @@ class UserController extends Controller
 		}
 	}
 
+	public function getChips($id)
+	{
+		$user = User::find($id);
+		if ($user) {
+			return response()->json(['chips' => $user->chips], 200);
+		} else {
+			return response()->json(['message' => 'User not found'], 404);
+		}
+	}
+
 	public function updateChips(Request $request, $id)
 	{
 		// TODO: Refactor when possible (front and back)
@@ -183,7 +193,7 @@ class UserController extends Controller
 					2 => 'face_image',
 					default => 'unknown_image',
 				};
-	
+
 				// Guardar la imagen en la colección 'pending_validations'
 				$validation->addMedia($image)
 					->usingFileName($imageName . '.' . $image->getClientOriginalExtension())

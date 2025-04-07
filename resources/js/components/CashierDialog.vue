@@ -116,8 +116,8 @@ const deposit = async () => {
 				cvv: cvv.value,
 				expiration_date: expiration_date_formatted
 			});
-			console.log('Transaction successful:', response.data);
-			console.log(`${user.chips} - ${chipsNumber.value}`);
+			// console.log('Transaction successful:', response.data);
+			// console.log(`${user.chips} - ${chipsNumber.value}`);
 			const responseUser = await axios.put(`/api/users/updateChips/${user.id}`, {
 				// name: user.name,
 				// surname1: user.surname1,
@@ -130,7 +130,7 @@ const deposit = async () => {
 				chips: user.chips + chipsNumber.value
 			});
 			authStore().user.chips += chipsNumber.value;
-			console.log('User updated:', responseUser.data);
+			// console.log('User updated:', responseUser.data);
 			visible.value = false;
 			customDeposit.value = 10;
 			cardNumber.value = '';
@@ -195,7 +195,7 @@ const validateForm = async () => {
 const submitForm = async () => {
 	const isValid = await validateForm();
 	if (isValid) {
-		console.log("entrando a deposit")
+		// console.log("entrando a deposit")
 		await deposit();
 	}
 };

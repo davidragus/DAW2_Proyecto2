@@ -18,10 +18,12 @@ use App\Http\Controllers\Api\TransactionController;
 Route::post('forget-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('forget.password.post');
 Route::post('reset-password', [ResetPasswordController::class, 'reset'])->name('password.reset');
 
-Route::get('getMessages', [\App\Http\Controllers\Api\LiveChatController::class, 'getMessages']);
-Route::post('sendMessage', [\App\Http\Controllers\Api\LiveChatController::class, 'sendMessage']);
+
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
+
+	Route::get('getMessages', [\App\Http\Controllers\Api\LiveChatController::class, 'getMessages']);
+	Route::post('sendMessage', [\App\Http\Controllers\Api\LiveChatController::class, 'sendMessage']);
 
 	Route::apiResource('users', UserController::class);
 	// Route::get('users', [UserController::class, 'index']);
@@ -30,8 +32,9 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 	Route::post('users/{user}', [UserController::class, 'update']);
 	// Route::delete('users/{user}', [UserController::class, 'destroy']);
 
-	Route::post('users/updateImg/{id}', [UserController::class, 'updateImg']); //Listar
-	Route::put('users/updateChips/{id}', [UserController::class, 'updateChips']); //Listar
+	Route::post('users/updateImg/{id}', [UserController::class, 'updateImg']);
+	Route::get('users/getChips/{id}', [UserController::class, 'getChips']);
+	Route::put('users/updateChips/{id}', [UserController::class, 'updateChips']);
 
 	Route::apiResource('posts', PostControllerAdvance::class);
 	Route::apiResource('categories', CategoryController::class);
