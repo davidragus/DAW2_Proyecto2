@@ -2,14 +2,11 @@
 	<div class="grid">
 		<div class="col-12">
 			<div class="card">
-
 				<div class="card-header bg-transparent ps-0 pe-0">
 					<h5 class="float-start mb-0">Games</h5>
 				</div>
-
 				<!-- v-model:filters="filters" Esto va en el datatable -->
 				<!-- :globalFilterFields="['id', 'alias', 'name', 'surname1', 'surname2', 'email', 'created_at', 'type.name']" -->
-
 				<DataTable :value="games.data" paginator :rows="25" stripedRows dataKey="id" size="small">
 
 					<template #header>
@@ -34,15 +31,7 @@
 					<Column field="id" header="ID" sortable></Column>
 					<!-- <Column field="dni" header="Identity Card Number" sortable></Column> -->
 					<Column field="name" header="Name" sortable></Column>
-					<Column field="status" header="Validation status" sortable>
-						<template #body="{ data }">
-							<span class="rounded-4 py-1 px-3 text-light fw-bolder" :class="{
-								'bg-success': data.status == 'ACCEPTED', 'bg-danger': data.status == 'DENIED',
-								'bg-warning': data.status == 'PENDING'
-							}">{{
-								data.status }}</span>
-						</template>
-					</Column>
+					<Column field="route_path" header="Route" sortable></Column>
 					<Column field="created_at" header="Created at" sortable></Column>
 
 					<Column class="pe-0 me-0 icon-column-2">
@@ -78,7 +67,7 @@ import { useAbility } from '@casl/vue'
 import { FilterMatchMode, FilterService } from "@primevue/core/api";
 
 
-const { games, getGames } = useGames();
+const { games, getAllGames } = useGames();
 const { can } = useAbility()
 
 // const filters = ref({
@@ -92,7 +81,7 @@ const { can } = useAbility()
 // };
 
 onMounted(() => {
-	getGames();
+	getAllGames();
 })
 
 </script>
