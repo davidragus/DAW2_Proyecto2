@@ -190,8 +190,9 @@ const drawBall = () => {
 
 
 
-const textToSpeak = ref("");  
-const { speak, isSupported } = useSpeechSynthesis(textToSpeak, { lang: "en-EN", rate: 0.9 });
+const textToSpeak = ref("");
+const language = ref("en-EN");
+const { speak, isSupported } = useSpeechSynthesis(textToSpeak, { lang: "en-EN", rate: 0.7 });
 
 const speakBall = (number) => {
     if (!isSupported.value) {
