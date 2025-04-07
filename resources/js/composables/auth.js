@@ -107,15 +107,15 @@ export default function useAuth() {
 				}
 			}
 		}
-		await axios.post('/register', serializedUser,{
-				headers: {
-					'Content-Type': 'multipart/form-data'
-				}
+		await axios.post('/register', serializedUser, {
+			headers: {
+				'Content-Type': 'multipart/form-data'
+			}
 		})
 			.then(async response => {
 				// await store.dispatch('auth/getUser')
 				// await loginUser()
-				router.replace({ path: '/', query: {closeModal: 'register'} })
+				router.replace({ path: '/', query: { closeModal: 'register' } })
 				swal({
 					icon: 'success',
 					title: 'Registration successfully',
