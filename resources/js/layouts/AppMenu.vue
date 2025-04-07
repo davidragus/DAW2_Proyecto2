@@ -48,8 +48,15 @@ const model = ref([
 	{
 		label: 'Achievements',
 		items: [
-			{ label: 'Achievements', icon: 'pi pi-fw pi-id-card', to: '/admin/achievements', permision: 'achievement-list' },
-			{ label: 'Categorias', icon: 'pi pi-fw pi-id-card', to: '/admin/categories', permision: 'category-list' }
+			{ label: 'Achievements', icon: 'pi pi-fw pi-id-card', to: '/admin/achievements', permision: 'achievement-list' }
+
+		]
+	},
+	{
+		label: 'Games',
+		items: [
+			{ label: 'Games', icon: 'pi pi-fw pi-bolt', to: '/admin/games', permision: 'games-list' },
+			{ label: 'Game rooms', icon: 'pi pi-fw pi-address-book', to: '/admin/game-rooms', permision: 'game-rooms-list' }
 
 		]
 	}

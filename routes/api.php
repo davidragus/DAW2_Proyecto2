@@ -62,6 +62,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 	Route::get('validation/{id}', [PendingValidationController::class, 'show']);
 	Route::put('validation/approve/{id}', [PendingValidationController::class, 'approve']);
 	Route::put('validation/decline/{id}', [PendingValidationController::class, 'decline']);
+	Route::delete('validation/{id}', [PendingValidationController::class, 'destroy']);
 });
 
 Route::get('category-list', [CategoryController::class, 'getList']);

@@ -44,6 +44,9 @@ export default function useValidations() {
 					background: '#2A2A2A',
 					color: '#ffffff'
 				})
+				.then(() => {
+					validation.value.status = response.data.data.status;
+				})
 			})
 			.catch(error => {
 				swal({
@@ -65,6 +68,9 @@ export default function useValidations() {
 					background: '#2A2A2A',
 					color: '#ffffff'
 				})
+				.then(() => {
+					validation.value.status = response.data.data.status;
+				})
 			})
 			.catch(error => {
 				swal({
@@ -76,6 +82,38 @@ export default function useValidations() {
 			})
 			.finally(() => isLoading.value = false);
 	};
+	const deleteValidation = async (id, index) => {
+		swal({
+			title: 'Are you sure?',
+			text: 'You won\'t be able to revert this action!',
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonText: 'Yes, delete it!',
+			confirmButtonColor: '#ef4444',
+			timer: 20000,
+			timerProgressBar: true,
+			reverseButtons: true
+		})
+			.then(result => {
+				if (result.isConfirmed) {
+					axios.delete('/api/validations/' + id)
+						.then(response => {
+							validations.value.data.splice(index, 1);
+
+							swal({
+								icon: 'success',
+								title: 'User deleted successfully'
+							})
+						})
+						.catch(error => {
+							swal({
+								icon: 'error',
+								title: 'Something went wrong'
+							})
+						})
+				}
+			})
+	}
 
 	return {
 		validation,
@@ -84,6 +122,7 @@ export default function useValidations() {
 		getValidation,
 		approveValidation,
 		declineValidation,
-		isLoading
+		isLoading,
+		deleteValidation
 	};
 }

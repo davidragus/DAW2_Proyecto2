@@ -335,6 +335,31 @@ export default [
 					},
 				]
 			},
+			{
+				name: 'games',
+				path: 'games',
+				meta: { breadCrumb: 'Games' },
+				children: [
+					{
+						name: 'games.index',
+						path: '',
+						component: () => import('../views/admin/games/Index.vue'),
+						meta: { breadCrumb: 'Games' }
+					},
+					{
+						name: 'games.create',
+						path: 'create',
+						component: () => import('../views/admin/games/Create.vue'),
+						meta: { breadCrumb: 'Create game' }
+					},
+					{
+						name: 'games.edit',
+						path: 'games/edit/:id',
+						component: () => import('../views/admin/games/Edit.vue'),
+						meta: { breadCrumb: 'Edit game' }
+					},
+				]
+			},
 
 			//TODO Organizar rutas
 			{

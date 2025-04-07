@@ -1,27 +1,45 @@
 <template>
-    <div class="bingo-container">
-        <h1 class="text-center">Bingo</h1>
-        <div class="bingo-board">
-            <div
-                v-for="(number, index) in board"
-                :key="index"
-                :class="['bingo-cell', { selected: selectedNumbers.includes(number) }]"
-            >
-                {{ number }}
+    <div id="mainContent">
+        <div class="container mt-3">
+            <div class="row justify-content-center mb-3">
+                <div class="col-auto">
+                    <input
+                        type="number"
+                        v-model.number="numCartones"
+                        min="1"
+                        max="10"
+                        class="form-control"
+                        placeholder="Número de cartones"
+                    />
+                </div>
+                <div class="col-auto">
+                    <button @click="generateBingoCards" class="btn btn-primary">
+                        Generar Cartones
+                    </button>
+                </div>
             </div>
-        </div>
-        <div class="controls">
-            <button class="btn btn-primary" @click="drawNumber" :disabled="selectedNumbers.length >= board.length">
-                Draw Number
-            </button>
-            <p v-if="selectedNumbers.length >= board.length" class="text-center mt-3">All numbers have been drawn!</p>
-        </div>
-        <div class="selected-numbers mt-4">
-            <h3>Selected Numbers:</h3>
-            <div class="selected-list">
-                <span v-for="(number, index) in selectedNumbers" :key="index" class="selected-number">
-                    {{ number }}
-                </span>
+            <div class="row">
+                <div
+                    v-for="(card, cardIndex) in bingoCards"
+                    :key="cardIndex"
+                    class="col-md-4 col-lg-3 mb-3"
+                >
+                    <div class="card p-2">
+                        <div
+                            v-for="(row, rowIndex) in card"
+                            :key="rowIndex"
+                            class="d-flex justify-content-center"
+                        >
+                            <div
+                                v-for="(cell, colIndex) in row"
+                                :key="colIndex"
+                                class="bingo-cell"
+                            >
+                                {{ cell }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -30,112 +48,149 @@
 <script setup>
 import { ref } from "vue";
 
-// Generar un tablero de bingo con números aleatorios
-const generateBoard = () => {
-    const numbers = [];
-    while (numbers.length < 25) {
-        const randomNumber = Math.floor(Math.random() * 75) + 1; // Números del 1 al 75
-        if (!numbers.includes(randomNumber)) {
-            numbers.push(randomNumber);
+const numCartones = ref(1);
+const bingoCards = ref([]);
+
+const generateBingoCards = () => {
+    bingoCards.value = Array.from(
+        { length: numCartones.value },
+        generateBingoCard
+    );
+};
+
+const generateBingoCard = () => {
+    const columnRanges = [
+        [1, 9],
+        [10, 19],
+        [20, 29],
+        [30, 39],
+        [40, 49],
+        [50, 59],
+        [60, 69],
+        [70, 79],
+        [80, 90],
+    ];
+
+    // Función auxiliar para obtener 'count' números aleatorios únicos en el rango, ordenados ascendentemente.
+    const getRandomNumbers = (start, end, count) => {
+        const pool = Array.from(
+            { length: end - start + 1 },
+            (_, i) => i + start
+        );
+        const nums = [];
+        for (let i = 0; i < count; i++) {
+            const idx = Math.floor(Math.random() * pool.length);
+            nums.push(pool.splice(idx, 1)[0]);
+        }
+        return nums.sort((a, b) => a - b);
+    };
+
+    // Generar un patrón válido (matriz de booleans de 3x9)
+    // Cada fila tendrá 5 "true" (rellenos) y se verificará que cada columna tenga 1 o 2 "true".
+    let pattern;
+    while (true) {
+        pattern = Array.from({ length: 3 }, () => Array(9).fill(false));
+
+        // Para cada fila, elegimos 5 columnas al azar
+        for (let r = 0; r < 3; r++) {
+            const availableCols = [...Array(9).keys()];
+            for (let i = 0; i < 5; i++) {
+                const idx = Math.floor(Math.random() * availableCols.length);
+                pattern[r][availableCols[idx]] = true;
+                availableCols.splice(idx, 1);
+            }
+        }
+
+        // Validar que cada columna tenga 1 o 2 celdas "true" (nunca 0 ni 3)
+        let valid = true;
+        for (let c = 0; c < 9; c++) {
+            const colCount = pattern.reduce(
+                (sum, row) => sum + (row[c] ? 1 : 0),
+                0
+            );
+            if (colCount === 0 || colCount === 3) {
+                valid = false;
+                break;
+            }
+        }
+        if (valid) break;
+    }
+
+    // Creamos la matriz del cartón (3x9) inicializada en ''.
+    const card = Array.from({ length: 3 }, () => Array(9).fill(""));
+
+    // Para cada columna, asignamos los números correspondientes a las celdas marcadas.
+    for (let c = 0; c < 9; c++) {
+        // Obtenemos las filas en las que se deben colocar números en esta columna.
+        const rowsWithNumber = [];
+        for (let r = 0; r < 3; r++) {
+            if (pattern[r][c]) rowsWithNumber.push(r);
+        }
+        // Se obtienen 'count' números aleatorios dentro del rango de la columna, ordenados.
+        const nums = getRandomNumbers(
+            columnRanges[c][0],
+            columnRanges[c][1],
+            rowsWithNumber.length
+        );
+        // Para respetar la regla de orden ascendente en la columna, asignamos los números a las filas ordenadas.
+        rowsWithNumber.sort((a, b) => a - b);
+        rowsWithNumber.forEach((r, i) => {
+            card[r][c] = nums[i];
+        });
+    }
+
+    return card;
+};
+
+// Ejemplo de prueba: generar 100 cartones y verificar su validez.
+const testCards = [];
+for (let i = 0; i < 100; i++) {
+    const card = generateBingoCard();
+    // Verificación de filas: cada fila debe tener 5 números.
+    const rowsValid = card.every(
+        (row) => row.filter((cell) => cell !== "").length === 5
+    );
+    // Verificación de columnas: cada columna debe tener 1 o 2 números.
+    let colsValid = true;
+    for (let c = 0; c < 9; c++) {
+        const colCount = card.reduce(
+            (sum, row) => sum + (row[c] !== "" ? 1 : 0),
+            0
+        );
+        if (colCount < 1 || colCount > 2) {
+            colsValid = false;
+            break;
         }
     }
-    return numbers;
-};
-
-const board = ref(generateBoard());
-const selectedNumbers = ref([]);
-
-// Función para seleccionar un número al azar
-const drawNumber = () => {
-    const remainingNumbers = board.value.filter((number) => !selectedNumbers.value.includes(number));
-    if (remainingNumbers.length > 0) {
-        const randomIndex = Math.floor(Math.random() * remainingNumbers.length);
-        selectedNumbers.value.push(remainingNumbers[randomIndex]);
+    if (rowsValid && colsValid) {
+        testCards.push(card);
+    } else {
+        console.error("Cartón inválido encontrado:", card);
     }
-};
+}
+console.log(
+    "Se generaron",
+    testCards.length,
+    "cartones válidos de 100 pruebas."
+);
+console.log(generateBingoCard());
 </script>
 
 <style scoped>
-.bingo-container {
-    max-width: 600px;
-    margin: 0 auto;
-    text-align: center;
-    color: white;
-    background-color: #2a2a2a;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+#mainContent {
+    width: 100%;
 }
-
-.bingo-board {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 10px;
-    margin: 20px 0;
-}
-
 .bingo-cell {
-    width: 60px;
-    height: 60px;
+    width: 40px;
+    height: 40px;
+    border: 1px solid black;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #313131;
-    color: white;
-    font-size: 1.2rem;
-    font-weight: bold;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    transition: background-color 0.3s, transform 0.2s;
+    background-color: #4a4a4a;
+    margin: 2px;
 }
-
-.bingo-cell.selected {
-    background-color: #007bff;
-    color: white;
-    transform: scale(1.1);
-}
-
-.controls {
-    margin-top: 20px;
-}
-
-.btn {
-    padding: 10px 20px;
-    font-size: 1rem;
-    font-weight: bold;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.btn-primary {
-    background-color: #007bff;
-    color: white;
-}
-
-.btn-primary:disabled {
-    background-color: #6c757d;
-    cursor: not-allowed;
-}
-
-.selected-numbers {
-    margin-top: 20px;
-    text-align: left;
-}
-
-.selected-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.selected-number {
-    background-color: #007bff;
-    color: white;
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-size: 1rem;
+.bingo-cell .complete{
+    background-color: #5a5a5a;
 }
 </style>
