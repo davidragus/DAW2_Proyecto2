@@ -74,11 +74,6 @@ import { langStore } from "@/store/lang";
 const numCartones = ref(1);
 const bingoCards = ref([]);
 
-const textToSpeak = ref("");
-const locale = ref(langStore().locale);
-const language = computed(() => `${locale.value.toLowerCase()}-${locale.value.toUpperCase()}`);
-const { speak, isSupported } = useSpeechSynthesis(textToSpeak, { lang: language.value, rate: 0.7 });
-
 const generateBingoCards = () => {
     bingoCards.value = Array.from(
         { length: numCartones.value },
@@ -191,8 +186,13 @@ const drawBall = () => {
         setTimeout(() => {
             currentBall.value = null;
         }, 500);
-    }, 3000);
+    }, 2000);
 };
+
+const textToSpeak = ref("");
+const locale = ref(langStore().locale);
+const language = computed(() => `${locale.value.toLowerCase()}-${locale.value.toUpperCase()}`);
+const { speak, isSupported } = useSpeechSynthesis(textToSpeak, { lang: language.value, rate: 0.7 });
 
 const speakBall = (number) => {
     console.log(language.value);
