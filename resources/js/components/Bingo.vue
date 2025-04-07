@@ -67,11 +67,17 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useSpeechSynthesis } from '@vueuse/core'
+import { langStore } from "@/store/lang";
 
 const numCartones = ref(1);
 const bingoCards = ref([]);
+
+const textToSpeak = ref("");
+const locale = ref(langStore().locale);
+const language = computed(() => `${locale.value.toLowerCase()}-${locale.value.toUpperCase()}`);
+const { speak, isSupported } = useSpeechSynthesis(textToSpeak, { lang: language.value, rate: 0.7 });
 
 const generateBingoCards = () => {
     bingoCards.value = Array.from(
@@ -188,13 +194,8 @@ const drawBall = () => {
     }, 3000);
 };
 
-
-
-const textToSpeak = ref("");
-const language = ref("en-EN");
-const { speak, isSupported } = useSpeechSynthesis(textToSpeak, { lang: "en-EN", rate: 0.7 });
-
 const speakBall = (number) => {
+    console.log(language.value);
     if (!isSupported.value) {
         console.warn("Speech synthesis not supported");
         return;
