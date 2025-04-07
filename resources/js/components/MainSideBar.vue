@@ -30,7 +30,15 @@
 				<img src="/images/chat-bot_dark.png" alt="england" class="icon">
 				<p class="color-white">LIVE CHAT</p>
 			</button>
-			<Drawer v-model:visible="chatVisible" position="right" header="Live Chat" class="w-25">
+			<Drawer v-model:visible="chatVisible" position="right" header="Live Chat" class="w-25" :pt="{
+				root: (options) => ({
+					style: {
+						'--p-drawer-background': '#212121',
+						'--p-drawer-color': '#fff',
+						'--p-drawer-border-color': '#212121',
+					}
+				}),
+			}">
 				<LiveChat></LiveChat>
 			</Drawer>
 		</div>
