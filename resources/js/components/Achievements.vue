@@ -131,7 +131,7 @@ onUnmounted(() => {
 <style scoped>
 #mainContent {
     display: flex;
-    padding: 20px;
+    padding: 0 20px 0 20px;
     background-color: #2A2A2A;
 }
 
@@ -144,6 +144,8 @@ onUnmounted(() => {
 .sidebar {
     width: 200px;
     margin-right: 20px;
+    border-right: 1px solid #3B3B3B;
+    padding: 20px 0 20px 0;
 }
 
 .sidebar ul {
@@ -221,5 +223,8 @@ onUnmounted(() => {
     cursor: pointer;
     width: 100%;
     text-align: center;
+}
+.container{
+    padding: 20px 0 20px 0;
 }
 </style>
