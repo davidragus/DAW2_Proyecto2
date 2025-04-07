@@ -20,19 +20,21 @@
 					</div>
 
 					<div class="mb-3">
-						<h6 class="text-white">Upload DNI Images</h6>
-
+						<h5 class="text-white">Upload DNI Images</h5>
+						<h6>Front image DNI</h6>
 						<!-- Imagen frontal del DNI -->
 						<FileUpload mode="basic" name="dni_front" accept="image/*" chooseLabel="Upload DNI Front"
-							@select="onSelectValidationImage($event, 'front')" />
+							@select="onSelectValidationImage($event, 'front')" class="w-100" :style="{ backgroundColor: 'yellow', borderColor: 'yellow', color: 'black' }" />
 
+						<h6>Back image DNI</h6>
 						<!-- Imagen trasera del DNI -->
 						<FileUpload mode="basic" name="dni_back" accept="image/*" chooseLabel="Upload DNI Back"
-							@select="onSelectValidationImage($event, 'back')" />
+							@select="onSelectValidationImage($event, 'back')" class="w-100" :style="{ backgroundColor: 'yellow', borderColor: 'yellow', color: 'black'}" />
 
+						<h6>Face picture</h6>
 						<!-- Imagen del rostro -->
 						<FileUpload mode="basic" name="face_image" accept="image/*" chooseLabel="Upload Face Image"
-							@select="onSelectValidationImage($event, 'face')" />
+							@select="onSelectValidationImage($event, 'face')" class="w-100" :style="{ backgroundColor: 'yellow', borderColor: 'yellow', color: 'black' }" />
 						<p v-if="validationErrors.validationImages" class="text-danger mt-1">{{ validationErrors.validationImages }}</p>
 					</div>
 					<div class="border rounded name-container">

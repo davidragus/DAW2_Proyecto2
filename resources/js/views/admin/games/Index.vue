@@ -4,13 +4,13 @@
 			<div class="card">
 
 				<div class="card-header bg-transparent ps-0 pe-0">
-					<h5 class="float-start mb-0">Validations</h5>
+					<h5 class="float-start mb-0">Games</h5>
 				</div>
 
 				<!-- v-model:filters="filters" Esto va en el datatable -->
 				<!-- :globalFilterFields="['id', 'alias', 'name', 'surname1', 'surname2', 'email', 'created_at', 'type.name']" -->
 
-				<DataTable :value="validations.data" paginator :rows="25" stripedRows dataKey="id" size="small">
+				<DataTable :value="games.data" paginator :rows="25" stripedRows dataKey="id" size="small">
 
 					<template #header>
 						<Toolbar pt:root:class="toolbar-table">
@@ -29,11 +29,11 @@
 
 					</template>
 
-					<template #empty> No validations found. </template>
+					<template #empty> No games found. </template>
 
 					<Column field="id" header="ID" sortable></Column>
 					<!-- <Column field="dni" header="Identity Card Number" sortable></Column> -->
-					<Column field="user.email" header="User" sortable></Column>
+					<Column field="name" header="Name" sortable></Column>
 					<Column field="status" header="Validation status" sortable>
 						<template #body="{ data }">
 							<span class="rounded-4 py-1 px-3 text-light fw-bolder" :class="{
@@ -56,10 +56,9 @@
 								:to="{ name: 'users.edit', params: { id: slotProps.data.id } }">
 								<Button icon="pi pi-pencil" severity="info" size="small" class="mr-1" />
 							</router-link> -->
-							<router-link v-if="can('validation-delete')">
-							<Button icon="pi pi-trash" severity="danger" v-if="can('user-delete')"
-								@click.prevent="deleteValidation(slotProps.data.id, slotProps.index)" size="small" />
-							</router-link>
+
+							<!-- <Button icon="pi pi-trash" severity="danger" v-if="can('user-delete')"
+								@click.prevent="deleteUser(slotProps.data.id, slotProps.index)" size="small" /> -->
 
 						</template>
 					</Column>
@@ -74,12 +73,12 @@
 <script setup>
 
 import { ref, onMounted } from "vue";
-import useValidations from "../../../composables/validations";
+import useGames from "../../../composables/games";
 import { useAbility } from '@casl/vue'
 import { FilterMatchMode, FilterService } from "@primevue/core/api";
 
 
-const { validations, getValidations, deleteValidation } = useValidations();
+const { games, getGames } = useGames();
 const { can } = useAbility()
 
 // const filters = ref({
@@ -93,7 +92,7 @@ const { can } = useAbility()
 // };
 
 onMounted(() => {
-	getValidations();
+	getGames();
 })
 
 </script>

@@ -1,5 +1,5 @@
 <template>
-    <div id="mainContent">
+    <div id="mainContent" class="d-flex">
         <aside class="sidebar">
             <ul>
                 <li><a><router-link to="/my-account" class="dropdown-item">ACCOUNT DETAILS</router-link></a></li>
@@ -9,7 +9,7 @@
                 <li class="active"><a href="#">VERIFY IDENTITY</a></li>
             </ul>
         </aside>
-        <div>
+        <div class="w-100">
             <div class="main-content-validation">
             <div v-if="user.validation_status === 'ACCEPTED'" class="status-card accepted">
                 <h2>Validation Accepted</h2>
@@ -110,7 +110,8 @@ async function handleSubmit() {
         await schema.validate({ validationImages: validationImages.value }, { abortEarly: false });
 
         await submitVerifyIdentity(authStore().user.id, validationImages.value);
-
+        showModal.value = false;
+        validationImages.value = [null, null, null];
         swal({
             icon: "success",
             title: "Validation submitted successfully!",
@@ -119,8 +120,6 @@ async function handleSubmit() {
             background: "#2A2A2A",
             color: "#ffffff",
         });
-
-        showModal.value = false;
         getUser(authStore().user.id);
     } catch (err) {
         if (err.inner) {
@@ -144,12 +143,13 @@ async function handleSubmit() {
 
 <style scoped>
 #mainContent {
-    padding-top: 20px;
     margin-left: 20px;
 }
 .sidebar {
     width: 200px;
     margin-right: 20px;
+    padding-top: 20px;
+    border-right: 1px solid #3B3B3B;
 }
 
 .sidebar ul {

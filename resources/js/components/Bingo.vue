@@ -137,6 +137,7 @@ const generateBingoCard = () => {
         }
         if (valid) break;
     }
+<<<<<<< HEAD
 
     // Creamos la matriz del cartón (3x9) inicializada en ''.
     const card = Array.from({ length: 3 }, () => Array(9).fill(""));
@@ -204,6 +205,20 @@ const speakBall = (number) => {
     speak();
 };
 
+=======
+    if (rowsValid && colsValid) {
+        testCards.push(card);
+    } else {
+        console.error("Cartón inválido encontrado:", card);
+    }
+}
+console.log(
+    "Se generaron",
+    testCards.length,
+    "cartones válidos de 100 pruebas."
+);
+console.log(generateBingoCard());
+>>>>>>> origin
 </script>
 
 <style scoped>
@@ -219,6 +234,7 @@ const speakBall = (number) => {
     justify-content: center;
     background-color: #4a4a4a;
     margin: 2px;
+<<<<<<< HEAD
     color: white;
 }
 
@@ -250,5 +266,10 @@ const speakBall = (number) => {
     0% { transform: scale(1); }
     50% { transform: scale(1.2); }
     100% { transform: scale(0); }
+=======
+}
+.bingo-cell .complete{
+    background-color: #5a5a5a;
+>>>>>>> origin
 }
 </style>
