@@ -26,20 +26,23 @@
 		<div class="w-100">
 			<LocaleSwitcher></LocaleSwitcher>
 			<button v-if="authStore().user?.name" class="bottom-buton live-chat" :class="{ 'd-none': !visible }"
-				@click="chatVisible = true">
+				@click="openDrawer">
 				<img src="/images/chat-bot_dark.png" alt="england" class="icon">
 				<p class="color-white">LIVE CHAT</p>
 			</button>
-			<Drawer v-model:visible="chatVisible" position="right" header="Live Chat" class="w-25" :pt="{
-				root: (options) => ({
-					style: {
-						'--p-drawer-background': '#212121',
-						'--p-drawer-color': '#fff',
-						'--p-drawer-border-color': '#212121',
-					}
-				}),
-			}">
-				<LiveChat></LiveChat>
+			<div class="appendToClass"></div>
+			<Drawer @hide="closeDrawer" v-if="showDrawer" v-model:visible="chatVisible" position="right"
+				header="Live Chat" class="w-25" :pt="{
+					root: (options) => ({
+						style: {
+							'--p-drawer-background': '#212121',
+							'--p-drawer-color': '#fff',
+							'--p-drawer-border-color': '#212121',
+						}
+					}),
+				}" appendTo="self">
+				<LiveChat>
+				</LiveChat>
 			</Drawer>
 		</div>
 		<!-- <div class="overlay" id="overlaySideBar"></div> -->
@@ -60,6 +63,7 @@ import Button from 'primevue/button';
 const { user } = authStore();
 
 const chatVisible = ref(false);
+const showDrawer = ref(false);
 
 defineProps({ visible: Boolean });
 
@@ -72,6 +76,19 @@ const languages = ref([
 	"Italiano", "Português", "Nederlands", "中文",
 	"日本語", "한국어", "Русский", "العربية"
 ]);
+
+const openDrawer = () => {
+	chatVisible.value = true;
+	showDrawer.value = true;
+}
+
+// Se debe de usar un temporizador para cambiar el valor de showDrawer. De lo contrario, dará un error al entrar al panel de admin.
+const closeDrawer = () => {
+	chatVisible.value = false;
+	setTimeout(() => {
+		showDrawer.value = false;
+	}, 300);
+}
 
 function optionHover(name) {
 	switch (name) {
