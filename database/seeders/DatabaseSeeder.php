@@ -11,6 +11,8 @@ class DatabaseSeeder extends Seeder
 		$this->call(CountryTableSeeder::class);
 		$this->call(CreateAdminUserSeeder::class);
 		$this->call(AchievementsSeeder::class);
+		$this->call(GamesSeeder::class);
+		$this->call(GameRoomsSeeder::class);
 
 		// $this->call(RoleSeeder::class);
 		// \App\Models\User::factory(10)->create();
