@@ -26,6 +26,9 @@
 					<button @click="generateBingoCards" class="btn btn-primary">
 						Generar Cartones
 					</button>
+					<button :disabled="bingoCards.length < 1" @click="updateStatus" class="btn btn-secondary ms-2">
+						{{ isReady ? 'Not ready' : 'Ready' }}
+					</button>
 				</div>
 			</div>
 			<div class="row">
@@ -54,7 +57,17 @@ import useUsers from '@/composables/users';
 
 const swal = inject("$swal");
 const { getChips, updateChips } = useUsers();
-const { bingoCards, generateBingoCard } = useBingo();
+const {
+	player,
+	bingoCards,
+	isReady,
+	getPlayer,
+	isGameOngoing,
+	generateBingoCard,
+	joinGame,
+	updatePlayerGameData,
+	updatePlayerStatus
+} = useBingo();
 
 const allBalls = ref(Array.from({ length: 90 }, (_, i) => i + 1));
 const drawnBalls = ref([]);
@@ -109,8 +122,9 @@ const users = ref([]);
 onMounted(() => {
 	window.Echo.join('bingo')
 		.here((channelUsers) => {
+			getPlayer(1, authStore().user.id);
 			users.value = channelUsers;
-			console.log(users.value);
+			// console.log(users.value);
 		})
 		.joining((user) => {
 			users.value.push(user);
@@ -126,25 +140,49 @@ onBeforeUnmount(() => {
 });
 
 const generateBingoCards = async () => {
-	const chips = await getChips(authStore().user.id);
-	if (chips >= (bingoCardsAmount.value * 10)) {
-		bingoCards.value = Array.from(
-			{ length: bingoCardsAmount.value },
-			generateBingoCard
-		);
-		authStore().user.chips = await updateChips(authStore().user.id, chips - (bingoCardsAmount.value * 10));
-	} else {
-		swal.fire({
-			icon: "error",
-			title: "Error",
-			text: `You don't have enough chips to buy ${bingoCardsAmount.value} bingo cards.`,
-			background: '#2A2A2A',
-			color: '#ffffff'
-		});
+	if (!await isGameOngoing(1)) {
+		const chips = await getChips(authStore().user.id);
+		if (chips >= (bingoCardsAmount.value * 10)) {
+			if (bingoCards.value.length + bingoCardsAmount.value > 10) {
+				swal.fire({
+					icon: "error",
+					title: "Error",
+					text: `You can only have 10 bingo cards at a time.`,
+					background: '#2A2A2A',
+					color: '#ffffff'
+				});
+			} else {
+				const newBingoCards = Array.from(
+					{ length: bingoCardsAmount.value },
+					generateBingoCard
+				);
+				bingoCards.value.push(...newBingoCards);
+				authStore().user.chips = await updateChips(authStore().user.id, chips - (bingoCardsAmount.value * 10));
+				if (!player.value) {
+					console.log(player.value);
+					joinGame(1);
+				} else {
+					updatePlayerGameData(1, authStore().user.id);
+				}
+			}
+		} else {
+			swal.fire({
+				icon: "error",
+				title: "Error",
+				text: `You don't have enough chips to buy ${bingoCardsAmount.value} bingo cards.`,
+				background: '#2A2A2A',
+				color: '#ffffff'
+			});
+		}
 	}
 };
 
 const bingoCardsAmount = ref(1);
+
+const updateStatus = () => {
+	isReady.value = !isReady.value;
+	updatePlayerStatus(1, authStore().user.id, isReady.value);
+}
 </script>
 
 <style scoped>

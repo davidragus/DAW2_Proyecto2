@@ -1,8 +1,12 @@
-import { ref } from 'vue'
+import { ref, inject } from 'vue'
 
 export default function useBingo() {
 
+	const swal = inject("$swal");
+
+	const player = ref(null);
 	const bingoCards = ref([]);
+	const isReady = ref(false);
 
 	const generateBingoCard = () => {
 		const columnRanges = [
@@ -78,6 +82,61 @@ export default function useBingo() {
 		return card;
 	};
 
+	const isGameOngoing = async (gameRoomId) => {
+		await axios.get('/api/game/getGameRoom/' + gameRoomId)
+			.then((response) => {
+				const gameRoom = response.data.data;
+				if (gameRoom['status'] === 'WAITING') {
+					return false;
+				} else {
+					swal.fire({
+						icon: "error",
+						title: "Error",
+						text: `You cannot join the game because it has already started.`,
+						background: '#2A2A2A',
+						color: '#ffffff'
+					});
+					return true;
+				}
+			})
+			.catch((error) => {
+				swal.fire({
+					icon: "error",
+					title: "Error",
+					text: `${error.response.data.message}`,
+					background: '#2A2A2A',
+					color: '#ffffff'
+				});
+			});
+	}
+
+	const getPlayer = async (gameRoomId, playerId) => {
+		await axios.get(`/api/game/getPlayer/${gameRoomId}/${playerId}`)
+			.then((response) => {
+				player.value = response.data.data;
+				bingoCards.value = JSON.parse(player.value.game_data);
+				isReady.value = player.value.is_ready;
+			});
+	}
+
+	const joinGame = async (gameRoomId) => {
+		axios.post('/api/game/joinGame/' + gameRoomId, {
+			game_data: bingoCards.value
+		});
+	};
+
+	const updatePlayerGameData = async (gameRoomId, playerId) => {
+		axios.post(`/api/game/updatePlayerGameData/${gameRoomId}/${playerId}`, {
+			game_data: bingoCards.value
+		});
+	};
+
+	const updatePlayerStatus = async (gameRoomId, playerId, isReady) => {
+		axios.post(`/api/game/updatePlayerStatus/${gameRoomId}/${playerId}`, {
+			is_ready: isReady
+		});
+	};
+
 	const startCountdown = () => {
 	};
 
@@ -85,8 +144,15 @@ export default function useBingo() {
 	};
 
 	return {
+		player,
 		bingoCards,
-		generateBingoCard
+		isReady,
+		getPlayer,
+		isGameOngoing,
+		generateBingoCard,
+		joinGame,
+		updatePlayerGameData,
+		updatePlayerStatus
 	};
 
 };

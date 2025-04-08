@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\CountryController;
+use App\Http\Controllers\Api\GameController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use Illuminate\Http\Request;
@@ -18,7 +19,11 @@ use App\Http\Controllers\Api\TransactionController;
 Route::post('forget-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('forget.password.post');
 Route::post('reset-password', [ResetPasswordController::class, 'reset'])->name('password.reset');
 
-
+Route::get('game/getGameRoom/{id}', [GameController::class, 'getGameRoom']);
+Route::get('game/getPlayer/{gameRoomId}/{playerId}', [GameController::class, 'getPlayer']);
+Route::post('game/joinGame/{id}', [GameController::class, 'joinGame']);
+Route::post('game/updatePlayerGameData/{gameRoomId}/{playerId}', [GameController::class, 'updatePlayerGameData']);
+Route::post('game/updatePlayerStatus/{gameRoomId}/{playerId}', [GameController::class, 'updatePlayerStatus']);
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
 
