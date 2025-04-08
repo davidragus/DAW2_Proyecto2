@@ -13,7 +13,9 @@ return new class extends Migration {
 		Schema::create('game_rooms', function (Blueprint $table) {
 			$table->id();
 			$table->unsignedBigInteger('game_id');
-			$table->string('max_users');
+			$table->string('name');
+			$table->string('max_users')->default(0);
+			$table->enum('status', ['WAITING', 'IN_PROGRESS'])->default('WAITING');
 			$table->timestamps();
 
 			$table->foreign('game_id')->references('id')->on('games')->onDelete('cascade');
