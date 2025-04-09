@@ -64,6 +64,7 @@ const {
 	getPlayer,
 	isGameOngoing,
 	generateBingoCard,
+	generateNumbersPosition,
 	joinGame,
 	updatePlayerGameData,
 	updatePlayerStatus

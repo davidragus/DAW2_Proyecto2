@@ -6,6 +6,7 @@ export default function useBingo() {
 
 	const player = ref(null);
 	const bingoCards = ref([]);
+	const cardsPositions = ref([]);
 	const isReady = ref(false);
 
 	const generateBingoCard = () => {
@@ -82,6 +83,22 @@ export default function useBingo() {
 		return card;
 	};
 
+	const generateNumbersPosition = () => {
+		cardsPositions.value = Array.from({ length: bingoCards.value.length }, () =>
+			Array.from({ length: 3 }, () => Array(9).fill(null)));
+		for (let i = 0; i < bingoCards.value.length; i++) {
+			for (let j = 0; j < bingoCards.value[i].length; j++) {
+				for (let k = 0; k < bingoCards.value[i][j].length; k++) {
+					if (bingoCards.value[i][j][k]) {
+						cardsPositions.value[i][j][k] = false;
+					}
+				}
+			}
+		}
+	}
+
+
+
 	const isGameOngoing = async (gameRoomId) => {
 		await axios.get('/api/game/getGameRoom/' + gameRoomId)
 			.then((response) => {
@@ -114,8 +131,11 @@ export default function useBingo() {
 		await axios.get(`/api/game/getPlayer/${gameRoomId}/${playerId}`)
 			.then((response) => {
 				player.value = response.data.data;
-				bingoCards.value = JSON.parse(player.value.game_data);
-				isReady.value = player.value.is_ready;
+				if (player.value) {
+					bingoCards.value = JSON.parse(player.value.game_data);
+					isReady.value = player.value.is_ready;
+					generateNumbersPosition();
+				}
 			});
 	}
 
@@ -146,10 +166,12 @@ export default function useBingo() {
 	return {
 		player,
 		bingoCards,
+		cardsPositions,
 		isReady,
 		getPlayer,
 		isGameOngoing,
 		generateBingoCard,
+		generateNumbersPosition,
 		joinGame,
 		updatePlayerGameData,
 		updatePlayerStatus
