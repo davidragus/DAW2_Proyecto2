@@ -97,7 +97,17 @@ export default function useBingo() {
 		}
 	}
 
-
+	const checkForNumber = (number) => {
+		for (let i = 0; i < bingoCards.value.length; i++) {
+			for (let j = 0; j < bingoCards.value[i].length; j++) {
+				for (let k = 0; k < bingoCards.value[i][j].length; k++) {
+					if (bingoCards.value[i][j][k] === number) {
+						cardsPositions.value[i][j][k] = true;
+					}
+				}
+			}
+		}
+	}
 
 	const isGameOngoing = async (gameRoomId) => {
 		await axios.get('/api/game/getGameRoom/' + gameRoomId)
@@ -139,6 +149,11 @@ export default function useBingo() {
 			});
 	}
 
+	const getPlayersStatus = async (gameRoomId) => {
+		const response = await axios.get(`/api/game/getPlayersStatus/${gameRoomId}`);
+		return response.data;
+	}
+
 	const joinGame = async (gameRoomId) => {
 		axios.post('/api/game/joinGame/' + gameRoomId, {
 			game_data: bingoCards.value
@@ -169,12 +184,14 @@ export default function useBingo() {
 		cardsPositions,
 		isReady,
 		getPlayer,
+		getPlayersStatus,
 		isGameOngoing,
 		generateBingoCard,
 		generateNumbersPosition,
 		joinGame,
 		updatePlayerGameData,
-		updatePlayerStatus
+		updatePlayerStatus,
+		checkForNumber
 	};
 
 };

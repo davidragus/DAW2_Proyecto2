@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\ChangePlayerStatus;
 use App\Http\Resources\GameRoomPlayerResource;
 use App\Models\GameRoom;
 use App\Http\Controllers\Controller;
@@ -44,6 +45,19 @@ class GameController extends Controller
 					'message' => 'Player not found in the game room',
 				], 404);
 			}
+		} catch (Exception $ex) {
+			return response()->json([
+				'message' => 'An unexpected error has occurred',
+			], 500);
+		}
+	}
+
+	public function getPlayersStatus($gameRoomId)
+	{
+		try {
+			$players = GameRoomsPlayer::where('game_room_id', $gameRoomId)->get()->pluck('is_ready', 'user_id')->toArray();
+
+			return response()->json($players, 200);
 		} catch (Exception $ex) {
 			return response()->json([
 				'message' => 'An unexpected error has occurred',
@@ -100,6 +114,7 @@ class GameController extends Controller
 			GameRoomsPlayer::where('game_room_id', $gameRoomId)->where('user_id', $playerId)->update([
 				'is_ready' => $request->is_ready ? 1 : 0,
 			]);
+			broadcast(new ChangePlayerStatus($playerId, $request->is_ready));
 			return response()->json([
 				'message' => 'Player updated successfully',
 			], 200);

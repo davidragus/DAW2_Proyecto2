@@ -1,6 +1,7 @@
 <template>
 	<div id="mainContent">
 		<div class="mt-3">
+			<h4 class="text-center">Players ready: {{ countReadyPlayers }}/5 </h4>
 			<h5>Números salidos:</h5>
 			<div class="d-flex flex-wrap">
 				<div v-for="ball in drawnBalls" :key="ball" class="bingo-cell" style="width: 30px; height: 30px">
@@ -36,6 +37,8 @@
 					<div class="card p-2">
 						<div v-for="(row, rowIndex) in card" :key="rowIndex" class="d-flex justify-content-center">
 							<div v-for="(cell, colIndex) in row" :key="colIndex" class="bingo-cell">
+								<div v-if="cardsPositions[cardIndex][rowIndex][colIndex] == true" class="cell-marker">
+								</div>
 								{{ cell }}
 							</div>
 						</div>
@@ -60,14 +63,17 @@ const { getChips, updateChips } = useUsers();
 const {
 	player,
 	bingoCards,
+	cardsPositions,
 	isReady,
 	getPlayer,
+	getPlayersStatus,
 	isGameOngoing,
 	generateBingoCard,
 	generateNumbersPosition,
 	joinGame,
 	updatePlayerGameData,
-	updatePlayerStatus
+	updatePlayerStatus,
+	checkForNumber
 } = useBingo();
 
 const allBalls = ref(Array.from({ length: 90 }, (_, i) => i + 1));
@@ -85,6 +91,7 @@ const drawBall = () => {
 	isFading.value = false;
 
 	speakBall(ball);
+	checkForNumber(ball);
 
 	setTimeout(() => {
 		isFading.value = true;
@@ -125,6 +132,7 @@ onMounted(() => {
 		.here((channelUsers) => {
 			getPlayer(1, authStore().user.id);
 			users.value = channelUsers;
+			updatePlayersStatus();
 			// console.log(users.value);
 		})
 		.joining((user) => {
@@ -134,11 +142,27 @@ onMounted(() => {
 			const userIndex = users.value.findIndex((u) => u.id === user.id);
 			users.value.splice(userIndex, 1);
 		})
+		.listen('.ChangePlayerStatus', (data) => {
+			const userIndex = users.value.findIndex((user) => user.id == data.id);
+			users.value[userIndex].isReady = data.isReady;
+			console.log(users.value);
+		});
 });
 
 onBeforeUnmount(() => {
 	window.Echo.leave('bingo');
 });
+
+const updatePlayersStatus = async () => {
+	const players = await getPlayersStatus(1);
+	users.value.forEach(user => {
+		user.isReady = players[user.id] == 1 ?? false;
+	});
+}
+
+const countReadyPlayers = computed(() => {
+	return users.value.reduce((accumulator, user) => accumulator + user.isReady ? 1 : 0, 0);
+})
 
 const generateBingoCards = async () => {
 	if (!await isGameOngoing(1)) {
@@ -158,9 +182,10 @@ const generateBingoCards = async () => {
 					generateBingoCard
 				);
 				bingoCards.value.push(...newBingoCards);
+				generateNumbersPosition(); //TODO: Modificar y añadir una función que añada un array nuevo en base a las tarjetas anteriores en vez de generarlas todas desde 0
 				authStore().user.chips = await updateChips(authStore().user.id, chips - (bingoCardsAmount.value * 10));
 				if (!player.value) {
-					console.log(player.value);
+					// console.log(player.value);
 					joinGame(1);
 				} else {
 					updatePlayerGameData(1, authStore().user.id);
@@ -201,6 +226,17 @@ const updateStatus = () => {
 	background-color: #4a4a4a;
 	margin: 2px;
 	color: white;
+	position: relative;
+}
+
+.cell-marker {
+	position: absolute;
+	height: 80%;
+	width: 100%;
+	background-color: rgba(255, 0, 0, 0.5);
+	border-radius: 100%;
+	/* opacity: 0;
+	transition: opacity 0.3s ease; */
 }
 
 .bola-actual {

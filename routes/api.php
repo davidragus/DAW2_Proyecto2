@@ -21,6 +21,7 @@ Route::post('reset-password', [ResetPasswordController::class, 'reset'])->name('
 
 Route::get('game/getGameRoom/{id}', [GameController::class, 'getGameRoom']);
 Route::get('game/getPlayer/{gameRoomId}/{playerId}', [GameController::class, 'getPlayer']);
+Route::get('game/getPlayersStatus/{gameRoomId}', [GameController::class, 'getPlayersStatus']);
 Route::post('game/joinGame/{id}', [GameController::class, 'joinGame']);
 Route::post('game/updatePlayerGameData/{gameRoomId}/{playerId}', [GameController::class, 'updatePlayerGameData']);
 Route::post('game/updatePlayerStatus/{gameRoomId}/{playerId}', [GameController::class, 'updatePlayerStatus']);
