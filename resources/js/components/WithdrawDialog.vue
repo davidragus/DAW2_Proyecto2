@@ -2,7 +2,7 @@
 	<div>
 		<Dialog v-model:visible="visible" modal header="WITHDRAW"
 			:style="{ width: '400px', backgroundColor: '#212121', color: 'white', borderColor: '#3B3B3B' }"
-			@update:visible="onDialogClose">
+			@update:visible="onDialogClose" appendTo="self">
 			<form class="withdraw-container p-4" @submit.prevent="withdraw">
 				<h3>Amount of chips to withdraw:</h3>
 				<div class="withdraw-amount">
