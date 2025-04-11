@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { ref, inject } from 'vue'
 
 export default function useBingo() {
@@ -109,6 +110,10 @@ export default function useBingo() {
 		}
 	}
 
+	const startGame = async (gameRoomId) => {
+		axios.post('/api/game/startGame/' + gameRoomId, {});
+	}
+
 	const isGameOngoing = async (gameRoomId) => {
 		await axios.get('/api/game/getGameRoom/' + gameRoomId)
 			.then((response) => {
@@ -185,6 +190,7 @@ export default function useBingo() {
 		isReady,
 		getPlayer,
 		getPlayersStatus,
+		startGame,
 		isGameOngoing,
 		generateBingoCard,
 		generateNumbersPosition,

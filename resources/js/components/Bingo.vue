@@ -1,7 +1,8 @@
 <template>
 	<div id="mainContent">
 		<div class="mt-3">
-			<h4 class="text-center">Players ready: {{ countReadyPlayers }}/5 </h4>
+			<h4 class="text-center">Players ready: {{ countReadyPlayers }}/1 </h4>
+			<!-- Modificar el contador al umbral asignado en el backend -->
 			<h5>Números salidos:</h5>
 			<div class="d-flex flex-wrap">
 				<div v-for="ball in drawnBalls" :key="ball" class="bingo-cell" style="width: 30px; height: 30px">
@@ -13,10 +14,7 @@
 			{{ currentBall }}
 		</div>
 
-
-		<button @click="drawBall" class="btn btn-success">
-			Sacar bola
-		</button>
+		<Timer v-if="timerSeconds" :seconds="timerSeconds" />
 		<div class="container mt-3">
 			<div class="row justify-content-center mb-3">
 				<div class="col-auto">
@@ -57,6 +55,7 @@ import useBingo from '@/composables/bingo';
 import Echo from "laravel-echo";
 import { authStore } from "../store/auth";
 import useUsers from '@/composables/users';
+import Timer from './Timer.vue';
 
 const swal = inject("$swal");
 const { getChips, updateChips } = useUsers();
@@ -67,6 +66,7 @@ const {
 	isReady,
 	getPlayer,
 	getPlayersStatus,
+	startGame,
 	isGameOngoing,
 	generateBingoCard,
 	generateNumbersPosition,
@@ -76,22 +76,22 @@ const {
 	checkForNumber
 } = useBingo();
 
+const imLeader = ref(false);
 const allBalls = ref(Array.from({ length: 90 }, (_, i) => i + 1));
 const drawnBalls = ref([]);
 const currentBall = ref(null);
 const isFading = ref(false);
+const timerSeconds = ref(null);
 
-const drawBall = () => {
-	if (allBalls.value.length === 0) return;
+const drawNumber = (number) => {
 
-	const randomNumber = Math.floor(Math.random() * allBalls.value.length);
-	const ball = allBalls.value.splice(randomNumber, 1)[0];
-	currentBall.value = ball;
-	drawnBalls.value.push(ball);
+	allBalls.value.splice(number, 1)[0];
+	currentBall.value = number;
+	drawnBalls.value.push(number);
 	isFading.value = false;
 
-	speakBall(ball);
-	checkForNumber(ball);
+	speakBall(number);
+	checkForNumber(number);
 
 	setTimeout(() => {
 		isFading.value = true;
@@ -133,7 +133,10 @@ onMounted(() => {
 			getPlayer(1, authStore().user.id);
 			users.value = channelUsers;
 			updatePlayersStatus();
-			// console.log(users.value);
+			if (channelUsers.length === 1) {
+				imLeader.value = true;
+				console.log('Yo soy el lider');
+			}
 		})
 		.joining((user) => {
 			users.value.push(user);
@@ -145,13 +148,54 @@ onMounted(() => {
 		.listen('.ChangePlayerStatus', (data) => {
 			const userIndex = users.value.findIndex((user) => user.id == data.id);
 			users.value[userIndex].isReady = data.isReady;
-			console.log(users.value);
-		});
+		})
+		.listen('.client-ChangeLeader', (data) => {
+			const userIndex = users.value.findIndex((user) => user.id == data.id);
+			if (users.value[userIndex].id == authStore().user.id) {
+				imLeader.value = true;
+			}
+		})
+		.listen('.SendCountdown', (data) => {
+			timerSeconds.value = data.seconds;
+			startCountdown();
+		})
+		.listen('.DrawNumber', (data) => {
+			drawNumber(data.number);
+		})
 });
 
 onBeforeUnmount(() => {
+	changeLeader();
 	window.Echo.leave('bingo');
 });
+
+window.onbeforeunload = function () {
+	changeLeader();
+};
+
+const changeLeader = () => {
+	if (imLeader.value) {
+		const newLeader = users.value.find(user => user.id != authStore().user.id);
+		if (newLeader) {
+			window.Echo.join('bingo')
+				.whisper('ChangeLeader', { id: newLeader.id });
+		}
+	}
+}
+
+const startCountdown = () => {
+	let secondsPassed = 0;
+	const countdown = setInterval(() => {
+		if (secondsPassed >= timerSeconds.value) {
+			clearInterval(countdown);
+			timerSeconds.value = null;
+			if (imLeader.value) {
+				startGame();
+			}
+		}
+		secondsPassed++;
+	}, 1000);
+}
 
 const updatePlayersStatus = async () => {
 	const players = await getPlayersStatus(1);

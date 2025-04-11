@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Events\ChangePlayerStatus;
+use App\Events\DrawNumber;
+use App\Events\SendCountdown;
 use App\Http\Resources\GameRoomPlayerResource;
 use App\Models\GameRoom;
 use App\Http\Controllers\Controller;
@@ -115,6 +117,16 @@ class GameController extends Controller
 				'is_ready' => $request->is_ready ? 1 : 0,
 			]);
 			broadcast(new ChangePlayerStatus($playerId, $request->is_ready));
+
+			$playersReady = GameRoomsPlayer::where('game_room_id', $gameRoomId)->where('is_ready', 1)->count();
+			$gameRoom = GameRoom::find($gameRoomId);
+
+			if ($playersReady >= 1 && $gameRoom->status == 'WAITING') {
+				$gameRoom->status = 'IN_PROGRESS';
+				$gameRoom->save();
+				$this->sendCountdown($gameRoomId);
+			}
+
 			return response()->json([
 				'message' => 'Player updated successfully',
 			], 200);
@@ -122,6 +134,32 @@ class GameController extends Controller
 			return response()->json([
 				'message' => 'An unexpected error has occurred',
 			], 500);
+		}
+	}
+
+	public function sendCountdown($gameRoomId)
+	{
+		broadcast(new SendCountdown(30));
+	}
+
+	public function startGame($gameRoomId)
+	{
+
+		$this->playBingo($gameRoomId);
+	}
+
+	public function playBingo($channelId)
+	{
+		$allNumbers = range(1, 90);
+
+		while (!empty($allNumbers)) {
+			$randomNumber = array_rand($allNumbers);
+			$number = $allNumbers[$randomNumber];
+			unset($allNumbers[$randomNumber]);
+
+			broadcast(new DrawNumber($number, $channelId));
+
+			sleep(5);
 		}
 	}
 }
