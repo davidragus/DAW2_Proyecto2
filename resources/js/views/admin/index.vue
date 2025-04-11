@@ -5,18 +5,18 @@
 			<p class="welcome-message">{{ welcomeMessage }}</p>
 		</div>
 		<div class="info-section">
-			<div class="info-card">
+			<RouterLink to="/admin/users" class="info-card">
 				<h2>Usuarios</h2>
 				<p>Actualmente hay <span class="highlight">{{ usersCount }}</span> usuarios registrados.</p>
-			</div>
-			<div class="info-card">
+			</RouterLink>
+			<RouterLink to="/admin/achievements" class="info-card">
 				<h2>Logros</h2>
 				<p>Se han creado <span class="highlight">{{ achievementsCount }}</span> logros en la plataforma.</p>
-			</div>
-			<div class="info-card">
+			</RouterLink>
+			<RouterLink to="/admin/games" class="info-card">
 				<h2>Juegos</h2>
 				<p>Disponibles <span class="highlight">{{ gamesCount }}</span> juegos para los usuarios.</p>
-			</div>
+			</RouterLink>
 		</div>
 	</div>
 </template>
@@ -25,19 +25,23 @@
 import { ref, onMounted, watch } from 'vue';
 import useUsers from "../../composables/users";
 import useAchievements from "../../composables/achievements";
+import useGames from "../../composables/games";
+import { RouterLink } from 'vue-router';
 
 const { achievements, getAllAchievements } = useAchievements();
 const { users, getUsers, deleteUser, resetUserDB } = useUsers();
+const { games, getAllGames } = useGames();
+
 const usersCount = ref(0);
 const achievementsCount = ref(0);
-const gamesCount = ref(10);
+const gamesCount = ref(0);
 
 // Mensaje dinámico
 const welcomeMessage = ref('');
 const messages = [
 	'Gestiona usuarios, logros y roles desde aquí.',
 	'Administra el contenido de Royal Flush Casino.',
-	'¡Haz que la experiencia de los usuarios sea inolvidable!'
+	'¡Haz que la experiencia sea inolvidable!'
 ];
 
 let messageIndex = 0;
@@ -49,19 +53,22 @@ function updateWelcomeMessage() {
 
 watch(users, (newUsers) => {
 	usersCount.value = newUsers.data.length;
-	// console.log(users.value);
-	// console.log(achievements.value);
 });
 
 watch(achievements, (newAchievements) => {
 	achievementsCount.value = newAchievements.data.length;
 })
 
+watch(games, (newGames) => {
+	gamesCount.value = newGames.data.length;
+});
+
 onMounted(() => {
 	getAllAchievements();
 	getUsers();
+	getAllGames();
 	updateWelcomeMessage();
-	setInterval(updateWelcomeMessage, 8000);
+	setInterval(updateWelcomeMessage, 5000);
 });
 
 </script>

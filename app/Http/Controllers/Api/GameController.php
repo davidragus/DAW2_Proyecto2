@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Game;
+use App\Http\Resources\GameResource;
 
 class GameController extends Controller
 {
@@ -33,6 +34,6 @@ class GameController extends Controller
             ->orderBy($orderColumn, $orderDirection)
             ->paginate(50);
 
-        return response()->json($games);
+        return GameResource::collection($games);
     }
 }
