@@ -28,6 +28,13 @@
 					<button :disabled="bingoCards.length < 1" @click="updateStatus" class="btn btn-secondary ms-2">
 						{{ isReady ? 'Not ready' : 'Ready' }}
 					</button>
+					<button :disabled="wrongLineCalls >= 3" @click="callLine" class="btn btn-secondary ms-2">
+						Call Line
+					</button>
+					<button :disabled="wrongBingoCalls >= 3" @click="callBingo(1, authStore().user.id)"
+						class="btn btn-secondary ms-2">
+						Call Bingo
+					</button>
 				</div>
 			</div>
 			<div class="row">
@@ -64,6 +71,8 @@ const {
 	bingoCards,
 	cardsPositions,
 	isReady,
+	wrongLineCalls,
+	wrongBingoCalls,
 	getPlayer,
 	getPlayersStatus,
 	startGame,
@@ -73,7 +82,9 @@ const {
 	joinGame,
 	updatePlayerGameData,
 	updatePlayerStatus,
-	checkForNumber
+	checkForNumber,
+	callLine,
+	callBingo
 } = useBingo();
 
 const imLeader = ref(false);
@@ -190,7 +201,7 @@ const startCountdown = () => {
 			clearInterval(countdown);
 			timerSeconds.value = null;
 			if (imLeader.value) {
-				startGame();
+				startGame(1);
 			}
 		}
 		secondsPassed++;

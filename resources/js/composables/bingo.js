@@ -9,6 +9,8 @@ export default function useBingo() {
 	const bingoCards = ref([]);
 	const cardsPositions = ref([]);
 	const isReady = ref(false);
+	const wrongLineCalls = ref(0);
+	const wrongBingoCalls = ref(0);
 
 	const generateBingoCard = () => {
 		const columnRanges = [
@@ -177,10 +179,67 @@ export default function useBingo() {
 		});
 	};
 
-	const startCountdown = () => {
+	const checkForLine = () => {
+		for (let i = 0; i < cardsPositions.value.length; i++) {
+			for (let j = 0; j < cardsPositions.value[i].length; j++) {
+				let numCounter = 0;
+				for (let k = 0; k < cardsPositions.value[i][j].length; k++) {
+					if (cardsPositions.value[i][j][k] == true) {
+						numCounter++;
+					}
+				}
+				if (numCounter == 5) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	const callLine = async (gameRoomId, playerId) => {
+		if (checkForLine()) {
+			// axios.post(`/api/game/callLine/${gameRoomId}/${playerId}`, {});
+			swal.fire({
+				icon: "success",
+				title: "Success",
+				text: `You have a line!`,
+				background: '#2A2A2A',
+				color: '#ffffff'
+			});
+		} else {
+			wrongLineCalls.value++;
+			const errorMessage = wrongLineCalls.value >= 3 ? 'You can\'t call line again.' : `You have ${3 - wrongLineCalls.value} ${3 - wrongLineCalls.value > 1 ? 'attempts' : 'attempt'} left.`;
+			swal.fire({
+				icon: "error",
+				title: "You don't have a line!",
+				text: errorMessage,
+				background: '#2A2A2A',
+				color: '#ffffff'
+			});
+		}
 	};
 
-	const stopCountdown = () => {
+	const callBingo = async (gameRoomId, playerId) => {
+		if (checkForLine()) {
+			axios.post(`/api/game/callLine/${gameRoomId}/${playerId}`, {});
+			swal.fire({
+				icon: "success",
+				title: "Success",
+				text: `You have a line!`,
+				background: '#2A2A2A',
+				color: '#ffffff'
+			});
+		} else {
+			wrongBingoCalls.value++;
+			const errorMessage = wrongBingoCalls.value >= 3 ? 'You can\'t call bingo again.' : `You have ${3 - wrongBingoCalls.value} ${3 - wrongLineCalls.value > 1 ? 'attempts' : 'attempt'} left.`;
+			swal.fire({
+				icon: "error",
+				title: "You don't have bingo!",
+				text: errorMessage,
+				background: '#2A2A2A',
+				color: '#ffffff'
+			});
+		}
 	};
 
 	return {
@@ -188,6 +247,8 @@ export default function useBingo() {
 		bingoCards,
 		cardsPositions,
 		isReady,
+		wrongLineCalls,
+		wrongBingoCalls,
 		getPlayer,
 		getPlayersStatus,
 		startGame,
@@ -197,7 +258,9 @@ export default function useBingo() {
 		joinGame,
 		updatePlayerGameData,
 		updatePlayerStatus,
-		checkForNumber
+		checkForNumber,
+		callLine,
+		callBingo
 	};
 
 };

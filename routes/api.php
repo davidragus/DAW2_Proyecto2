@@ -25,6 +25,7 @@ Route::get('game/getPlayersStatus/{gameRoomId}', [GameController::class, 'getPla
 Route::post('game/startGame/{gameRoomId}', [GameController::class, 'startGame']);
 Route::post('game/joinGame/{id}', [GameController::class, 'joinGame']);
 Route::post('game/updatePlayerGameData/{gameRoomId}/{playerId}', [GameController::class, 'updatePlayerGameData']);
+Route::post('game/callLine/{gameRoomId}/{playerId}', [GameController::class, 'callLine']);
 Route::post('game/updatePlayerStatus/{gameRoomId}/{playerId}', [GameController::class, 'updatePlayerStatus']);
 
 Route::group(['middleware' => 'auth:sanctum'], function () {

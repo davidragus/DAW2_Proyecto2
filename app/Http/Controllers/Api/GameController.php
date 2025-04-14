@@ -9,6 +9,7 @@ use App\Http\Resources\GameRoomPlayerResource;
 use App\Models\GameRoom;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\GameRoomResource;
+use App\Models\GameRoomsHistory;
 use App\Models\GameRoomsPlayer;
 use Exception;
 use Illuminate\Http\Request;
@@ -144,12 +145,16 @@ class GameController extends Controller
 
 	public function startGame($gameRoomId)
 	{
-
-		$this->playBingo($gameRoomId);
+		$history = GameRoomsHistory::create([
+			'game_room_id' => $gameRoomId,
+			'game_data' => json_encode(['winners' => ['line' => null, 'bingo' => null], 'numbers' => []]),
+		]);
+		$this->playBingo($gameRoomId, $history->id);
 	}
 
-	public function playBingo($channelId)
+	public function playBingo($channelId, $historyId)
 	{
+		$gameRoomHistory = GameRoomsHistory::find($historyId);
 		$allNumbers = range(1, 90);
 
 		while (!empty($allNumbers)) {
@@ -157,9 +162,23 @@ class GameController extends Controller
 			$number = $allNumbers[$randomNumber];
 			unset($allNumbers[$randomNumber]);
 
+			$gameData = json_decode($gameRoomHistory->game_data, true);
+			$gameData['numbers'][] = $number;
+
 			broadcast(new DrawNumber($number, $channelId));
+			$gameRoomHistory->game_data = json_encode($gameData);
+			$gameRoomHistory->save();
 
 			sleep(5);
 		}
+	}
+
+	public function callLine($gameRoomId, $playerId)
+	{
+		$gameRoomHistory = GameRoomsHistory::where('game_room_id', $gameRoomId)->get()->last();
+		$gameData = json_decode($gameRoomHistory->game_data, true);
+		$gameData['winners']['line'] = $playerId;
+		$gameRoomHistory->game_data = json_encode($gameData);
+		$gameRoomHistory->save();
 	}
 }
