@@ -14,6 +14,7 @@ return new class extends Migration {
 			$table->id();
 			$table->unsignedBigInteger('user_id');
 			$table->unsignedBigInteger('game_room_id');
+			$table->integer('chips_betted')->default(0);
 			$table->boolean('is_ready')->default(false);
 			$table->json('game_data')->nullable();
 			$table->timestamps();

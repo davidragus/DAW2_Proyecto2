@@ -28,7 +28,8 @@
 					<button :disabled="bingoCards.length < 1" @click="updateStatus" class="btn btn-secondary ms-2">
 						{{ isReady ? 'Not ready' : 'Ready' }}
 					</button>
-					<button :disabled="wrongLineCalls >= 3" @click="callLine" class="btn btn-secondary ms-2">
+					<button :disabled="wrongLineCalls >= 3" @click="callLine(1, authStore().user.id)"
+						class="btn btn-secondary ms-2">
 						Call Line
 					</button>
 					<button :disabled="wrongBingoCalls >= 3" @click="callBingo(1, authStore().user.id)"
@@ -173,6 +174,28 @@ onMounted(() => {
 		.listen('.DrawNumber', (data) => {
 			drawNumber(data.number);
 		})
+		.listen('.BroadcastWinners', (data) => {
+			let lineWinners = [];
+			let bingoWinners = [];
+
+			if (data.lineWinners.length > 0) {
+				lineWinners = data.lineWinners.map(winner => users.value.find(user => user.id == winner).username);
+			}
+			if (data.bingoWinners.length > 0) {
+				bingoWinners = data.bingoWinners.map(winner => users.value.find(user => user.id == winner).username);
+			}
+
+			swal.fire({
+				icon: "success",
+				title: `Bingo!`,
+				text: `Line winners: ${lineWinners.join(', ')}\nBingo winners: ${bingoWinners.join(', ')}`,
+				background: '#2A2A2A',
+				color: '#ffffff'
+			});
+
+			restoreDataAfterGame();
+			updateUserChips();
+		})
 });
 
 onBeforeUnmount(() => {
@@ -192,6 +215,26 @@ const changeLeader = () => {
 				.whisper('ChangeLeader', { id: newLeader.id });
 		}
 	}
+}
+
+const restoreDataAfterGame = () => {
+	bingoCards.value = [];
+	cardsPositions.value = [];
+	player.value = null;
+	isReady.value = false;
+	wrongLineCalls.value = 0;
+	wrongBingoCalls.value = 0;
+	drawnBalls.value = [];
+	currentBall.value = null;
+
+	console.log(users.value);
+	for (const user of users.value) {
+		user.isReady = false;
+	}
+}
+
+const updateUserChips = async () => {
+	authStore().user.chips = await getChips(authStore().user.id);
 }
 
 const startCountdown = () => {
@@ -240,10 +283,10 @@ const generateBingoCards = async () => {
 				generateNumbersPosition(); //TODO: Modificar y añadir una función que añada un array nuevo en base a las tarjetas anteriores en vez de generarlas todas desde 0
 				authStore().user.chips = await updateChips(authStore().user.id, chips - (bingoCardsAmount.value * 10));
 				if (!player.value) {
-					// console.log(player.value);
-					joinGame(1);
+					joinGame(1, bingoCardsAmount.value * 10);
+					getPlayer(1, authStore().user.id);
 				} else {
-					updatePlayerGameData(1, authStore().user.id);
+					updatePlayerGameData(1, authStore().user.id, bingoCardsAmount.value * 10);
 				}
 			}
 		} else {

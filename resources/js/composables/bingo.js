@@ -161,15 +161,17 @@ export default function useBingo() {
 		return response.data;
 	}
 
-	const joinGame = async (gameRoomId) => {
+	const joinGame = async (gameRoomId, chipsBetted) => {
 		axios.post('/api/game/joinGame/' + gameRoomId, {
-			game_data: bingoCards.value
-		});
+			game_data: bingoCards.value,
+			chips_betted: chipsBetted
+		})
 	};
 
-	const updatePlayerGameData = async (gameRoomId, playerId) => {
+	const updatePlayerGameData = async (gameRoomId, playerId, chipsBetted) => {
 		axios.post(`/api/game/updatePlayerGameData/${gameRoomId}/${playerId}`, {
-			game_data: bingoCards.value
+			game_data: bingoCards.value,
+			chips_betted: chipsBetted
 		});
 	};
 
@@ -196,9 +198,26 @@ export default function useBingo() {
 		return false;
 	}
 
+	const checkForBingo = () => {
+		for (let i = 0; i < cardsPositions.value.length; i++) {
+			let numCounter = 0;
+			for (let j = 0; j < cardsPositions.value[i].length; j++) {
+				for (let k = 0; k < cardsPositions.value[i][j].length; k++) {
+					if (cardsPositions.value[i][j][k] == true) {
+						numCounter++;
+					}
+				}
+			}
+			if (numCounter == 15) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	const callLine = async (gameRoomId, playerId) => {
-		if (checkForLine()) {
-			// axios.post(`/api/game/callLine/${gameRoomId}/${playerId}`, {});
+		if (true) { // checkForLine()
+			axios.post(`/api/game/callLine/${gameRoomId}/${playerId}`, {});
 			swal.fire({
 				icon: "success",
 				title: "Success",
@@ -220,12 +239,12 @@ export default function useBingo() {
 	};
 
 	const callBingo = async (gameRoomId, playerId) => {
-		if (checkForLine()) {
-			axios.post(`/api/game/callLine/${gameRoomId}/${playerId}`, {});
+		if (true) { // checkForBingo()
+			axios.post(`/api/game/callBingo/${gameRoomId}/${playerId}`, {});
 			swal.fire({
 				icon: "success",
 				title: "Success",
-				text: `You have a line!`,
+				text: `You won the bingo!`,
 				background: '#2A2A2A',
 				color: '#ffffff'
 			});

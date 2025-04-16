@@ -50,6 +50,7 @@ class User extends Authenticatable implements HasMedia
 	 */
 	protected $casts = [
 		'email_verified_at' => 'datetime',
+		'chips' => 'integer',
 	];
 
 	public function sendPasswordResetNotification($token)
@@ -70,8 +71,8 @@ class User extends Authenticatable implements HasMedia
 	public function achievements()
 	{
 		return $this->belongsToMany(Achievement::class, 'users_has_achievements')
-			->withPivot('obtained_date') 
-			->withTimestamps(); 
+			->withPivot('obtained_date')
+			->withTimestamps();
 	}
 
 	public function registerMediaCollections(): void

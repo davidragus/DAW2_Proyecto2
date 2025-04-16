@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Events\ChangePlayerStatus;
 use App\Events\DrawNumber;
 use App\Events\SendCountdown;
+use App\Events\AnnounceWinners;
 use App\Http\Resources\GameRoomPlayerResource;
 use App\Models\GameRoom;
 use App\Http\Controllers\Controller;
@@ -13,6 +14,7 @@ use App\Models\GameRoomsHistory;
 use App\Models\GameRoomsPlayer;
 use Exception;
 use Illuminate\Http\Request;
+use App\Jobs\DrawNextNumber;
 
 class GameController extends Controller
 {
@@ -78,6 +80,7 @@ class GameController extends Controller
 					'game_room_id' => $gameRoom->id,
 					'user_id' => $request->user()->id,
 					'game_data' => json_encode($request->game_data),
+					'chips_betted' => $request->chips_betted,
 				]);
 
 				return response()->json([
@@ -98,8 +101,8 @@ class GameController extends Controller
 	public function updatePlayerGameData(Request $request, $gameRoomId, $playerId)
 	{
 		try {
-			GameRoomsPlayer::where('game_room_id', $gameRoomId)->where('user_id', $playerId)->update([
-				'game_data' => json_encode($request->game_data),
+			GameRoomsPlayer::where('game_room_id', $gameRoomId)->where('user_id', $playerId)->increment('chips_betted', $request->chips_betted, [
+				'game_data' => json_encode($request->game_data)
 			]);
 			return response()->json([
 				'message' => 'Player updated successfully',
@@ -149,7 +152,8 @@ class GameController extends Controller
 			'game_room_id' => $gameRoomId,
 			'game_data' => json_encode(['winners' => ['line' => null, 'bingo' => null], 'numbers' => []]),
 		]);
-		$this->playBingo($gameRoomId, $history->id);
+		DrawNextNumber::dispatch($history->id)->onQueue('bingo');
+		// $this->playBingo($gameRoomId, $history->id);
 	}
 
 	public function playBingo($channelId, $historyId)
@@ -177,7 +181,16 @@ class GameController extends Controller
 	{
 		$gameRoomHistory = GameRoomsHistory::where('game_room_id', $gameRoomId)->get()->last();
 		$gameData = json_decode($gameRoomHistory->game_data, true);
-		$gameData['winners']['line'] = $playerId;
+		$gameData['winners']['line'][] = $playerId;
+		$gameRoomHistory->game_data = json_encode($gameData);
+		$gameRoomHistory->save();
+	}
+
+	public function callBingo($gameRoomId, $playerId)
+	{
+		$gameRoomHistory = GameRoomsHistory::where('game_room_id', $gameRoomId)->get()->last();
+		$gameData = json_decode($gameRoomHistory->game_data, true);
+		$gameData['winners']['bingo'][] = $playerId;
 		$gameRoomHistory->game_data = json_encode($gameData);
 		$gameRoomHistory->save();
 	}

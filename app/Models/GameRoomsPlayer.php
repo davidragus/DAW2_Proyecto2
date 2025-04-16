@@ -12,6 +12,7 @@ class GameRoomsPlayer extends Model
 	protected $fillable = [
 		'game_room_id',
 		'user_id',
+		'chips_betted',
 		'is_ready',
 		'game_data',
 	];
