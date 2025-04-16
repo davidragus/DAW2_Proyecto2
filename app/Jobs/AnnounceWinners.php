@@ -48,8 +48,8 @@ class AnnounceWinners implements ShouldQueue
 		}
 
 		$distributedChips = [
-			'line' => ($totalChips * $percentages['line']) / count($winners['line']),
-			'bingo' => ($totalChips * $percentages['bingo']) / count($winners['bingo']),
+			'line' => floor(($totalChips * $percentages['line']) / count($winners['line'])),
+			'bingo' => floor(($totalChips * $percentages['bingo']) / count($winners['bingo'])),
 		];
 
 		foreach ($winners as $type => $ids) {
