@@ -216,7 +216,7 @@ export default function useBingo() {
 	}
 
 	const callLine = async (gameRoomId, playerId) => {
-		if (true) { // checkForLine()
+		if (checkForLine()) {
 			axios.post(`/api/game/callLine/${gameRoomId}/${playerId}`, {});
 			swal.fire({
 				icon: "success",
@@ -239,7 +239,7 @@ export default function useBingo() {
 	};
 
 	const callBingo = async (gameRoomId, playerId) => {
-		if (true) { // checkForBingo()
+		if (checkForBingo()) {
 			axios.post(`/api/game/callBingo/${gameRoomId}/${playerId}`, {});
 			swal.fire({
 				icon: "success",
