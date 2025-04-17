@@ -1,16 +1,6 @@
 <template>
 	<div id="mainContent" class="d-flex">
-		<aside class="sidebar">
-			<ul>
-				<li>
-					<RouterLink to="/my-account" class="router-link-active">ACCOUNT DETAILS</RouterLink>
-				</li>
-				<li><a href="#">BALANCE HISTORY</a></li>
-				<li><a href="#">GAME HISTORY</a></li>
-				<li class="active"><a href="#">ACHIEVEMENTS</a></li>
-				<li><a><router-link to="/verify-identity" class="dropdown-item">VERIFY IDENTITY</router-link></a></li>
-			</ul>
-		</aside>
+		<MyAccountSidebar />
 		<div class="container">
 			<div class="row">
 				<!-- Mostrar logros obtenidos -->
@@ -52,10 +42,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { RouterLink } from 'vue-router';
 import axios from 'axios';
 import { authStore } from '../store/auth';
+import MyAccountSidebar from './MyAccountSidebar.vue';
 
 // Estado para logros y logro seleccionado
 const achievements = ref([]);
@@ -113,7 +104,7 @@ onMounted(() => {
 	}
 });
 
-onUnmounted(() => {
+onBeforeUnmount(() => {
 	document.getElementById('mainContent').classList.remove('ml-4');
 });
 </script>
@@ -123,40 +114,6 @@ onUnmounted(() => {
 	display: flex;
 	padding: 0 20px 0 20px;
 	background-color: #2A2A2A;
-}
-
-.active {
-	text-decoration: underline;
-	color: #ffffff;
-	font-weight: bold;
-}
-
-.sidebar {
-	width: 200px;
-	margin-right: 20px;
-	border-right: 1px solid #3B3B3B;
-	padding: 20px 0 20px 0;
-}
-
-.sidebar ul {
-	list-style: none;
-	padding: 0;
-}
-
-.sidebar ul li {
-	margin-bottom: 10px;
-}
-
-.sidebar ul li a {
-	text-decoration: none;
-	color: #ffffff;
-}
-
-.sidebar ul li a:hover {
-	text-decoration: none;
-	color: #ffffff;
-	font-weight: bold;
-	transition: 0.2s;
 }
 
 .achievement-img {

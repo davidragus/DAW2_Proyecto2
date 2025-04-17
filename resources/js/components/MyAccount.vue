@@ -1,14 +1,6 @@
 <template>
 	<div id="mainContent" class="d-flex">
-		<aside class="sidebar">
-			<ul>
-				<li class="active"><a href="#">ACCOUNT DETAILS</a></li>
-				<li><a href="#">BALANCE HISTORY</a></li>
-				<li><a><router-link to="/game-history">GAME HISTORY</router-link></a></li>
-				<li><a><router-link to="/achievements" class="dropdown-item">ACHIEVEMENTS</router-link></a></li>
-				<li><a><router-link to="/verify-identity" class="dropdown-item">VERIFY IDENTITY</router-link></a></li>
-			</ul>
-		</aside>
+		<MyAccountSidebar />
 		<div class="container">
 			<div class="row justify-content-center ">
 				<div class="col-11 text-center">
@@ -93,6 +85,7 @@ import { authStore } from "../store/auth";
 import useCountries from '@/composables/countries';
 import Swal from 'sweetalert2';
 import * as yup from 'yup';
+import MyAccountSidebar from './MyAccountSidebar.vue';
 
 const auth = authStore();
 const logedUser = computed(() => auth.user);
@@ -240,34 +233,6 @@ const routeToAchivements = () => {
 	padding: 0 20px 0 20px;
 }
 
-.sidebar {
-	padding: 20px 0 20px 0;
-	border-right: 1px solid #3B3B3B;
-	width: 200px;
-	margin-right: 20px;
-}
-
-.sidebar ul {
-	list-style: none;
-	padding: 0;
-}
-
-.sidebar ul li {
-	margin-bottom: 10px;
-}
-
-.sidebar ul li a {
-	text-decoration: none;
-	color: #ffffff;
-}
-
-.sidebar ul li a:hover {
-	text-decoration: none;
-	color: #ffffff;
-	font-weight: bold;
-	transition: 0.2s;
-}
-
 .user-icon {
 	display: block;
 	width: 100px;
@@ -313,12 +278,6 @@ form {
 .btn-secondary {
 	background-color: #6c757d;
 	border-color: #6c757d;
-}
-
-.active {
-	text-decoration: underline;
-	color: #ffffff;
-	font-weight: bold;
 }
 
 .form-control {

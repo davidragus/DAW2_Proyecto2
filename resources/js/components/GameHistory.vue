@@ -1,16 +1,6 @@
 <template>
 	<div id="mainContent" class="d-flex">
-		<aside class="sidebar">
-			<ul>
-				<li>
-					<RouterLink to="/my-account" class="router-link-active">ACCOUNT DETAILS</RouterLink>
-				</li>
-				<li><a href="#">BALANCE HISTORY</a></li>
-				<li class="active"><a href="#">GAME HISTORY</a></li>
-				<li><a href="#">ACHIEVEMENTS</a></li>
-				<li><a><router-link to="/verify-identity" class="dropdown-item">VERIFY IDENTITY</router-link></a></li>
-			</ul>
-		</aside>
+		<MyAccountSidebar />
 		<div class="container py-3">
 			<DataView :value="gameHistory" paginator :rows="6">
 				<template #header>
@@ -62,7 +52,7 @@ import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { RouterLink } from 'vue-router';
 import { authStore } from '../store/auth';
 import DataView from 'primevue/dataview';
-// import DatePicker from 'primevue/datepicker';
+import MyAccountSidebar from './MyAccountSidebar.vue';
 import useUsers from '@/composables/users';
 
 const { gameHistory, getGameHistory } = useUsers();
