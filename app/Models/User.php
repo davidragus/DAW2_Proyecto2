@@ -68,6 +68,11 @@ class User extends Authenticatable implements HasMedia
 		return $this->hasMany(GameRoomsPlayersHistory::class, 'user_id', 'id');
 	}
 
+	public function transactions()
+	{
+		return $this->hasMany(Transaction::class, 'user_id', 'id');
+	}
+
 	public function country()
 	{
 		return $this->hasOne(Country::class, 'code', 'country_code');

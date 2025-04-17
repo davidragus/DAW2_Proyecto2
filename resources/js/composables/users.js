@@ -7,6 +7,7 @@ export default function useUsers() {
 		name: ''
 	})
 	const gameHistory = ref([]);
+	const balanceHistory = ref([]);
 
 	const router = useRouter()
 	const validationErrors = ref({})
@@ -246,10 +247,18 @@ export default function useUsers() {
 			});
 	};
 
+	const getBalanceHistory = async (userId) => {
+		return axios.get('/api/users/getBalanceHistory/' + userId)
+			.then(response => {
+				balanceHistory.value = response.data.data;
+			});
+	}
+
 	return {
 		users,
 		user,
 		gameHistory,
+		balanceHistory,
 		getUsers,
 		getUsersWithTasks,
 		getUser,
@@ -266,5 +275,6 @@ export default function useUsers() {
 		getChips,
 		updateChips,
 		getGameHistory,
+		getBalanceHistory
 	}
 }

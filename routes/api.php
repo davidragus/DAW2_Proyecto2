@@ -29,6 +29,7 @@ Route::post('game/callLine/{gameRoomId}/{playerId}', [GameController::class, 'ca
 Route::post('game/callBingo/{gameRoomId}/{playerId}', [GameController::class, 'callBingo']);
 Route::post('game/updatePlayerStatus/{gameRoomId}/{playerId}', [GameController::class, 'updatePlayerStatus']);
 Route::get('users/getGameHistory/{id}', [UserController::class, 'getGameHistory']);
+Route::get('users/getBalanceHistory/{id}', [UserController::class, 'getBalanceHistory']);
 
 
 Route::group(['middleware' => 'auth:sanctum'], function () {

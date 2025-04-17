@@ -208,12 +208,70 @@ class UserController extends Controller
 
 	public function getGameHistory($userId)
 	{
-		$user = User::findOrFail($userId);
+		$user = User::find($userId);
 
 		$history = $user->gamesHistory()
 			->orderBy('created_at', 'desc')
 			->paginate(50);
 
 		return GameRoomPlayerHistoryResource::collection($history);
+	}
+
+	public function getBalanceHistory($userId)
+	{
+		$user = User::find($userId);
+
+		$gameHistory = $user->gamesHistory()
+			->orderBy('created_at', 'desc')
+			->paginate(50);
+
+		$gameHistory = $gameHistory->flatMap(function ($game) {
+			if ($game->win_amount) {
+				return array_values([
+					[
+						'name' => 'Bet',
+						'created_at' => $game->created_at->toDateString(),
+						'type' => 'MINUS',
+						'amount' => $game->bet_amount
+					],
+					[
+						'name' => 'Win',
+						'created_at' => $game->created_at->toDateString(),
+						'type' => 'PLUS',
+						'amount' => $game->win_amount
+					]
+				]);
+			} else {
+				return [
+					[
+						'name' => 'Bet',
+						'created_at' => $game->created_at->toDateString(),
+						'type' => 'MINUS',
+						'amount' => $game->bet_amount
+					]
+				];
+			}
+		});
+
+		$transactions = $user->transactions()
+			->orderBy('created_at', 'desc')
+			->paginate(50);
+
+		$transactions = $transactions->flatMap(function ($transaction) {
+			return [
+				[
+					'name' => $transaction->type === 'DEPOSIT' ? 'Deposit' : 'Withdraw',
+					'created_at' => $transaction->created_at->toDateString(),
+					'type' => $transaction->type === 'DEPOSIT' ? 'PLUS' : 'MINUS',
+					'amount' => $transaction->chips
+				]
+			];
+		});
+
+		$finalArray = $gameHistory->concat($transactions)
+			->sortByDesc('created_at')
+			->values();
+
+		return response()->json(['data' => $finalArray], 200);
 	}
 }

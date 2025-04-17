@@ -142,6 +142,12 @@ export default [
 				beforeEnter: requireLogin,
 			},
 			{
+				path: 'balance-history',
+				name: 'auth.balance-history',
+				component: () => import('../components/BalanceHistory.vue'),
+				beforeEnter: requireLogin,
+			},
+			{
 				path: 'achievements',
 				name: 'auth.achievements',
 				component: () => import('../components/Achievements.vue'),
