@@ -63,6 +63,11 @@ class User extends Authenticatable implements HasMedia
 		return $this->hasMany(PendingValidation::class);
 	}
 
+	public function gamesHistory()
+	{
+		return $this->hasMany(GameRoomsPlayersHistory::class, 'user_id', 'id');
+	}
+
 	public function country()
 	{
 		return $this->hasOne(Country::class, 'code', 'country_code');

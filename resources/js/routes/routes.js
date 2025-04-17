@@ -136,6 +136,12 @@ export default [
 				beforeEnter: requireLogin,
 			},
 			{
+				path: 'game-history',
+				name: 'auth.game-history',
+				component: () => import('../components/GameHistory.vue'),
+				beforeEnter: requireLogin,
+			},
+			{
 				path: 'achievements',
 				name: 'auth.achievements',
 				component: () => import('../components/Achievements.vue'),

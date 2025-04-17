@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Http\Resources\GameRoomPlayerHistoryResource;
 use App\Http\Resources\UserResource;
 use App\Models\PendingValidation;
 use App\Models\Task;
@@ -203,5 +204,16 @@ class UserController extends Controller
 		} else {
 			return response()->json(['message' => 'User not found'], 404);
 		}
+	}
+
+	public function getGameHistory($userId)
+	{
+		$user = User::findOrFail($userId);
+
+		$history = $user->gamesHistory()
+			->orderBy('created_at', 'desc')
+			->paginate(50);
+
+		return GameRoomPlayerHistoryResource::collection($history);
 	}
 }

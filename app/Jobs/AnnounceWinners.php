@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\GameRoomsPlayersHistory;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -51,6 +52,29 @@ class AnnounceWinners implements ShouldQueue
 			'line' => floor(($totalChips * $percentages['line']) / count($winners['line'])),
 			'bingo' => floor(($totalChips * $percentages['bingo']) / count($winners['bingo'])),
 		];
+
+		$playerHistory = [];
+		foreach ($players as $player) {
+			$winnings = 0;
+			if (in_array($player->user_id, $winners['line'])) {
+				$winnings += $distributedChips['line'];
+			}
+			if (in_array($player->user_id, $winners['bingo'])) {
+				$winnings += $distributedChips['bingo'];
+			}
+
+			$playerHistory[$player->user_id] = [
+				'game_room_id' => $gameRoomId,
+				'user_id' => $player->user_id,
+				'bet_amount' => $player->chips_betted,
+				'win_amount' => $winnings,
+				'result' => in_array($player->user_id, $winners['line']) || in_array($player->user_id, $winners['bingo']) ? 'WIN' : 'LOSE',
+				'created_at' => now(),
+				'updated_at' => now(),
+			];
+		}
+
+		GameRoomsPlayersHistory::insert($playerHistory);
 
 		foreach ($winners as $type => $ids) {
 			User::whereIn('id', $ids)->increment('chips', $distributedChips[$type]);

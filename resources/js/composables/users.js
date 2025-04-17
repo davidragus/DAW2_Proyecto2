@@ -6,6 +6,7 @@ export default function useUsers() {
 	const user = ref({
 		name: ''
 	})
+	const gameHistory = ref([]);
 
 	const router = useRouter()
 	const validationErrors = ref({})
@@ -238,9 +239,17 @@ export default function useUsers() {
 			});
 	}
 
+	const getGameHistory = async (userId) => {
+		return axios.get('/api/users/getGameHistory/' + userId)
+			.then(response => {
+				gameHistory.value = response.data.data;
+			});
+	};
+
 	return {
 		users,
 		user,
+		gameHistory,
 		getUsers,
 		getUsersWithTasks,
 		getUser,
@@ -255,6 +264,7 @@ export default function useUsers() {
 		isLoading,
 		submitVerifyIdentity,
 		getChips,
-		updateChips
+		updateChips,
+		getGameHistory,
 	}
 }

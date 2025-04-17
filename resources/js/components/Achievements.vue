@@ -121,7 +121,7 @@ onUnmounted(() => {
 <style scoped>
 #mainContent {
 	display: flex;
-	padding: 20px;
+	padding: 0 20px 0 20px;
 	background-color: #2A2A2A;
 }
 

@@ -14,6 +14,18 @@ class GameRoomsPlayersHistory extends Model
 		'game_room_id',
 		'bet_amount',
 		'win_amount',
-		'result'
+		'result',
+		'created_at',
+		'updated_at',
 	];
+
+	public function user()
+	{
+		return $this->belongsTo(User::class, 'user_id');
+	}
+
+	public function gameRoom()
+	{
+		return $this->belongsTo(GameRoom::class, 'game_room_id');
+	}
 }
