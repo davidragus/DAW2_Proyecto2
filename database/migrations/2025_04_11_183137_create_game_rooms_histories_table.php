@@ -10,10 +10,10 @@ return new class extends Migration {
 	 */
 	public function up(): void
 	{
-		Schema::create('games', function (Blueprint $table) {
+		Schema::create('game_rooms_histories', function (Blueprint $table) {
 			$table->id();
-			$table->string('name');
-			$table->string('route_path');
+			$table->unsignedBigInteger('game_room_id');
+			$table->json('game_data')->nullable();
 			$table->timestamps();
 		});
 	}
@@ -23,6 +23,6 @@ return new class extends Migration {
 	 */
 	public function down(): void
 	{
-		Schema::dropIfExists('games');
+		Schema::dropIfExists('game_rooms_histories');
 	}
 };

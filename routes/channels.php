@@ -21,3 +21,8 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 Broadcast::channel('chat', function ($user) {
 	return new PublicUserResource($user);
 });
+
+Broadcast::channel('bingo', function ($user) {
+	$player = new PublicUserResource($user);
+	return array_merge($player->toArray(request()), ['isReady' => false, 'isLeader' => false]);
+});

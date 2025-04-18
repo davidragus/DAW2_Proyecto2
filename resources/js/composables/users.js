@@ -6,6 +6,8 @@ export default function useUsers() {
 	const user = ref({
 		name: ''
 	})
+	const gameHistory = ref([]);
+	const balanceHistory = ref([]);
 
 	const router = useRouter()
 	const validationErrors = ref({})
@@ -174,14 +176,14 @@ export default function useUsers() {
 	}
 	const submitVerifyIdentity = async (id, validationImages) => {
 		const formData = new FormData();
-	
+
 		// Agregar las imágenes al FormData
 		validationImages.forEach((file, index) => {
 			if (file) {
 				formData.append(`validationImages[${index}]`, file);
 			}
 		});
-	
+
 		try {
 			// Enviar la solicitud al backend
 			const response = await axios.post(`/api/user/${id}/submit-validation`, formData, {
@@ -189,7 +191,7 @@ export default function useUsers() {
 					"Content-Type": "multipart/form-data",
 				},
 			});
-	
+
 			// Mostrar mensaje de éxito
 			swal({
 				icon: "success",
@@ -199,10 +201,10 @@ export default function useUsers() {
 				background: "#2A2A2A",
 				color: "#ffffff",
 			});
-	
+
 			// Actualizar los datos del usuario
 			await getUser(id);
-	
+
 			return response.data; // Devolver la respuesta si es necesario
 		} catch (error) {
 			// Manejar errores y asignar mensajes de error si existen
@@ -221,9 +223,42 @@ export default function useUsers() {
 		}
 	};
 
+	const getChips = async (userId) => {
+		return axios.get('/api/users/getChips/' + userId)
+			.then(response => {
+				return response.data.chips;
+			});
+	};
+
+	const updateChips = async (userId, chips) => {
+
+		return axios.put('/api/users/updateChips/' + userId, {
+			chips: chips
+		})
+			.then(response => {
+				return response.data.chips;
+			});
+	}
+
+	const getGameHistory = async (userId) => {
+		return axios.get('/api/users/getGameHistory/' + userId)
+			.then(response => {
+				gameHistory.value = response.data.data;
+			});
+	};
+
+	const getBalanceHistory = async (userId) => {
+		return axios.get('/api/users/getBalanceHistory/' + userId)
+			.then(response => {
+				balanceHistory.value = response.data.data;
+			});
+	}
+
 	return {
 		users,
 		user,
+		gameHistory,
+		balanceHistory,
 		getUsers,
 		getUsersWithTasks,
 		getUser,
@@ -236,6 +271,10 @@ export default function useUsers() {
 		deleteUser,
 		validationErrors,
 		isLoading,
-		submitVerifyIdentity
+		submitVerifyIdentity,
+		getChips,
+		updateChips,
+		getGameHistory,
+		getBalanceHistory
 	}
 }

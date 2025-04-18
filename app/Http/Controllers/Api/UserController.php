@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Http\Resources\GameRoomPlayerHistoryResource;
 use App\Http\Resources\UserResource;
 use App\Models\PendingValidation;
 use App\Models\Task;
@@ -123,6 +124,16 @@ class UserController extends Controller
 		}
 	}
 
+	public function getChips($id)
+	{
+		$user = User::find($id);
+		if ($user) {
+			return response()->json(['chips' => $user->chips], 200);
+		} else {
+			return response()->json(['message' => 'User not found'], 404);
+		}
+	}
+
 	public function updateChips(Request $request, $id)
 	{
 		// TODO: Refactor when possible (front and back)
@@ -183,7 +194,7 @@ class UserController extends Controller
 					2 => 'face_image',
 					default => 'unknown_image',
 				};
-	
+
 				// Guardar la imagen en la colección 'pending_validations'
 				$validation->addMedia($image)
 					->usingFileName($imageName . '.' . $image->getClientOriginalExtension())
@@ -194,6 +205,76 @@ class UserController extends Controller
 			return response()->json(['message' => 'User not found'], 404);
 		}
 	}
+
+	public function getGameHistory($userId)
+	{
+		$user = User::find($userId);
+
+		$history = $user->gamesHistory()
+			->orderBy('created_at', 'desc')
+			->paginate(50);
+
+		return GameRoomPlayerHistoryResource::collection($history);
+	}
+
+	public function getBalanceHistory($userId)
+	{
+		$user = User::find($userId);
+
+		$gameHistory = $user->gamesHistory()
+			->orderBy('created_at', 'desc')
+			->paginate(50);
+
+		$gameHistory = $gameHistory->flatMap(function ($game) {
+			if ($game->win_amount) {
+				return array_values([
+					[
+						'name' => 'Bet',
+						'created_at' => $game->created_at->toDateString(),
+						'type' => 'MINUS',
+						'amount' => $game->bet_amount
+					],
+					[
+						'name' => 'Win',
+						'created_at' => $game->created_at->toDateString(),
+						'type' => 'PLUS',
+						'amount' => $game->win_amount
+					]
+				]);
+			} else {
+				return [
+					[
+						'name' => 'Bet',
+						'created_at' => $game->created_at->toDateString(),
+						'type' => 'MINUS',
+						'amount' => $game->bet_amount
+					]
+				];
+			}
+		});
+
+		$transactions = $user->transactions()
+			->orderBy('created_at', 'desc')
+			->paginate(50);
+
+		$transactions = $transactions->flatMap(function ($transaction) {
+			return [
+				[
+					'name' => $transaction->type === 'DEPOSIT' ? 'Deposit' : 'Withdraw',
+					'created_at' => $transaction->created_at->toDateString(),
+					'type' => $transaction->type === 'DEPOSIT' ? 'PLUS' : 'MINUS',
+					'amount' => $transaction->chips
+				]
+			];
+		});
+
+		$finalArray = $gameHistory->concat($transactions)
+			->sortByDesc('created_at')
+			->values();
+
+		return response()->json(['data' => $finalArray], 200);
+	}
+
 	public function updatePassword(Request $request, $id)
 	{
 		$user = User::find($id);

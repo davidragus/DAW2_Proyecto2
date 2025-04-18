@@ -9,20 +9,33 @@ use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\CountryController;
+use App\Http\Controllers\Api\GameController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\TransactionController;
-use App\Http\Controllers\Api\GameController;
 
 Route::post('forget-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('forget.password.post');
 Route::post('reset-password', [ResetPasswordController::class, 'reset'])->name('password.reset');
 
-Route::get('getMessages', [\App\Http\Controllers\Api\LiveChatController::class, 'getMessages']);
-Route::post('sendMessage', [\App\Http\Controllers\Api\LiveChatController::class, 'sendMessage']);
+Route::get('game/getGameRoom/{id}', [GameController::class, 'getGameRoom']);
+Route::get('game/getPlayer/{gameRoomId}/{playerId}', [GameController::class, 'getPlayer']);
+Route::get('game/getPlayersStatus/{gameRoomId}', [GameController::class, 'getPlayersStatus']);
+Route::post('game/startGame/{gameRoomId}', [GameController::class, 'startGame']);
+Route::post('game/joinGame/{id}', [GameController::class, 'joinGame']);
+Route::post('game/updatePlayerGameData/{gameRoomId}/{playerId}', [GameController::class, 'updatePlayerGameData']);
+Route::post('game/callLine/{gameRoomId}/{playerId}', [GameController::class, 'callLine']);
+Route::post('game/callBingo/{gameRoomId}/{playerId}', [GameController::class, 'callBingo']);
+Route::post('game/updatePlayerStatus/{gameRoomId}/{playerId}', [GameController::class, 'updatePlayerStatus']);
+Route::get('users/getGameHistory/{id}', [UserController::class, 'getGameHistory']);
+Route::get('users/getBalanceHistory/{id}', [UserController::class, 'getBalanceHistory']);
+
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
+
+	Route::get('getMessages', [\App\Http\Controllers\Api\LiveChatController::class, 'getMessages']);
+	Route::post('sendMessage', [\App\Http\Controllers\Api\LiveChatController::class, 'sendMessage']);
 
 	Route::apiResource('users', UserController::class);
 	// Route::get('users', [UserController::class, 'index']);
@@ -31,9 +44,10 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 	Route::post('users/{user}', [UserController::class, 'update']);
 	// Route::delete('users/{user}', [UserController::class, 'destroy']);
 
-	Route::post('users/updateImg/{id}', [UserController::class, 'updateImg']); 
-	Route::put('users/updateChips/{id}', [UserController::class, 'updateChips']); 
-	Route::put('users/changePassword/{id}', [UserController::class, 'updatePassword']); 
+	Route::post('users/updateImg/{id}', [UserController::class, 'updateImg']);
+	Route::get('users/getChips/{id}', [UserController::class, 'getChips']);
+	Route::put('users/updateChips/{id}', [UserController::class, 'updateChips']);
+	Route::put('users/changePassword/{id}', [UserController::class, 'updatePassword']);
 
 	Route::apiResource('posts', PostControllerAdvance::class);
 	Route::apiResource('categories', CategoryController::class);
@@ -84,4 +98,4 @@ Route::post('achievements', [AchievementController::class, 'store']);
 Route::delete('achievements/{achievement}', [AchievementController::class, 'destroy']);
 
 Route::get('/users/{userId}/achievements', [UserController::class, 'getUserAchievements']);
-Route::get('games', [GameController::class, 'index']);	
+Route::get('games', [GameController::class, 'index']);
