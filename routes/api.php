@@ -14,6 +14,7 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\TransactionController;
+use App\Http\Controllers\Api\GameController;
 
 Route::post('forget-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('forget.password.post');
 Route::post('reset-password', [ResetPasswordController::class, 'reset'])->name('password.reset');
@@ -30,8 +31,9 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 	Route::post('users/{user}', [UserController::class, 'update']);
 	// Route::delete('users/{user}', [UserController::class, 'destroy']);
 
-	Route::post('users/updateImg/{id}', [UserController::class, 'updateImg']); //Listar
-	Route::put('users/updateChips/{id}', [UserController::class, 'updateChips']); //Listar
+	Route::post('users/updateImg/{id}', [UserController::class, 'updateImg']); 
+	Route::put('users/updateChips/{id}', [UserController::class, 'updateChips']); 
+	Route::put('users/changePassword/{id}', [UserController::class, 'updatePassword']); 
 
 	Route::apiResource('posts', PostControllerAdvance::class);
 	Route::apiResource('categories', CategoryController::class);
@@ -82,3 +84,4 @@ Route::post('achievements', [AchievementController::class, 'store']);
 Route::delete('achievements/{achievement}', [AchievementController::class, 'destroy']);
 
 Route::get('/users/{userId}/achievements', [UserController::class, 'getUserAchievements']);
+Route::get('games', [GameController::class, 'index']);	

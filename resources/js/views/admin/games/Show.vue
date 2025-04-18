@@ -38,8 +38,8 @@
 					<Column class="pe-0 me-0 icon-column-2">
 						<template #body="slotProps">
 
-							<router-link v-if="can('games-show')"
-								:to="{ name: 'games.show', params: { id: slotProps.data.id } }">
+							<router-link v-if="can('validation-show')"
+								:to="{ name: 'validations.show', params: { id: slotProps.data.id } }">
 								<Button icon="pi pi-eye" severity="info" size="small" class="mr-1" />
 							</router-link>
 							<!-- <router-link v-if="can('validation-show')"
