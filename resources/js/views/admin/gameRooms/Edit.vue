@@ -98,10 +98,10 @@ const errors = ref({});
 
 // Yup schema: solo valida que los campos no estén vacíos
 const schema = yup.object({
-    name: yup.string().test("not-empty", "Required", val => !!val?.trim()),
-    game_id: yup.string().test("not-empty", "Required", val => !!val),
-    max_users: yup.number().typeError("Required").test("not-empty", "Required", val => val !== null && val !== ""),
-    status: yup.string().test("not-empty", "Required", val => !!val),
+    name: yup.string().required("Room name is required"),
+    game_id: yup.string().required("Game is required"),
+    max_players: yup.number().required("Max players is required").min(0, "Max players must be at least 0"),
+    status: yup.string().required("Status is required"),
 });
 
 onMounted(() => {
