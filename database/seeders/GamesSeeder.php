@@ -15,6 +15,7 @@ class GamesSeeder extends Seeder
 	{
 		Game::create([
 			'name' => 'Bingo',
+			'route_path' => 'bingo',
 		]);
 	}
 }
