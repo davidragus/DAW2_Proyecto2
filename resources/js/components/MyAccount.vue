@@ -20,7 +20,7 @@
 					<h2 class="text-white">{{ userCopy.name }} {{ userCopy.surname1 }} {{ userCopy.surname2 }}</h2>
 				</div>
 				<div class="col-12 col-md-6">
-					<form @submit.prevent="submitForm">
+					<form @submit.prevent="submitForm" class="mb-3">
 						<div class="mb-3">
 							<label for="name" class="form-label">Name</label>
 							<input type="text" class="form-control" id="name" v-model="userCopy.name"
@@ -71,7 +71,38 @@
 							<div v-if="errors.phone_number" class="invalid-feedback">{{ errors.phone_number }}</div>
 						</div>
 						<button type="submit" class="btn background-red w-100 mb-3">SAVE DATA</button>
-						<button type="button" class="btn background-yellow w-100">CHANGE PASSWORD</button>
+						<button type="button" class="btn background-yellow w-100" v-if="!changePasswordVisible"
+							@click="changePasswordVisible = !changePasswordVisible">CHANGE PASSWORD</button>
+					</form>
+					<form @submit.prevent="submitChangePasswordForm" v-if="changePasswordVisible">
+						<h4 class="color-white mb-4">Change password</h4>
+						<div class="mb-3">
+							<label for="currentPassword" class="form-label">Current password</label>
+							<input type="password" class="form-control" id="currentPassword"
+								v-model="changePassword.current_password"
+								:class="{ 'is-invalid': changePasswordErrors.current_password }">
+							<div v-if="changePasswordErrors.current_password" class="invalid-feedback">{{
+								changePasswordErrors.current_password }}</div>
+						</div>
+						<div class="mb-3">
+							<label for="newPassword" class="form-label">New password</label>
+							<input type="password" class="form-control" id="newPassword"
+								v-model="changePassword.new_password"
+								:class="{ 'is-invalid': changePasswordErrors.new_password }">
+							<div v-if="changePasswordErrors.new_password" class="invalid-feedback">{{
+								changePasswordErrors.new_password }}</div>
+						</div>
+						<div class="mb-3">
+							<label for="confirmPassword" class="form-label">Confirm password</label>
+							<input type="password" class="form-control" id="confirmPassword"
+								v-model="changePassword.confirm_password"
+								:class="{ 'is-invalid': changePasswordErrors.confirm_password }">
+							<div v-if="changePasswordErrors.confirm_password" class="invalid-feedback">{{
+								changePasswordErrors.confirm_password }}</div>
+						</div>
+						<button type="submit" class="btn background-red w-100 mb-3">CHANGE PASSWORD</button>
+						<button type="button" class="btn border-yellow w-100"
+							@click="changePasswordVisible = !changePasswordVisible; changePasswordErrors = {}">CANCEL</button>
 					</form>
 				</div>
 			</div>
@@ -219,11 +250,69 @@ async function uploadImage() {
 	}
 }
 
-// Routes
-const routeToAchivements = () => {
-	console.log('routeToAchivements');
-	router.push('/achievements');
-}
+const changePasswordVisible = ref(false);
+const changePassword = ref({
+	current_password: '',
+	new_password: '',
+	confirm_password: ''
+});
+const changePasswordErrors = ref({});
+const changePasswordSchema = yup.object({
+	current_password: yup.string().required('Current password is required'),
+	new_password: yup.string().required('New password is required'),
+	confirm_password: yup.string().oneOf([yup.ref('new_password'), null], 'Passwords must match').required('Confirm password is required'),
+});
+const changePasswordValidateForm = async () => {
+	changePasswordErrors.value = {};
+	try {
+		await changePasswordSchema.validate(changePassword.value, { abortEarly: false });
+		return true;
+	} catch (validationErrors) {
+		validationErrors.inner.forEach(error => {
+			changePasswordErrors.value[error.path] = error.message;
+		});
+		return false;
+	}
+};
+const changeUserPassword = async () => {
+	try {
+		const response = await axios.put(`/api/users/changePassword/${logedUser.value.id}`, {
+			current_password: changePassword.value.current_password,
+			new_password: changePassword.value.new_password,
+			confirm_password: changePassword.value.confirm_password,
+		});
+		Swal.fire({
+			icon: 'success',
+			title: 'Password changed successfully',
+			showConfirmButton: false,
+			timer: 1500,
+			background: '#2A2A2A',
+			color: '#ffffff'
+		});
+		changePassword.value = {
+			current_password: '',
+			new_password: '',
+			confirm_password: ''
+		};
+		changePasswordVisible.value = false;
+	} catch (error) {
+		console.error('Error changing password:', error);
+		Swal.fire({
+			icon: 'error',
+			title: 'Failed to change password',
+			text: error.response?.data?.message || 'An error occurred',
+			background: '#2A2A2A',
+			color: '#ffffff'
+		});
+	}
+};
+const submitChangePasswordForm = async () => {
+	const isValid = await changePasswordValidateForm();
+	if (isValid) {
+		await changeUserPassword();
+	}
+};
+
 </script>
 
 <style scoped>
@@ -327,6 +416,11 @@ form {
 	color: white;
 }
 
+.background-red:hover {
+	background-color: #c00000;
+	color: white;
+}
+
 .background-yellow {
 	background-color: yellow;
 	color: black;
@@ -338,5 +432,15 @@ form {
 
 .image-container {
 	border: 1px solid #414141;
+}
+
+.border-yellow {
+	border: 1px solid yellow;
+	color: white;
+}
+
+.border-yellow:hover {
+	background-color: yellow;
+	color: black;
 }
 </style>

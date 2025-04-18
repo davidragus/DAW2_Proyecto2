@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Events\ChangePlayerStatus;
 use App\Events\DrawNumber;
 use App\Events\SendCountdown;
-use App\Events\AnnounceWinners;
 use App\Http\Resources\GameRoomPlayerResource;
 use App\Models\GameRoom;
 use App\Http\Controllers\Controller;
@@ -15,9 +14,39 @@ use App\Models\GameRoomsPlayer;
 use Exception;
 use Illuminate\Http\Request;
 use App\Jobs\DrawNextNumber;
+use App\Models\Game;
+use App\Http\Resources\GameResource;
 
 class GameController extends Controller
 {
+
+	public function index()
+	{
+		$orderColumn = request('order_column', 'created_at');
+		if (!in_array($orderColumn, ['id', 'name', 'created_at'])) {
+			$orderColumn = 'created_at';
+		}
+		$orderDirection = request('order_direction', 'desc');
+		if (!in_array($orderDirection, ['asc', 'desc'])) {
+			$orderDirection = 'desc';
+		}
+		$games = Game::when(request('search_id'), function ($query) {
+			$query->where('id', request('search_id'));
+		})
+			->when(request('search_title'), function ($query) {
+				$query->where('name', 'like', '%' . request('search_title') . '%');
+			})
+			->when(request('search_global'), function ($query) {
+				$query->where(function ($q) {
+					$q->where('id', request('search_global'))
+						->orWhere('name', 'like', '%' . request('search_global') . '%');
+				});
+			})
+			->orderBy($orderColumn, $orderDirection)
+			->paginate(50);
+
+		return GameResource::collection($games);
+	}
 
 	public function getGameRoom($id)
 	{
@@ -156,26 +185,26 @@ class GameController extends Controller
 		// $this->playBingo($gameRoomId, $history->id);
 	}
 
-	public function playBingo($channelId, $historyId)
-	{
-		$gameRoomHistory = GameRoomsHistory::find($historyId);
-		$allNumbers = range(1, 90);
+	// public function playBingo($channelId, $historyId)
+	// {
+	// 	$gameRoomHistory = GameRoomsHistory::find($historyId);
+	// 	$allNumbers = range(1, 90);
 
-		while (!empty($allNumbers)) {
-			$randomNumber = array_rand($allNumbers);
-			$number = $allNumbers[$randomNumber];
-			unset($allNumbers[$randomNumber]);
+	// 	while (!empty($allNumbers)) {
+	// 		$randomNumber = array_rand($allNumbers);
+	// 		$number = $allNumbers[$randomNumber];
+	// 		unset($allNumbers[$randomNumber]);
 
-			$gameData = json_decode($gameRoomHistory->game_data, true);
-			$gameData['numbers'][] = $number;
+	// 		$gameData = json_decode($gameRoomHistory->game_data, true);
+	// 		$gameData['numbers'][] = $number;
 
-			broadcast(new DrawNumber($number, $channelId));
-			$gameRoomHistory->game_data = json_encode($gameData);
-			$gameRoomHistory->save();
+	// 		broadcast(new DrawNumber($number, $channelId));
+	// 		$gameRoomHistory->game_data = json_encode($gameData);
+	// 		$gameRoomHistory->save();
 
-			sleep(5);
-		}
-	}
+	// 		sleep(5);
+	// 	}
+	// }
 
 	public function callLine($gameRoomId, $playerId)
 	{

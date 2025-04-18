@@ -85,6 +85,13 @@ class User extends Authenticatable implements HasMedia
 			->withTimestamps();
 	}
 
+	public function games()
+	{
+		return $this->belongsToMany(Game::class, 'users_game_rooms_plays')
+			->withPivot('bet_amount', 'win_amount', 'result') 
+			->withTimestamps(); 
+	}
+
 	public function registerMediaCollections(): void
 	{
 		$this->addMediaCollection('images/user_avatar')

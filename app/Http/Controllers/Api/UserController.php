@@ -274,4 +274,24 @@ class UserController extends Controller
 
 		return response()->json(['data' => $finalArray], 200);
 	}
+
+	public function updatePassword(Request $request, $id)
+	{
+		$user = User::find($id);
+		// Validate the current password
+		if (!Hash::check($request->current_password, $user->password)) {
+			return response()->json(['message' => 'Current password is incorrect'], 400);
+		}
+		// Validate the new password
+		if ($request->new_password !== $request->confirm_password) {
+			return response()->json(['message' => 'New password and confirmation do not match'], 400);
+		}
+		// Update the password
+		$user->password = Hash::make($request->new_password);
+		if ($user->save()) {
+			return response()->json(['message' => 'Password updated successfully'], 200);
+		} else {
+			return response()->json(['message' => 'Failed to update password'], 500);
+		}
+	}
 }
