@@ -28,11 +28,11 @@
 					<button :disabled="bingoCards.length < 1" @click="updateStatus" class="btn btn-secondary ms-2">
 						{{ isReady ? 'Not ready' : 'Ready' }}
 					</button>
-					<button :disabled="wrongLineCalls >= 3" @click="callLine(1, authStore().user.id)"
+					<button :disabled="wrongLineCalls >= 3" @click="callLine(route.params.id, authStore().user.id)"
 						class="btn btn-secondary ms-2">
 						Call Line
 					</button>
-					<button :disabled="wrongBingoCalls >= 3" @click="callBingo(1, authStore().user.id)"
+					<button :disabled="wrongBingoCalls >= 3" @click="callBingo(route.params.id, authStore().user.id)"
 						class="btn btn-secondary ms-2">
 						Call Bingo
 					</button>
@@ -64,6 +64,9 @@ import Echo from "laravel-echo";
 import { authStore } from "../store/auth";
 import useUsers from '@/composables/users';
 import Timer from './Timer.vue';
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
 
 const swal = inject("$swal");
 const { getChips, updateChips } = useUsers();
@@ -140,9 +143,9 @@ window.Echo = new Echo({
 const users = ref([]);
 
 onMounted(() => {
-	window.Echo.join('bingo')
+	window.Echo.join(`bingo-${route.params.id}`)
 		.here((channelUsers) => {
-			getPlayer(1, authStore().user.id);
+			getPlayer(route.params.id, authStore().user.id);
 			users.value = channelUsers;
 			updatePlayersStatus();
 			if (channelUsers.length === 1) {
@@ -244,7 +247,7 @@ const startCountdown = () => {
 			clearInterval(countdown);
 			timerSeconds.value = null;
 			if (imLeader.value) {
-				startGame(1);
+				startGame(route.params.id);
 			}
 		}
 		secondsPassed++;
@@ -263,7 +266,7 @@ const countReadyPlayers = computed(() => {
 })
 
 const generateBingoCards = async () => {
-	if (!await isGameOngoing(1)) {
+	if (!await isGameOngoing(route.params.id)) {
 		const chips = await getChips(authStore().user.id);
 		if (chips >= (bingoCardsAmount.value * 10)) {
 			if (bingoCards.value.length + bingoCardsAmount.value > 10) {
@@ -283,10 +286,10 @@ const generateBingoCards = async () => {
 				generateNumbersPosition(); //TODO: Modificar y añadir una función que añada un array nuevo en base a las tarjetas anteriores en vez de generarlas todas desde 0
 				authStore().user.chips = await updateChips(authStore().user.id, chips - (bingoCardsAmount.value * 10));
 				if (!player.value) {
-					joinGame(1, bingoCardsAmount.value * 10);
-					getPlayer(1, authStore().user.id);
+					joinGame(route.params.id, bingoCardsAmount.value * 10);
+					getPlayer(route.params.id, authStore().user.id);
 				} else {
-					updatePlayerGameData(1, authStore().user.id, bingoCardsAmount.value * 10);
+					updatePlayerGameData(route.params.id, authStore().user.id, bingoCardsAmount.value * 10);
 				}
 			}
 		} else {
@@ -305,7 +308,7 @@ const bingoCardsAmount = ref(1);
 
 const updateStatus = () => {
 	isReady.value = !isReady.value;
-	updatePlayerStatus(1, authStore().user.id, isReady.value);
+	updatePlayerStatus(route.params.id, authStore().user.id, isReady.value);
 }
 </script>
 

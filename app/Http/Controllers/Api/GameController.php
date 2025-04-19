@@ -149,7 +149,7 @@ class GameController extends Controller
 			GameRoomsPlayer::where('game_room_id', $gameRoomId)->where('user_id', $playerId)->update([
 				'is_ready' => $request->is_ready ? 1 : 0,
 			]);
-			broadcast(new ChangePlayerStatus($playerId, $request->is_ready));
+			broadcast(new ChangePlayerStatus($gameRoomId, $playerId, $request->is_ready));
 
 			$playersReady = GameRoomsPlayer::where('game_room_id', $gameRoomId)->where('is_ready', 1)->count();
 			$gameRoom = GameRoom::find($gameRoomId);
@@ -172,7 +172,7 @@ class GameController extends Controller
 
 	public function sendCountdown($gameRoomId)
 	{
-		broadcast(new SendCountdown(30));
+		broadcast(new SendCountdown($gameRoomId, 30));
 	}
 
 	public function startGame($gameRoomId)
@@ -222,5 +222,13 @@ class GameController extends Controller
 		$gameData['winners']['bingo'][] = $playerId;
 		$gameRoomHistory->game_data = json_encode($gameData);
 		$gameRoomHistory->save();
+	}
+
+	public function getGameRooms($route)
+	{
+		$game = Game::where('route_path', $route)->first();
+
+		$gameRooms = GameRoom::where('game_id', $game->id)->get();
+		return GameRoomResource::collection($gameRooms);
 	}
 }

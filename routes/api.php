@@ -106,3 +106,4 @@ Route::get('game-rooms/{id}', [GameRoomController::class, 'show']);
 Route::post('game-rooms', [GameRoomController::class, 'store']);
 Route::put('game-rooms/{id}', [GameRoomController::class, 'update']);
 Route::delete('game-rooms/{id}', [GameRoomController::class, 'destroy']);
+Route::get('games/getGameRooms/{route}', [GameController::class, 'getGameRooms']);
