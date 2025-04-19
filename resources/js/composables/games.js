@@ -12,40 +12,33 @@ export default function useGames() {
     const getAllGames = async () => {
         try {
             const response = await axios.get("/api/games").then(response => {
-                games.value = response.data;
+                games.value = response.data.data;
             })
         } catch (error) {
             console.error("Error fetching games:", error);
         }
     };
 
-    const getAchievement = async (id) => {
+    const getGame = async (id) => {
         try {
-            const response = await axios.get(`/api/achievements/${id}`);
-            achievement.value = response.data.data;
-            console.log(achievement.value);
+            const response = await axios.get(`/api/games/${id}`);
+            game.value = response.data.data;
+            console.log(game.value);
         } catch (error) {
-            console.error("Error fetching achievement:", error);
+            console.error("Error fetching game:", error);
         }
     };
 
-    const updateAchievement = async (achievement) => {
+    const createGame = async () => {
         try {
             isLoading.value = true;
 
             const formData = new FormData();
-            formData.append("name", achievement.name);
-            formData.append("description", achievement.description);
-            formData.append("achievement_type", achievement.achievement_type);
-            formData.append("amount", achievement.amount);
-            formData.append("reward_amount", achievement.reward_amount);
-
-            if (achievement.image instanceof File) {
-                formData.append("image", achievement.image); // Agregar la imagen si es un archivo
-            }
-
+            formData.append("name", game.value.name);
+            formData.append("route_path", game.value.route_path);
+            formData.append("image", game.value.image);
             await axios.post(
-                `/api/achievements/${achievement.id}`,
+                `/api/games`,
                 formData,
                 {
                     headers: {
@@ -53,8 +46,13 @@ export default function useGames() {
                     },
                 }
             );
-
             isLoading.value = false;
+            swal.fire(
+                "Success!",
+                "Game created successfully.",
+                "success"
+            );
+            router.push({ name: "games" });
         } catch (error) {
             isLoading.value = false;
             if (error.response && error.response.data.errors) {
@@ -62,9 +60,73 @@ export default function useGames() {
             }
             throw error;
         }
-    };
+    }
 
-    const deleteAchievement = async (id, index) => {
+    const updateGameRoom = async (id) => {
+        try {
+            isLoading.value = true;
+
+            await axios.put(`/api/game-rooms/${id}`, {
+                game_id: gameRoom.value.game_id,
+                name: gameRoom.value.name,
+                max_users: gameRoom.value.max_players,
+                status: gameRoom.value.status,
+            }, {
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json"
+                },
+            });
+            isLoading.value = false;
+            swal.fire(
+                "Success!",
+                "Game room updated successfully.",
+                "success"
+            );
+            router.push({ name: "game-rooms" });
+        } catch (error) {
+            isLoading.value = false;
+            if (error.response && error.response.data.errors) {
+                validationErrors.value = error.response.data.errors;
+            }
+            throw error;
+        }
+    }
+
+    const updateGame = async (id) => {
+        try {
+            isLoading.value = true;
+
+            const formData = new FormData();
+            formData.append("name", game.value.name);
+            formData.append("route_path", game.value.route_path);
+            formData.append("image", game.value.image);
+
+            await axios.post(
+                `/api/games/${id}`,formData
+                ,{
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                }
+            );
+            isLoading.value = false;
+            swal.fire(
+                "Success!",
+                "Game updated successfully.",
+                "success"
+            );
+            router.push({ name: "games" });
+        } catch (error) {
+            isLoading.value = false;
+            if (error.response && error.response.data.errors) {
+                validationErrors.value = error.response.data.errors;
+            }
+            throw error;
+        }
+    }
+
+    const deleteGame = async (id, index) => {
         try {
             const confirmed = await swal.fire({
                 title: "Are you sure?",
@@ -77,58 +139,30 @@ export default function useGames() {
             });
 
             if (confirmed.isConfirmed) {
-                await axios.delete(`/api/achievements/${id}`);
-                achievements.value.splice(index, 1);
+                await axios.delete(`/api/games/${id}`);
+                games.value.splice(index, 1);
                 swal.fire(
                     "Deleted!",
-                    "The achievement has been deleted.",
+                    "The game has been deleted.",
                     "success"
                 );
             }
         } catch (error) {
-            console.error("Error deleting achievement:", error);
-            swal.fire("Error!", "Failed to delete the achievement.", "error");
-        }
-    };
-    const createAchievement = async (achievement) => {
-        try {
-            isLoading.value = true;
-
-            const formData = new FormData();
-            formData.append("name", achievement.name);
-            formData.append("description", achievement.description);
-            formData.append("achievement_type", achievement.achievement_type);
-            formData.append("amount", achievement.amount);
-            formData.append("reward_amount", achievement.reward_amount);
-            
-            if (achievement.image instanceof File) {
-                formData.append("image", achievement.image); // Agregar la imagen si es un archivo
-            }
-
-            console.log(formData.get("image"));
-            await axios.post(
-                `/api/achievements`,
-                formData,
-                {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    },
-                }
-            );
-
-            isLoading.value = false;
-        } catch (error) {
-            isLoading.value = false;
-            if (error.response && error.response.data.errors) {
-                validationErrors.value = error.response.data.errors;
-            }
-            throw error;
+            console.error("Error deleting game:", error);
+            swal.fire("Error!", "Failed to delete the game.", "error");
         }
     };
 
     return {
         game,
         games,
-        getAllGames
+        getAllGames,
+        getGame,
+        createGame,
+        updateGame,
+        deleteGame,
+        validationErrors,
+        isLoading
+
     };
 }

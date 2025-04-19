@@ -14,7 +14,7 @@ class Game extends Model implements HasMedia
 
 	protected $fillable = [
 		'name',
-		'route_name'
+		'route_path'
 	];
 
 	// public function users()
@@ -31,11 +31,11 @@ class Game extends Model implements HasMedia
 			->useFallbackPath(public_path('/images/games'));
 	}
 
-	public function registerMediaConversions(Media $media = null): void
-	{
-		$this->addMediaConversion('thumb')
-			->width(100)
-			->height(100)
-			->sharpen(10);
-	}
+	// public function registerMediaConversions(Media $media = null): void
+	// {
+	// 	$this->addMediaConversion('thumb')
+	// 		->width(300)
+	// 		->height(300)
+	// 		->sharpen(10);
+	// }
 }

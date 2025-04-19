@@ -42,6 +42,8 @@ class PermissionTableSeeder extends Seeder
 			'achievement-delete',
 			'achievement-list',
 			'games-list',
+			'game-create',
+			'game-edit',
 			'validation-delete',
 			'gameRooms-list',
 			'gameRooms-create',

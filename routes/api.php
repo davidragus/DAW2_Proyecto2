@@ -100,6 +100,10 @@ Route::delete('achievements/{achievement}', [AchievementController::class, 'dest
 
 Route::get('/users/{userId}/achievements', [UserController::class, 'getUserAchievements']);
 Route::get('games', [GameController::class, 'index']);
+Route::get('games/{id}', [GameController::class, 'show']);
+Route::post('games', [GameController::class, 'store']);
+Route::post('games/{id}', [GameController::class, 'update']);
+Route::delete('games/{id}', [GameController::class, 'destroy']);
 
 Route::get('game-rooms', [GameRoomController::class, 'index']);
 Route::get('game-rooms/{id}', [GameRoomController::class, 'show']);

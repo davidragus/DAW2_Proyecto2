@@ -18,7 +18,9 @@ class GameResource extends JsonResource
 			'id' => $this->id,
 			'name' => $this->name,
             'route_path' => $this->route_path,
-			'created_at' => $this->created_at->toDateString()
+			'image' => $this->getFirstMediaUrl('games'),
+			'created_at' => $this->created_at->toDateString(),
+			'updated_at' => $this->updated_at->toDateString(),
 		];
 	}
 }
