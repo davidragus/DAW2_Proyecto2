@@ -29,7 +29,7 @@
                                     class="form-select"
                                 >
                                     <option value="">Select a game</option>
-                                    <option v-for="game in games.data" :key="game.id" :value="game.id">
+                                    <option v-for="game in games" :key="game.id" :value="game.id">
                                         {{ game.name }}
                                     </option>
                                 </select>
