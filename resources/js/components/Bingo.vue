@@ -1,20 +1,32 @@
 <template>
 	<div id="mainContent">
+		<div class="mt-5 container d-flex justify-content-center">
+			<div
+				class="d-flex justify-content-around align-items-center col-12 md:col-8 lg:col-8 xl:col-6 xxl:col-4 mt-3 bingo-history">
+				<div v-for="(num, index) in numberHistory" :key="index" class="history-ball">
+					{{ num }}
+				</div>
+			</div>
+		</div>
 		<div class="mt-3">
 			<h4 class="text-center">Players ready: {{ countReadyPlayers }}/1 </h4>
 			<!-- Modificar el contador al umbral asignado en el backend -->
-			<h5>Números salidos:</h5>
+			<!-- <h5>Números salidos:</h5>
 			<div class="d-flex flex-wrap">
 				<div v-for="ball in drawnBalls" :key="ball" class="bingo-cell" style="width: 30px; height: 30px">
 					{{ ball }}
 				</div>
+			</div> -->
+		</div>
+		<div class="timer-number-container my-5 d-flex justify-content-center align-items-center">
+			<Timer v-if="timerSeconds" :seconds="timerSeconds" />
+			<div class="current-number" v-if="currentBall !== null" :class="{ 'fade-out': isFading }">
+				<div class="white-circle"></div>
+				<div class="number">
+					{{ currentBall }}
+				</div>
 			</div>
 		</div>
-		<div class="bola-actual" v-if="currentBall !== null" :class="{ 'fade-out': isFading }">
-			{{ currentBall }}
-		</div>
-
-		<Timer v-if="timerSeconds" :seconds="timerSeconds" />
 		<div class="container mt-3">
 			<div class="row justify-content-center mb-3">
 				<div class="col-auto">
@@ -38,15 +50,15 @@
 					</button>
 				</div>
 			</div>
-			<div class="row">
-				<div v-for="(card, cardIndex) in bingoCards" :key="cardIndex" class="col-md-4 col-lg-3 mb-3">
-					<div class="card p-2">
-						<div v-for="(row, rowIndex) in card" :key="rowIndex" class="d-flex justify-content-center">
-							<div v-for="(cell, colIndex) in row" :key="colIndex" class="bingo-cell">
-								<div v-if="cardsPositions[cardIndex][rowIndex][colIndex] == true" class="cell-marker">
-								</div>
-								{{ cell }}
-							</div>
+		</div>
+		<div class="row lg:justify-content-center mx-0 mb-5 cards-container">
+			<div v-for="(card, cardIndex) in bingoCards" :key="cardIndex" class="md:col-6 xl:col-4 xxl:col-3 mb-3">
+				<div class="card p-3">
+					<h4 class="text-center">BINGO CARD #{{ cardIndex + 1 }}</h4>
+					<div v-for="(row, rowIndex) in card" :key="rowIndex" class="d-flex justify-content-center">
+						<div v-for="(cell, colIndex) in row" :key="colIndex" class="bingo-cell"
+							:class="{ 'empty-cell': cardsPositions[cardIndex][rowIndex][colIndex] == null, 'cell-marker': cardsPositions[cardIndex][rowIndex][colIndex] == true }">
+							{{ cell }}
 						</div>
 					</div>
 				</div>
@@ -77,7 +89,10 @@ const {
 	isReady,
 	wrongLineCalls,
 	wrongBingoCalls,
+	drawnBalls,
+	numberHistory,
 	getPlayer,
+	loadGameData,
 	getPlayersStatus,
 	startGame,
 	isGameOngoing,
@@ -92,15 +107,12 @@ const {
 } = useBingo();
 
 const imLeader = ref(false);
-const allBalls = ref(Array.from({ length: 90 }, (_, i) => i + 1));
-const drawnBalls = ref([]);
 const currentBall = ref(null);
 const isFading = ref(false);
 const timerSeconds = ref(null);
 
 const drawNumber = (number) => {
 
-	allBalls.value.splice(number, 1)[0];
 	currentBall.value = number;
 	drawnBalls.value.push(number);
 	isFading.value = false;
@@ -111,6 +123,10 @@ const drawNumber = (number) => {
 	setTimeout(() => {
 		isFading.value = true;
 		setTimeout(() => {
+			if (numberHistory.value.length >= 6) {
+				numberHistory.value.shift();
+			}
+			numberHistory.value.push(currentBall.value);
 			currentBall.value = null;
 		}, 500);
 	}, 3000);
@@ -145,12 +161,11 @@ const users = ref([]);
 onMounted(() => {
 	window.Echo.join(`bingo-${route.params.id}`)
 		.here((channelUsers) => {
-			getPlayer(route.params.id, authStore().user.id);
+			loadGameData(route.params.id, authStore().user.id);
 			users.value = channelUsers;
 			updatePlayersStatus();
 			if (channelUsers.length === 1) {
 				imLeader.value = true;
-				console.log('Yo soy el lider');
 			}
 		})
 		.joining((user) => {
@@ -229,6 +244,7 @@ const restoreDataAfterGame = () => {
 	wrongBingoCalls.value = 0;
 	drawnBalls.value = [];
 	currentBall.value = null;
+	numberHistory.value = [];
 
 	console.log(users.value);
 	for (const user of users.value) {
@@ -301,6 +317,14 @@ const generateBingoCards = async () => {
 				color: '#ffffff'
 			});
 		}
+	} else {
+		swal.fire({
+			icon: "error",
+			title: "Error",
+			text: `You cannot join the game because it has already started.`,
+			background: '#2A2A2A',
+			color: '#ffffff'
+		});
 	}
 };
 
@@ -330,28 +354,60 @@ const updateStatus = () => {
 	position: relative;
 }
 
-.cell-marker {
-	position: absolute;
-	height: 80%;
-	width: 100%;
-	background-color: rgba(255, 0, 0, 0.5);
-	border-radius: 100%;
-	/* opacity: 0;
-	transition: opacity 0.3s ease; */
+.empty-cell {
+	background-color: #2a2a2a;
 }
 
-.bola-actual {
-	width: 100px;
-	height: 100px;
+.cell-marker {
+	background-color: rgba(255, 0, 0, 0.5);
+}
+
+.bingo-history {
+	min-height: 74px;
+	background-color: #222;
+	padding: 10px 20px;
+	gap: 5%;
+	border-radius: 10px;
+	border: 2px solid white;
+}
+
+.history-ball {
+	width: 50px;
+	height: 50px;
+	background: radial-gradient(circle at 25% 25%, white 1px, rgb(226, 226, 226) 20%, #7e7e7e 80%);
+	color: black;
+	font-weight: bold;
 	border-radius: 50%;
-	background-color: red;
-	color: white;
-	font-size: 2rem;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	margin: 1rem auto;
+	font-size: 18px;
+}
+
+.timer-number-container {
+	min-width: 150px;
+	min-height: 150px;
+}
+
+.current-number {
+	width: 150px;
+	height: 150px;
+	border-radius: 50%;
+	/* background: radial-gradient(circle at 25% 25%, rgb(255, 0, 0) 1px, rgb(218, 0, 0) 20%, #850000 80%); */
+	background: radial-gradient(circle at 25% 25%, rgb(255, 255, 255) 1px, rgb(226, 226, 226) 20%, #7e7e7e 80%);
+	/* color: white; */
+	color: black;
+	font-weight: bold;
+	font-size: 3rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	animation: bounce-in 0.4s ease;
+	position: relative;
+}
+
+.number {
+	position: absolute;
 }
 
 @keyframes bounce-in {
@@ -383,6 +439,24 @@ const updateStatus = () => {
 
 	100% {
 		transform: scale(0);
+	}
+}
+
+@media (max-width: 768px) {
+	.bingo-cell {
+		width: 30px;
+		height: 30px;
+	}
+
+	.history-ball {
+		width: 35px;
+		height: 35px;
+	}
+
+	.cards-container {
+		flex-wrap: nowrap;
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
 	}
 }
 </style>

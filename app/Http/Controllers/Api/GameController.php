@@ -74,10 +74,6 @@ class GameController extends Controller
 
 			if ($player) {
 				return new GameRoomPlayerResource($player);
-			} else {
-				return response()->json([
-					'message' => 'Player not found in the game room',
-				], 404);
 			}
 		} catch (Exception $ex) {
 			return response()->json([
@@ -230,5 +226,12 @@ class GameController extends Controller
 
 		$gameRooms = GameRoom::where('game_id', $game->id)->get();
 		return GameRoomResource::collection($gameRooms);
+	}
+
+	public function getGameData($gameRoomId)
+	{
+		$gameRoomHistory = GameRoomsHistory::where('game_room_id', $gameRoomId)->get()->last();
+		$gameData = json_decode($gameRoomHistory->game_data, true);
+		return response()->json($gameData, 200);
 	}
 }
