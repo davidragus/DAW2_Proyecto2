@@ -51,6 +51,7 @@ class CreateAdminUserSeeder extends Seeder
 			'achievement-edit',
 			'achievement-delete',
 			'achievement-list',
+			'gameRooms-list',
 			'gameRooms-create',
 			'gameRooms-edit',
 			'gameRooms-delete',

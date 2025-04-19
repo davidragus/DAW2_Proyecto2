@@ -43,7 +43,11 @@ class PermissionTableSeeder extends Seeder
 			'achievement-list',
 			'games-list',
 			'game-rooms-list',
-			'validation-delete'
+			'validation-delete',
+			'gameRooms-list',
+			'gameRooms-create',
+			'gameRooms-edit',
+			'gameRooms-delete',
 		];
 
 		foreach ($permissions as $permission) {
