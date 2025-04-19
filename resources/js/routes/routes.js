@@ -372,6 +372,31 @@ export default [
 					},
 				]
 			},
+			{
+				name: 'game-rooms',
+				path: 'game-rooms',
+				meta: { breadCrumb: 'Game rooms' },
+				children: [
+					{
+						name: 'game-rooms.index',
+						path: '',
+						component: () => import('../views/admin/gameRooms/Index.vue'),
+						meta: { breadCrumb: 'Game rooms' }
+					},
+					{
+						name: 'game-rooms.create',
+						path: 'create',
+						component: () => import('../views/admin/gameRooms/Create.vue'),
+						meta: { breadCrumb: 'Create game room' }
+					},
+					{
+						name: 'game-rooms.edit',
+						path: 'game-rooms/edit/:id',
+						component: () => import('../views/admin/gameRooms/Edit.vue'),
+						meta: { breadCrumb: 'Edit game room' }
+					},
+				]
+			},
 
 			//TODO Organizar rutas
 			{

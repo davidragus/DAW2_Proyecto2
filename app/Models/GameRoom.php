@@ -9,5 +9,10 @@ class GameRoom extends Model
 {
 	use HasFactory;
 
-	protected $fillable = ['game_id', 'max_users'];
+	protected $fillable = [
+		'game_id', 
+		'name',
+		'max_users',
+		'status',
+	];
 }

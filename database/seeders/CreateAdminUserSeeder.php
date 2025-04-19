@@ -51,6 +51,9 @@ class CreateAdminUserSeeder extends Seeder
 			'achievement-edit',
 			'achievement-delete',
 			'achievement-list',
+			'gameRooms-create',
+			'gameRooms-edit',
+			'gameRooms-delete',
 		];
 		$role2->syncPermissions($permissions);
 

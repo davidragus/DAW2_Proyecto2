@@ -2,23 +2,25 @@
 	<div id="mainContent" class="d-flex">
 		<MyAccountSidebar />
 		<div class="container">
-			<div class="row">
-				<!-- Mostrar logros obtenidos -->
-				<div v-for="achievement in userAchievements" :key="achievement.id"
-					class="col-3 d-flex flex-column align-items-center mb-4">
-					<img :src="achievement.image" class="achievement-img" :alt="achievement.name"
-						@click="openAchievementDialog(achievement)" />
-					<h5 class="text-white mt-2">{{ achievement.name }}</h5>
-				</div>
-				<!-- Mostrar logros -->
-				<div v-for="achievement in achievements" :key="achievement.id"
-					class="col-3 d-flex flex-column align-items-center mb-4">
-					<img :src="achievement.image" class="achievement-img" style="filter: grayscale(100%);"
-						:alt="achievement.name" @click="openAchievementDialog(achievement)" />
-					<h5 class="text-white mt-2">{{ achievement.name }}</h5>
-				</div>
-			</div>
+	<div class="d-flex flex-wrap gap-3">
+		<!-- Logros obtenidos -->
+		<div v-for="achievement in userAchievements" :key="achievement.id"
+			class="achievement-card text-center">
+			<img :src="achievement.image" class="achievement-img" :alt="achievement.name"
+				@click="openAchievementDialog(achievement)" />
+			<h6 class="text-white mt-2">{{ achievement.name }}</h6>
 		</div>
+
+		<!-- Logros no obtenidos -->
+		<div v-for="achievement in achievements" :key="achievement.id"
+			class="achievement-card text-center">
+			<img :src="achievement.image" class="achievement-img" style="filter: grayscale(100%);"
+				:alt="achievement.name" @click="openAchievementDialog(achievement)" />
+			<h6 class="text-white mt-2">{{ achievement.name }}</h6>
+		</div>
+	</div>
+</div>
+
 
 		<!-- Modal para mostrar detalles del logro -->
 		<div v-if="selectedAchievement" class="modal-overlay" @click.self="closeAchievementDialog">

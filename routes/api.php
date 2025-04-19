@@ -15,6 +15,7 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\TransactionController;
+use App\Http\Controllers\Api\GameRoomController;
 
 Route::post('forget-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('forget.password.post');
 Route::post('reset-password', [ResetPasswordController::class, 'reset'])->name('password.reset');
@@ -99,3 +100,9 @@ Route::delete('achievements/{achievement}', [AchievementController::class, 'dest
 
 Route::get('/users/{userId}/achievements', [UserController::class, 'getUserAchievements']);
 Route::get('games', [GameController::class, 'index']);
+
+Route::get('game-rooms', [GameRoomController::class, 'index']);
+Route::get('game-rooms/{id}', [GameRoomController::class, 'show']);
+Route::post('game-rooms', [GameRoomController::class, 'store']);
+Route::put('game-rooms/{id}', [GameRoomController::class, 'update']);
+Route::delete('game-rooms/{id}', [GameRoomController::class, 'destroy']);
