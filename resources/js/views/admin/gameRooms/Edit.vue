@@ -29,7 +29,7 @@
                                     class="form-select"
                                 >
                                     <option value="">Select a game</option>
-                                    <option v-for="game in games.data" :key="game.id" :value="game.id">
+                                    <option v-for="game in games" :key="game.id" :value="game.id">
                                         {{ game.name }}
                                     </option>
                                 </select>
@@ -52,8 +52,9 @@
                             <!-- Status fixed -->
                             <div class="mb-3">
                                 <label for="status" class="form-label">Status</label>
-                                <select v-model="gameRoom.status" id="status" class="form-select" disabled>
+                                <select v-model="gameRoom.status" id="status" class="form-select" :disabled="gameRoom.status === 'WAITING'">
                                     <option value="WAITING">WAITING</option>
+                                    <option value="IN_PROGRESS">IN_PROGRESS</option>
                                 </select>
                             </div>
                         </div>
