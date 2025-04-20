@@ -80,6 +80,8 @@ class AnnounceWinners implements ShouldQueue
 			User::whereIn('id', $ids)->increment('chips', $distributedChips[$type]);
 		}
 
+		GiveAchievements::dispatch($gameRoomId, $players->pluck('user_id')->toArray());
+
 		GameRoomsPlayer::where('game_room_id', $gameRoomId)->delete();
 		GameRoom::where('id', $gameRoomId)->update(['status' => 'WAITING']);
 

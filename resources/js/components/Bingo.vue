@@ -2,21 +2,17 @@
 	<div id="mainContent">
 		<div class="mt-5 container d-flex justify-content-center">
 			<div
-				class="d-flex justify-content-around align-items-center col-12 md:col-8 lg:col-8 xl:col-6 xxl:col-4 mt-3 bingo-history">
-				<div v-for="(num, index) in numberHistory" :key="index" class="history-ball">
-					{{ num }}
+				class="d-flex justify-content-end align-items-center col-12 md:col-8 lg:col-8 xl:col-6 xxl:col-4 mt-3 bingo-history">
+				<div v-for="(num, index) in numberHistory" :key="index" class="col-2 d-flex justify-content-center p-0">
+					<div class="history-ball">
+						{{ num }}
+					</div>
 				</div>
 			</div>
 		</div>
 		<div class="mt-3">
-			<h4 class="text-center">Players ready: {{ countReadyPlayers }}/1 </h4>
+			<h4 class="text-center text-white">Players ready: {{ countReadyPlayers }}/2 </h4>
 			<!-- Modificar el contador al umbral asignado en el backend -->
-			<!-- <h5>Números salidos:</h5>
-			<div class="d-flex flex-wrap">
-				<div v-for="ball in drawnBalls" :key="ball" class="bingo-cell" style="width: 30px; height: 30px">
-					{{ ball }}
-				</div>
-			</div> -->
 		</div>
 		<div class="timer-number-container my-5 d-flex justify-content-center align-items-center">
 			<Timer v-if="timerSeconds" :seconds="timerSeconds" />
@@ -28,26 +24,22 @@
 			</div>
 		</div>
 		<div class="container mt-3">
-			<div class="row justify-content-center mb-3">
-				<div class="col-auto">
+			<div class="row justify-content-center align-items-center mb-3">
+				<div v-if="canBuyCards && bingoCards.length < 10" class="col-auto">
 					<input type="number" v-model.number="bingoCardsAmount" min="1" max="10" class="form-control"
 						placeholder="Número de cartones" />
 				</div>
 				<div class="col-auto">
-					<button @click="generateBingoCards" class="btn btn-primary">
-						Generar Cartones
-					</button>
-					<button :disabled="bingoCards.length < 1" @click="updateStatus" class="btn btn-secondary ms-2">
-						{{ isReady ? 'Not ready' : 'Ready' }}
-					</button>
-					<button :disabled="wrongLineCalls >= 3" @click="callLine(route.params.id, authStore().user.id)"
-						class="btn btn-secondary ms-2">
-						Call Line
-					</button>
-					<button :disabled="wrongBingoCalls >= 3" @click="callBingo(route.params.id, authStore().user.id)"
-						class="btn btn-secondary ms-2">
-						Call Bingo
-					</button>
+					<Button v-if="canBuyCards && bingoCards.length < 10" label="Buy bingo cards"
+						@click="generateBingoCards" severity="danger" class="btn btn-primary" />
+					<Button v-if="canChangeStatus" @click="updateStatus" :icon="isReady ? 'pi pi-times' : 'pi pi-check'"
+						:label="isReady ? 'Not ready' : 'Ready'" :severity="isReady ? 'danger' : 'success'"
+						class="btn ms-2" />
+					<Button v-if="canCallLine" icon="pi pi-megaphone" label="Call line" :disabled="wrongLineCalls >= 3"
+						@click="callLine(route.params.id, authStore().user.id)" class="btn ms-2" severity="danger" />
+					<Button v-if="canCallBingo" icon="pi pi-megaphone" label="Call bingo"
+						:disabled="wrongBingoCalls >= 3" @click="callBingo(route.params.id, authStore().user.id)"
+						class="btn ms-2" severity="danger" />
 				</div>
 			</div>
 		</div>
@@ -65,6 +57,8 @@
 			</div>
 		</div>
 	</div>
+
+	<Toast />
 </template>
 
 <script setup>
@@ -77,14 +71,19 @@ import { authStore } from "../store/auth";
 import useUsers from '@/composables/users';
 import Timer from './Timer.vue';
 import { useRoute } from 'vue-router';
+import { useToast } from 'primevue/usetoast';
+
 
 const route = useRoute();
+const toast = useToast();
 
 const swal = inject("$swal");
 const { getChips, updateChips } = useUsers();
 const {
 	player,
+	canChangeStatus,
 	bingoCards,
+	canBuyCards,
 	cardsPositions,
 	isReady,
 	wrongLineCalls,
@@ -103,7 +102,9 @@ const {
 	updatePlayerStatus,
 	checkForNumber,
 	callLine,
-	callBingo
+	callBingo,
+	canCallLine,
+	canCallBingo
 } = useBingo();
 
 const imLeader = ref(false);
@@ -192,6 +193,21 @@ onMounted(() => {
 		.listen('.DrawNumber', (data) => {
 			drawNumber(data.number);
 		})
+		.listen('.StartGame', () => {
+			canCallLine.value = true;
+			canChangeStatus.value = false;
+		})
+		.listen('.LineCalled', (data) => {
+			canCallBingo.value = true;
+			canCallLine.value = false;
+			const userIndex = users.value.findIndex((user) => user.id == data.playerId);
+			toast.add({ severity: 'info', summary: 'Line called!', detail: `The user ${users.value[userIndex].username} has called line!`, life: 3000 });
+		})
+		.listen('.BingoCalled', (data) => {
+			canCallBingo.value = false;
+			const userIndex = users.value.findIndex((user) => user.id == data.playerId);
+			toast.add({ severity: 'info', summary: 'Bingo called!', detail: `The user ${users.value[userIndex].username} has called bingo!`, life: 3000 });
+		})
 		.listen('.BroadcastWinners', (data) => {
 			let lineWinners = [];
 			let bingoWinners = [];
@@ -205,10 +221,11 @@ onMounted(() => {
 
 			swal.fire({
 				icon: "success",
-				title: `Bingo!`,
-				text: `Line winners: ${lineWinners.join(', ')}\nBingo winners: ${bingoWinners.join(', ')}`,
+				title: `Game over!`,
+				html: `<b>${lineWinners.join(', ')}</b> called line<br><b>${bingoWinners.join(', ')}</b> called bingo`,
 				background: '#2A2A2A',
-				color: '#ffffff'
+				color: '#ffffff',
+				confirmButtonColor: '#ff0000'
 			});
 
 			restoreDataAfterGame();
@@ -299,11 +316,12 @@ const generateBingoCards = async () => {
 					generateBingoCard
 				);
 				bingoCards.value.push(...newBingoCards);
-				generateNumbersPosition(); //TODO: Modificar y añadir una función que añada un array nuevo en base a las tarjetas anteriores en vez de generarlas todas desde 0
+				generateNumbersPosition();
 				authStore().user.chips = await updateChips(authStore().user.id, chips - (bingoCardsAmount.value * 10));
 				if (!player.value) {
 					joinGame(route.params.id, bingoCardsAmount.value * 10);
 					getPlayer(route.params.id, authStore().user.id);
+					canChangeStatus.value = true;
 				} else {
 					updatePlayerGameData(route.params.id, authStore().user.id, bingoCardsAmount.value * 10);
 				}
@@ -366,7 +384,6 @@ const updateStatus = () => {
 	min-height: 74px;
 	background-color: #222;
 	padding: 10px 20px;
-	gap: 5%;
 	border-radius: 10px;
 	border: 2px solid white;
 }

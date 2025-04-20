@@ -79,6 +79,7 @@ onMounted(() => {
 	align-items: center;
 	justify-content: center;
 	font-size: 48px;
+	color: white;
 }
 
 .base-timer-path-remaining {

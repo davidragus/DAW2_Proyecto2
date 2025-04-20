@@ -13,6 +13,10 @@ export default function useBingo() {
 	const wrongBingoCalls = ref(0);
 	const drawnBalls = ref([]);
 	const numberHistory = ref([]);
+	const canChangeStatus = ref(false);
+	const canBuyCards = ref(false);
+	const canCallLine = ref(false);
+	const canCallBingo = ref(false);
 
 	const generateBingoCard = () => {
 		const columnRanges = [
@@ -275,14 +279,28 @@ export default function useBingo() {
 				numberHistory.value = response.data.numbers.slice(Math.max(response.data.numbers.length - 6, 0));
 				if (player.value) {
 					checkForNumbers();
+					if (response.data.winners.line) {
+						canCallLine.value = false;
+						canCallBingo.value = true;
+					}
+					if (response.data.winners.bingo) {
+						canCallBingo.value = false;
+					}
 				}
+			}
+		} else {
+			canBuyCards.value = true;
+			if (player.value) {
+				canChangeStatus.value = true;
 			}
 		}
 	}
 
 	return {
 		player,
+		canChangeStatus,
 		bingoCards,
+		canBuyCards,
 		cardsPositions,
 		isReady,
 		wrongLineCalls,
@@ -301,7 +319,9 @@ export default function useBingo() {
 		updatePlayerStatus,
 		checkForNumber,
 		callLine,
-		callBingo
+		callBingo,
+		canCallLine,
+		canCallBingo
 	};
 
 };
