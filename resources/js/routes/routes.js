@@ -156,16 +156,20 @@ export default [
 			{
 				path: 'games',
 				name: 'auth.games',
-				beforeEnter: requireLogin,
-				beforeEnter: requireValidation,
+				beforeEnter: [requireLogin, requireValidation],
 				children: [
 					{
-						path: 'bingo',
-						name: 'auth.bingo',
-						component: () => import('../components/Bingo.vue'),
-						beforeEnter: requireLogin,
-						beforeEnter: requireValidation,
+						path: ':route',
+						name: 'auth.gamerooms',
+						component: () => import('../views/games/GameRoomsSelect.vue'),
+						beforeEnter: [requireLogin, requireValidation],
 					},
+					{
+						path: ':route/:id',
+						name: 'auth.bingo.gameroom',
+						component: () => import('../components/Bingo.vue'),
+						beforeEnter: [requireLogin, requireValidation],
+					}
 				]
 			},
 			{

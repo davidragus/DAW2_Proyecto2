@@ -43,7 +43,7 @@ class DrawNextNumber implements ShouldQueue
 		$remaining = array_values(array_diff(range(1, 90), $alreadyDrawn));
 
 		if (empty($remaining)) {
-			DrawNextNumber::dispatch($this->historyId)->onQueue('bingo')->delay(now()->addSeconds(5));
+			DrawNextNumber::dispatch($this->historyId)->onQueue('bingo')->delay(now()->addSeconds(6));
 			return;
 		}
 
@@ -55,6 +55,6 @@ class DrawNextNumber implements ShouldQueue
 
 		broadcast(new DrawNumber($number, $history->game_room_id));
 
-		DrawNextNumber::dispatch($this->historyId)->onQueue('bingo')->delay(now()->addSeconds(5));
+		DrawNextNumber::dispatch($this->historyId)->onQueue('bingo')->delay(now()->addSeconds(6));
 	}
 }

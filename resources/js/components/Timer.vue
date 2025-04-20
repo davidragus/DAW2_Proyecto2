@@ -39,7 +39,6 @@ const timeFraction = computed(() => {
 
 const startTimer = () => {
 	const interval = setInterval(() => {
-		console.log(circleRemainingTime.value);
 		if (secondsPassed.value >= props.seconds) {
 			clearInterval(interval);
 			return;
@@ -57,8 +56,8 @@ onMounted(() => {
 <style scoped>
 .base-timer {
 	position: relative;
-	width: 300px;
-	height: 300px;
+	width: 150px;
+	height: 150px;
 }
 
 .base-timer-circle {
@@ -73,13 +72,14 @@ onMounted(() => {
 
 .base-timer-label {
 	position: absolute;
-	width: 300px;
-	height: 300px;
+	width: 150px;
+	height: 150px;
 	top: 0;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	font-size: 48px;
+	color: white;
 }
 
 .base-timer-path-remaining {
@@ -88,7 +88,7 @@ onMounted(() => {
 	transform: rotate(90deg);
 	transform-origin: center;
 	transition: 1s linear all;
-	stroke: rgb(65, 184, 131);
+	stroke: rgb(255, 0, 0);
 }
 
 .base-timer-svg {

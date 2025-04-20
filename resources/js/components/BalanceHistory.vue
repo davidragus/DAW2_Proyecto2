@@ -11,12 +11,18 @@
 				<template #list="{ items }">
 					<div class="history-row row d-flex align-items-center m-0 px-3 py-2" v-for="(data, index) in items"
 						:key="index">
-						<div class="col-11">
+						<div :class="data.name == 'Deposit' || data.name == 'Withdraw' ? 'col-10' : 'col-11'">
 							<h4 class="m-0">{{ data.name }}</h4>
 							<span class="history-date">{{ data.created_at }}</span>
 						</div>
+						<div v-if="data.real_money" class="col-1 d-flex justify-content-end align-items-center">
+							<span :class="{ 'minus': data.type == 'PLUS', 'plus': data.type == 'MINUS' }"> {{ data.type
+								==
+								'MINUS' ? '+' : '-' }}{{ data.real_money }} </span> €
+						</div>
 						<div class="col-1 d-flex justify-content-end align-items-center">
-							<span :class="{ 'plus': data.type == 'PLUS', 'minus': data.type == 'MINUS' }"> {{ data.type ==
+							<span :class="{ 'plus': data.type == 'PLUS', 'minus': data.type == 'MINUS' }"> {{ data.type
+								==
 								'PLUS' ? '+' : '-' }}{{ data.amount }} </span> <img class="chips-icon ms-2"
 								src="/images/chips2.png" alt="Icon of chips">
 						</div>

@@ -9,16 +9,17 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class BroadcastWinners implements ShouldBroadcast
+class StartGame implements ShouldBroadcast
 {
 	use Dispatchable, InteractsWithSockets, SerializesModels;
 
-	public $winners;
 	public $channelId;
 
-	public function __construct($winners, $channelId)
+	/**
+	 * Create a new event instance.
+	 */
+	public function __construct($channelId)
 	{
-		$this->winners = $winners;
 		$this->channelId = $channelId;
 	}
 
@@ -34,15 +35,6 @@ class BroadcastWinners implements ShouldBroadcast
 
 	public function broadcastAs()
 	{
-		return 'BroadcastWinners';
+		return 'StartGame';
 	}
-
-	public function broadcastWith(): array
-	{
-		return [
-			'lineWinners' => $this->winners['line'],
-			'bingoWinners' => $this->winners['bingo'],
-		];
-	}
-
 }

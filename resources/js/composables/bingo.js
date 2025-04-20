@@ -11,6 +11,12 @@ export default function useBingo() {
 	const isReady = ref(false);
 	const wrongLineCalls = ref(0);
 	const wrongBingoCalls = ref(0);
+	const drawnBalls = ref([]);
+	const numberHistory = ref([]);
+	const canChangeStatus = ref(false);
+	const canBuyCards = ref(false);
+	const canCallLine = ref(false);
+	const canCallBingo = ref(false);
 
 	const generateBingoCard = () => {
 		const columnRanges = [
@@ -112,27 +118,24 @@ export default function useBingo() {
 		}
 	}
 
+	const checkForNumbers = () => {
+		for (let i = 0; i < bingoCards.value.length; i++) {
+			for (let j = 0; j < bingoCards.value[i].length; j++) {
+				for (let k = 0; k < bingoCards.value[i][j].length; k++) {
+					if (drawnBalls.value.includes(bingoCards.value[i][j][k])) {
+						cardsPositions.value[i][j][k] = true;
+					}
+				}
+			}
+		}
+	}
+
 	const startGame = async (gameRoomId) => {
 		axios.post('/api/game/startGame/' + gameRoomId, {});
 	}
 
 	const isGameOngoing = async (gameRoomId) => {
-		await axios.get('/api/game/getGameRoom/' + gameRoomId)
-			.then((response) => {
-				const gameRoom = response.data.data;
-				if (gameRoom['status'] === 'WAITING') {
-					return false;
-				} else {
-					swal.fire({
-						icon: "error",
-						title: "Error",
-						text: `You cannot join the game because it has already started.`,
-						background: '#2A2A2A',
-						color: '#ffffff'
-					});
-					return true;
-				}
-			})
+		const response = await axios.get('/api/game/getGameRoom/' + gameRoomId)
 			.catch((error) => {
 				swal.fire({
 					icon: "error",
@@ -142,6 +145,12 @@ export default function useBingo() {
 					color: '#ffffff'
 				});
 			});
+		const gameRoom = response.data.data;
+		if (gameRoom['status'] === 'WAITING') {
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 	const getPlayer = async (gameRoomId, playerId) => {
@@ -261,14 +270,45 @@ export default function useBingo() {
 		}
 	};
 
+	const loadGameData = async (gameRoomId, playerId) => {
+		await getPlayer(gameRoomId, playerId);
+		if (await isGameOngoing(gameRoomId)) {
+			const response = await axios.get(`/api/games/getGameData/${gameRoomId}`);
+			if (response.data) {
+				drawnBalls.value = response.data.numbers;
+				numberHistory.value = response.data.numbers.slice(Math.max(response.data.numbers.length - 6, 0));
+				if (player.value) {
+					checkForNumbers();
+					if (response.data.winners.line) {
+						canCallLine.value = false;
+						canCallBingo.value = true;
+					}
+					if (response.data.winners.bingo) {
+						canCallBingo.value = false;
+					}
+				}
+			}
+		} else {
+			canBuyCards.value = true;
+			if (player.value) {
+				canChangeStatus.value = true;
+			}
+		}
+	}
+
 	return {
 		player,
+		canChangeStatus,
 		bingoCards,
+		canBuyCards,
 		cardsPositions,
 		isReady,
 		wrongLineCalls,
 		wrongBingoCalls,
+		drawnBalls,
+		numberHistory,
 		getPlayer,
+		loadGameData,
 		getPlayersStatus,
 		startGame,
 		isGameOngoing,
@@ -279,7 +319,9 @@ export default function useBingo() {
 		updatePlayerStatus,
 		checkForNumber,
 		callLine,
-		callBingo
+		callBingo,
+		canCallLine,
+		canCallBingo
 	};
 
 };

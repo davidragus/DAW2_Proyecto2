@@ -56,7 +56,7 @@ const model = ref([
 		label: 'Games',
 		items: [
 			{ label: 'Games', icon: 'pi pi-fw pi-bolt', to: '/admin/games', permision: 'games-list' },
-			{ label: 'Game rooms', icon: 'pi pi-fw pi-address-book', to: '/admin/game-rooms', permision: 'game-rooms-list' }
+			{ label: 'Game rooms', icon: 'pi pi-fw pi-address-book', to: '/admin/game-rooms', permision: 'gameRooms-list' }
 
 		]
 	}

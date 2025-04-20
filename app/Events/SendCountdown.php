@@ -15,12 +15,14 @@ class SendCountdown implements ShouldBroadcast
 	use Dispatchable, InteractsWithSockets, SerializesModels;
 
 	public $seconds;
+	public $gameRoomId;
 
 	/**
 	 * Create a new event instance.
 	 */
-	public function __construct($seconds)
+	public function __construct($gameRoomId, $seconds)
 	{
+		$this->gameRoomId = $gameRoomId;
 		$this->seconds = $seconds;
 	}
 
@@ -31,7 +33,7 @@ class SendCountdown implements ShouldBroadcast
 	 */
 	public function broadcastOn()
 	{
-		return new PresenceChannel('bingo');
+		return new PresenceChannel('bingo-' . $this->gameRoomId);
 	}
 
 	public function broadcastAs()

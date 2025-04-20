@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Events\ChangePlayerStatus;
-use App\Events\DrawNumber;
 use App\Events\SendCountdown;
+use App\Events\StartGame;
+use App\Events\LineCalled;
+use App\Events\BingoCalled;
 use App\Http\Resources\GameRoomPlayerResource;
 use App\Models\GameRoom;
 use App\Http\Controllers\Controller;
@@ -74,10 +76,6 @@ class GameController extends Controller
 
 			if ($player) {
 				return new GameRoomPlayerResource($player);
-			} else {
-				return response()->json([
-					'message' => 'Player not found in the game room',
-				], 404);
 			}
 		} catch (Exception $ex) {
 			return response()->json([
@@ -149,7 +147,7 @@ class GameController extends Controller
 			GameRoomsPlayer::where('game_room_id', $gameRoomId)->where('user_id', $playerId)->update([
 				'is_ready' => $request->is_ready ? 1 : 0,
 			]);
-			broadcast(new ChangePlayerStatus($playerId, $request->is_ready));
+			broadcast(new ChangePlayerStatus($gameRoomId, $playerId, $request->is_ready));
 
 			$playersReady = GameRoomsPlayer::where('game_room_id', $gameRoomId)->where('is_ready', 1)->count();
 			$gameRoom = GameRoom::find($gameRoomId);
@@ -172,7 +170,7 @@ class GameController extends Controller
 
 	public function sendCountdown($gameRoomId)
 	{
-		broadcast(new SendCountdown(30));
+		broadcast(new SendCountdown($gameRoomId, 30));
 	}
 
 	public function startGame($gameRoomId)
@@ -181,46 +179,46 @@ class GameController extends Controller
 			'game_room_id' => $gameRoomId,
 			'game_data' => json_encode(['winners' => ['line' => null, 'bingo' => null], 'numbers' => []]),
 		]);
+		broadcast(new StartGame($gameRoomId));
 		DrawNextNumber::dispatch($history->id)->onQueue('bingo');
-		// $this->playBingo($gameRoomId, $history->id);
 	}
-
-	// public function playBingo($channelId, $historyId)
-	// {
-	// 	$gameRoomHistory = GameRoomsHistory::find($historyId);
-	// 	$allNumbers = range(1, 90);
-
-	// 	while (!empty($allNumbers)) {
-	// 		$randomNumber = array_rand($allNumbers);
-	// 		$number = $allNumbers[$randomNumber];
-	// 		unset($allNumbers[$randomNumber]);
-
-	// 		$gameData = json_decode($gameRoomHistory->game_data, true);
-	// 		$gameData['numbers'][] = $number;
-
-	// 		broadcast(new DrawNumber($number, $channelId));
-	// 		$gameRoomHistory->game_data = json_encode($gameData);
-	// 		$gameRoomHistory->save();
-
-	// 		sleep(5);
-	// 	}
-	// }
 
 	public function callLine($gameRoomId, $playerId)
 	{
 		$gameRoomHistory = GameRoomsHistory::where('game_room_id', $gameRoomId)->get()->last();
 		$gameData = json_decode($gameRoomHistory->game_data, true);
-		$gameData['winners']['line'][] = $playerId;
-		$gameRoomHistory->game_data = json_encode($gameData);
-		$gameRoomHistory->save();
+		if (!$gameData['winners']['line']) {
+			$gameData['winners']['line'][] = $playerId;
+			$gameRoomHistory->game_data = json_encode($gameData);
+			$gameRoomHistory->save();
+			broadcast(new LineCalled($gameRoomId, $playerId));
+		}
 	}
 
 	public function callBingo($gameRoomId, $playerId)
 	{
 		$gameRoomHistory = GameRoomsHistory::where('game_room_id', $gameRoomId)->get()->last();
 		$gameData = json_decode($gameRoomHistory->game_data, true);
-		$gameData['winners']['bingo'][] = $playerId;
-		$gameRoomHistory->game_data = json_encode($gameData);
-		$gameRoomHistory->save();
+		if (!$gameData['winners']['bingo']) {
+			$gameData['winners']['bingo'][] = $playerId;
+			$gameRoomHistory->game_data = json_encode($gameData);
+			$gameRoomHistory->save();
+			broadcast(new BingoCalled($gameRoomId, $playerId));
+		}
+	}
+
+	public function getGameRooms($route)
+	{
+		$game = Game::where('route_path', $route)->first();
+
+		$gameRooms = GameRoom::where('game_id', $game->id)->get();
+		return GameRoomResource::collection($gameRooms);
+	}
+
+	public function getGameData($gameRoomId)
+	{
+		$gameRoomHistory = GameRoomsHistory::where('game_room_id', $gameRoomId)->get()->last();
+		$gameData = json_decode($gameRoomHistory->game_data, true);
+		return response()->json($gameData, 200);
 	}
 }

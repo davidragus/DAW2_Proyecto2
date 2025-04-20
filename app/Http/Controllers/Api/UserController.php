@@ -229,16 +229,16 @@ class UserController extends Controller
 			if ($game->win_amount) {
 				return array_values([
 					[
-						'name' => 'Bet',
-						'created_at' => $game->created_at->toDateString(),
-						'type' => 'MINUS',
-						'amount' => $game->bet_amount
-					],
-					[
 						'name' => 'Win',
 						'created_at' => $game->created_at->toDateString(),
 						'type' => 'PLUS',
 						'amount' => $game->win_amount
+					],
+					[
+						'name' => 'Bet',
+						'created_at' => $game->created_at->toDateString(),
+						'type' => 'MINUS',
+						'amount' => $game->bet_amount
 					]
 				]);
 			} else {
@@ -263,6 +263,7 @@ class UserController extends Controller
 					'name' => $transaction->type === 'DEPOSIT' ? 'Deposit' : 'Withdraw',
 					'created_at' => $transaction->created_at->toDateString(),
 					'type' => $transaction->type === 'DEPOSIT' ? 'PLUS' : 'MINUS',
+					'real_money' => $transaction->money,
 					'amount' => $transaction->chips
 				]
 			];
