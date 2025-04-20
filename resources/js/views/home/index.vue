@@ -31,7 +31,7 @@
 					</div>
 				</div>
 				<div class="row d-flex justify-content-around mt-3 games-row">
-					<RouterLink class="col-2 game-card" to="/games/bingo">
+					<RouterLink class="col-2 game-card" :to="{ name: 'auth.gamerooms', params: { route: 'bingo' } }">
 						<img src="/images/bingoGame.webp" alt="Bingo" class="game-image" />
 						<p class="game-title">BINGO</p>
 						<div class="bottom-game-line"></div>
@@ -118,11 +118,11 @@ watch(() => route.query.toast, (newValue) => {
 
 const showSticky = (toastValue) => {
 	// toast.add({ severity: 'success', summary: 'Success Message', detail: 'Message Content', life: 3000 });
-    if(toastValue == 'denied'){
-        toast.add({ severity: 'error', summary: 'Validation status denied', detail: 'Your validation status is DENIED, You can repeat the verification in "My Account -> Verify Identity".', life: 5000 });
-    } else if(toastValue == 'pending'){
-        toast.add({ severity: 'warn', summary: 'Validation status pending', detail: 'Your validation status is PENDING', life: 2000 });
-	} else if(toastValue == 'error'){
+	if (toastValue == 'denied') {
+		toast.add({ severity: 'error', summary: 'Validation status denied', detail: 'Your validation status is DENIED, You can repeat the verification in "My Account -> Verify Identity".', life: 5000 });
+	} else if (toastValue == 'pending') {
+		toast.add({ severity: 'warn', summary: 'Validation status pending', detail: 'Your validation status is PENDING', life: 2000 });
+	} else if (toastValue == 'error') {
 		toast.add({ severity: 'error', summary: 'Validation status not valid', detail: 'Your validation status have an error', life: 2000 });
 	}
 

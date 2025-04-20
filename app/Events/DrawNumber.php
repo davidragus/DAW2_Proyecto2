@@ -33,7 +33,7 @@ class DrawNumber implements ShouldBroadcast
 	 */
 	public function broadcastOn()
 	{
-		return new PresenceChannel('bingo');
+		return new PresenceChannel('bingo-' . $this->channelId);
 	}
 
 	public function broadcastAs()

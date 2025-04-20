@@ -5,21 +5,25 @@ namespace App\Events;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
+use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class BroadcastWinners implements ShouldBroadcast
+class BingoCalled implements ShouldBroadcast
 {
 	use Dispatchable, InteractsWithSockets, SerializesModels;
 
-	public $winners;
+	public $userId;
 	public $channelId;
 
-	public function __construct($winners, $channelId)
+	/**
+	 * Create a new event instance.
+	 */
+	public function __construct($channelId, $userId)
 	{
-		$this->winners = $winners;
 		$this->channelId = $channelId;
+		$this->userId = $userId;
 	}
 
 	/**
@@ -34,15 +38,13 @@ class BroadcastWinners implements ShouldBroadcast
 
 	public function broadcastAs()
 	{
-		return 'BroadcastWinners';
+		return 'BingoCalled';
 	}
 
 	public function broadcastWith(): array
 	{
 		return [
-			'lineWinners' => $this->winners['line'],
-			'bingoWinners' => $this->winners['bingo'],
+			'playerId' => $this->userId
 		];
 	}
-
 }

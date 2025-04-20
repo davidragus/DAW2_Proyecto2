@@ -1,58 +1,64 @@
 <template>
 	<div id="mainContent">
-		<div class="mt-3">
-			<h4 class="text-center">Players ready: {{ countReadyPlayers }}/1 </h4>
-			<!-- Modificar el contador al umbral asignado en el backend -->
-			<h5>Números salidos:</h5>
-			<div class="d-flex flex-wrap">
-				<div v-for="ball in drawnBalls" :key="ball" class="bingo-cell" style="width: 30px; height: 30px">
-					{{ ball }}
+		<div class="mt-5 container d-flex justify-content-center">
+			<div
+				class="d-flex justify-content-end align-items-center col-12 md:col-8 lg:col-8 xl:col-6 xxl:col-4 mt-3 bingo-history">
+				<div v-for="(num, index) in numberHistory" :key="index" class="col-2 d-flex justify-content-center p-0">
+					<div class="history-ball">
+						{{ num }}
+					</div>
 				</div>
 			</div>
 		</div>
-		<div class="bola-actual" v-if="currentBall !== null" :class="{ 'fade-out': isFading }">
-			{{ currentBall }}
+		<div class="mt-3">
+			<h4 class="text-center text-white">Players ready: {{ countReadyPlayers }}/2 </h4>
+			<!-- Modificar el contador al umbral asignado en el backend -->
 		</div>
-
-		<Timer v-if="timerSeconds" :seconds="timerSeconds" />
+		<div class="timer-number-container my-5 d-flex justify-content-center align-items-center">
+			<Timer v-if="timerSeconds" :seconds="timerSeconds" />
+			<div class="current-number" v-if="currentBall !== null" :class="{ 'fade-out': isFading }">
+				<div class="white-circle"></div>
+				<div class="number">
+					{{ currentBall }}
+				</div>
+			</div>
+		</div>
 		<div class="container mt-3">
-			<div class="row justify-content-center mb-3">
-				<div class="col-auto">
+			<div class="row justify-content-center align-items-center mb-3">
+				<div v-if="canBuyCards && bingoCards.length < 10" class="col-auto">
 					<input type="number" v-model.number="bingoCardsAmount" min="1" max="10" class="form-control"
 						placeholder="Número de cartones" />
 				</div>
 				<div class="col-auto">
-					<button @click="generateBingoCards" class="btn btn-primary">
-						Generar Cartones
-					</button>
-					<button :disabled="bingoCards.length < 1" @click="updateStatus" class="btn btn-secondary ms-2">
-						{{ isReady ? 'Not ready' : 'Ready' }}
-					</button>
-					<button :disabled="wrongLineCalls >= 3" @click="callLine(1, authStore().user.id)"
-						class="btn btn-secondary ms-2">
-						Call Line
-					</button>
-					<button :disabled="wrongBingoCalls >= 3" @click="callBingo(1, authStore().user.id)"
-						class="btn btn-secondary ms-2">
-						Call Bingo
-					</button>
+					<Button v-if="canBuyCards && bingoCards.length < 10" label="Buy bingo cards"
+						@click="generateBingoCards" severity="danger" class="btn btn-primary" />
+					<Button v-if="canChangeStatus" @click="updateStatus" :icon="isReady ? 'pi pi-times' : 'pi pi-check'"
+						:label="isReady ? 'Not ready' : 'Ready'" :severity="isReady ? 'danger' : 'success'"
+						class="btn ms-2" />
+					<Button v-if="canCallLine" icon="pi pi-megaphone" label="Call line" :disabled="wrongLineCalls >= 3"
+						@click="callLine(route.params.id, authStore().user.id)" class="btn ms-2" severity="danger" />
+					<Button v-if="canCallBingo" icon="pi pi-megaphone" label="Call bingo"
+						:disabled="wrongBingoCalls >= 3" @click="callBingo(route.params.id, authStore().user.id)"
+						class="btn ms-2" severity="danger" />
 				</div>
 			</div>
-			<div class="row">
-				<div v-for="(card, cardIndex) in bingoCards" :key="cardIndex" class="col-md-4 col-lg-3 mb-3">
-					<div class="card p-2">
-						<div v-for="(row, rowIndex) in card" :key="rowIndex" class="d-flex justify-content-center">
-							<div v-for="(cell, colIndex) in row" :key="colIndex" class="bingo-cell">
-								<div v-if="cardsPositions[cardIndex][rowIndex][colIndex] == true" class="cell-marker">
-								</div>
-								{{ cell }}
-							</div>
+		</div>
+		<div class="row lg:justify-content-center mx-0 mb-5 cards-container">
+			<div v-for="(card, cardIndex) in bingoCards" :key="cardIndex" class="md:col-6 xl:col-4 xxl:col-3 mb-3">
+				<div class="card p-3">
+					<h4 class="text-center">BINGO CARD #{{ cardIndex + 1 }}</h4>
+					<div v-for="(row, rowIndex) in card" :key="rowIndex" class="d-flex justify-content-center">
+						<div v-for="(cell, colIndex) in row" :key="colIndex" class="bingo-cell"
+							:class="{ 'empty-cell': cardsPositions[cardIndex][rowIndex][colIndex] == null, 'cell-marker': cardsPositions[cardIndex][rowIndex][colIndex] == true }">
+							{{ cell }}
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+
+	<Toast />
 </template>
 
 <script setup>
@@ -64,17 +70,28 @@ import Echo from "laravel-echo";
 import { authStore } from "../store/auth";
 import useUsers from '@/composables/users';
 import Timer from './Timer.vue';
+import { useRoute } from 'vue-router';
+import { useToast } from 'primevue/usetoast';
+
+
+const route = useRoute();
+const toast = useToast();
 
 const swal = inject("$swal");
 const { getChips, updateChips } = useUsers();
 const {
 	player,
+	canChangeStatus,
 	bingoCards,
+	canBuyCards,
 	cardsPositions,
 	isReady,
 	wrongLineCalls,
 	wrongBingoCalls,
+	drawnBalls,
+	numberHistory,
 	getPlayer,
+	loadGameData,
 	getPlayersStatus,
 	startGame,
 	isGameOngoing,
@@ -85,19 +102,18 @@ const {
 	updatePlayerStatus,
 	checkForNumber,
 	callLine,
-	callBingo
+	callBingo,
+	canCallLine,
+	canCallBingo
 } = useBingo();
 
 const imLeader = ref(false);
-const allBalls = ref(Array.from({ length: 90 }, (_, i) => i + 1));
-const drawnBalls = ref([]);
 const currentBall = ref(null);
 const isFading = ref(false);
 const timerSeconds = ref(null);
 
 const drawNumber = (number) => {
 
-	allBalls.value.splice(number, 1)[0];
 	currentBall.value = number;
 	drawnBalls.value.push(number);
 	isFading.value = false;
@@ -108,6 +124,10 @@ const drawNumber = (number) => {
 	setTimeout(() => {
 		isFading.value = true;
 		setTimeout(() => {
+			if (numberHistory.value.length >= 6) {
+				numberHistory.value.shift();
+			}
+			numberHistory.value.push(currentBall.value);
 			currentBall.value = null;
 		}, 500);
 	}, 3000);
@@ -140,14 +160,13 @@ window.Echo = new Echo({
 const users = ref([]);
 
 onMounted(() => {
-	window.Echo.join('bingo')
+	window.Echo.join(`bingo-${route.params.id}`)
 		.here((channelUsers) => {
-			getPlayer(1, authStore().user.id);
+			loadGameData(route.params.id, authStore().user.id);
 			users.value = channelUsers;
 			updatePlayersStatus();
 			if (channelUsers.length === 1) {
 				imLeader.value = true;
-				console.log('Yo soy el lider');
 			}
 		})
 		.joining((user) => {
@@ -174,6 +193,21 @@ onMounted(() => {
 		.listen('.DrawNumber', (data) => {
 			drawNumber(data.number);
 		})
+		.listen('.StartGame', () => {
+			canCallLine.value = true;
+			canChangeStatus.value = false;
+		})
+		.listen('.LineCalled', (data) => {
+			canCallBingo.value = true;
+			canCallLine.value = false;
+			const userIndex = users.value.findIndex((user) => user.id == data.playerId);
+			toast.add({ severity: 'info', summary: 'Line called!', detail: `The user ${users.value[userIndex].username} has called line!`, life: 3000 });
+		})
+		.listen('.BingoCalled', (data) => {
+			canCallBingo.value = false;
+			const userIndex = users.value.findIndex((user) => user.id == data.playerId);
+			toast.add({ severity: 'info', summary: 'Bingo called!', detail: `The user ${users.value[userIndex].username} has called bingo!`, life: 3000 });
+		})
 		.listen('.BroadcastWinners', (data) => {
 			let lineWinners = [];
 			let bingoWinners = [];
@@ -187,10 +221,11 @@ onMounted(() => {
 
 			swal.fire({
 				icon: "success",
-				title: `Bingo!`,
-				text: `Line winners: ${lineWinners.join(', ')}\nBingo winners: ${bingoWinners.join(', ')}`,
+				title: `Game over!`,
+				html: `<b>${lineWinners.join(', ')}</b> called line<br><b>${bingoWinners.join(', ')}</b> called bingo`,
 				background: '#2A2A2A',
-				color: '#ffffff'
+				color: '#ffffff',
+				confirmButtonColor: '#ff0000'
 			});
 
 			restoreDataAfterGame();
@@ -226,6 +261,7 @@ const restoreDataAfterGame = () => {
 	wrongBingoCalls.value = 0;
 	drawnBalls.value = [];
 	currentBall.value = null;
+	numberHistory.value = [];
 
 	console.log(users.value);
 	for (const user of users.value) {
@@ -244,7 +280,7 @@ const startCountdown = () => {
 			clearInterval(countdown);
 			timerSeconds.value = null;
 			if (imLeader.value) {
-				startGame(1);
+				startGame(route.params.id);
 			}
 		}
 		secondsPassed++;
@@ -263,7 +299,7 @@ const countReadyPlayers = computed(() => {
 })
 
 const generateBingoCards = async () => {
-	if (!await isGameOngoing(1)) {
+	if (!await isGameOngoing(route.params.id)) {
 		const chips = await getChips(authStore().user.id);
 		if (chips >= (bingoCardsAmount.value * 10)) {
 			if (bingoCards.value.length + bingoCardsAmount.value > 10) {
@@ -280,13 +316,14 @@ const generateBingoCards = async () => {
 					generateBingoCard
 				);
 				bingoCards.value.push(...newBingoCards);
-				generateNumbersPosition(); //TODO: Modificar y añadir una función que añada un array nuevo en base a las tarjetas anteriores en vez de generarlas todas desde 0
+				generateNumbersPosition();
 				authStore().user.chips = await updateChips(authStore().user.id, chips - (bingoCardsAmount.value * 10));
 				if (!player.value) {
-					joinGame(1, bingoCardsAmount.value * 10);
-					getPlayer(1, authStore().user.id);
+					joinGame(route.params.id, bingoCardsAmount.value * 10);
+					getPlayer(route.params.id, authStore().user.id);
+					canChangeStatus.value = true;
 				} else {
-					updatePlayerGameData(1, authStore().user.id, bingoCardsAmount.value * 10);
+					updatePlayerGameData(route.params.id, authStore().user.id, bingoCardsAmount.value * 10);
 				}
 			}
 		} else {
@@ -298,6 +335,14 @@ const generateBingoCards = async () => {
 				color: '#ffffff'
 			});
 		}
+	} else {
+		swal.fire({
+			icon: "error",
+			title: "Error",
+			text: `You cannot join the game because it has already started.`,
+			background: '#2A2A2A',
+			color: '#ffffff'
+		});
 	}
 };
 
@@ -305,7 +350,7 @@ const bingoCardsAmount = ref(1);
 
 const updateStatus = () => {
 	isReady.value = !isReady.value;
-	updatePlayerStatus(1, authStore().user.id, isReady.value);
+	updatePlayerStatus(route.params.id, authStore().user.id, isReady.value);
 }
 </script>
 
@@ -327,28 +372,59 @@ const updateStatus = () => {
 	position: relative;
 }
 
-.cell-marker {
-	position: absolute;
-	height: 80%;
-	width: 100%;
-	background-color: rgba(255, 0, 0, 0.5);
-	border-radius: 100%;
-	/* opacity: 0;
-	transition: opacity 0.3s ease; */
+.empty-cell {
+	background-color: #2a2a2a;
 }
 
-.bola-actual {
-	width: 100px;
-	height: 100px;
+.cell-marker {
+	background-color: rgba(255, 0, 0, 0.5);
+}
+
+.bingo-history {
+	min-height: 74px;
+	background-color: #222;
+	padding: 10px 20px;
+	border-radius: 10px;
+	border: 2px solid white;
+}
+
+.history-ball {
+	width: 50px;
+	height: 50px;
+	background: radial-gradient(circle at 25% 25%, white 1px, rgb(226, 226, 226) 20%, #7e7e7e 80%);
+	color: black;
+	font-weight: bold;
 	border-radius: 50%;
-	background-color: red;
-	color: white;
-	font-size: 2rem;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	margin: 1rem auto;
+	font-size: 18px;
+}
+
+.timer-number-container {
+	min-width: 150px;
+	min-height: 150px;
+}
+
+.current-number {
+	width: 150px;
+	height: 150px;
+	border-radius: 50%;
+	/* background: radial-gradient(circle at 25% 25%, rgb(255, 0, 0) 1px, rgb(218, 0, 0) 20%, #850000 80%); */
+	background: radial-gradient(circle at 25% 25%, rgb(255, 255, 255) 1px, rgb(226, 226, 226) 20%, #7e7e7e 80%);
+	/* color: white; */
+	color: black;
+	font-weight: bold;
+	font-size: 3rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	animation: bounce-in 0.4s ease;
+	position: relative;
+}
+
+.number {
+	position: absolute;
 }
 
 @keyframes bounce-in {
@@ -380,6 +456,24 @@ const updateStatus = () => {
 
 	100% {
 		transform: scale(0);
+	}
+}
+
+@media (max-width: 768px) {
+	.bingo-cell {
+		width: 30px;
+		height: 30px;
+	}
+
+	.history-ball {
+		width: 35px;
+		height: 35px;
+	}
+
+	.cards-container {
+		flex-wrap: nowrap;
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
 	}
 }
 </style>

@@ -2,12 +2,12 @@ import { ref, inject } from "vue";
 import { useRouter } from "vue-router";
 
 export default function useGames() {
-    const games = ref([]);
-    const game = ref({});
-    const router = useRouter();
-    const validationErrors = ref({});
-    const isLoading = ref(false);
-    const swal = inject("$swal");
+	const games = ref([]);
+	const game = ref({});
+	const router = useRouter();
+	const validationErrors = ref({});
+	const isLoading = ref(false);
+	const swal = inject("$swal");
 
     const getAllGames = async () => {
         try {

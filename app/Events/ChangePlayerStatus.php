@@ -14,14 +14,16 @@ class ChangePlayerStatus implements ShouldBroadcast
 {
 	use Dispatchable, InteractsWithSockets, SerializesModels;
 
+	public $gameRoomId;
 	public $userId;
 	public $isReady;
 
 	/**
 	 * Create a new event instance.
 	 */
-	public function __construct($userId, $isReady)
+	public function __construct($gameRoomId, $userId, $isReady)
 	{
+		$this->gameRoomId = $gameRoomId;
 		$this->userId = $userId;
 		$this->isReady = $isReady;
 	}
@@ -33,7 +35,7 @@ class ChangePlayerStatus implements ShouldBroadcast
 	 */
 	public function broadcastOn()
 	{
-		return new PresenceChannel('bingo');
+		return new PresenceChannel('bingo-' . $this->gameRoomId);
 	}
 
 	public function broadcastAs()
