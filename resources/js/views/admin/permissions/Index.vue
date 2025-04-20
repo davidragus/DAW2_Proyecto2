@@ -10,6 +10,7 @@
               label="Create Permission"
               @click="$router.push({ name: 'permissions.create' })"
               class="float-end"
+              :style="{ backgroundColor: 'red', color: 'white', borderColor: 'red' }"
             />
           </div>
   
@@ -39,14 +40,14 @@
                     type="button"
                     icon="pi pi-filter-slash"
                     label="Clear"
-                    class="ml-1"
+                    class="ml-1 filter-btn"
                     outlined
                     @click="initFilters"
                   />
                   <Button
                     type="button"
                     icon="pi pi-refresh"
-                    class="h-100 ml-1"
+                    class="h-100 ml-1 filter-btn"
                     outlined
                     @click="getPermissions"
                   />

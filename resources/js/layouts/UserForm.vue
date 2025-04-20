@@ -173,7 +173,7 @@
 	</div>
 	<div class="row d-flex justify-content-end mt-5">
 		<div class="text-right col-2">
-			<button :disabled="isLoading" class="btn btn-primary w-100" @click="submitForm">
+			<button :disabled="isLoading" class="btn btn-primary w-100" @click="submitForm" :style="{ backgroundColor: 'red', color: 'white', borderColor: 'red' }">
 				<div v-show="isLoading" class=""></div>
 				<span v-if="isLoading">Processing...</span>
 				<span v-else>Save user</span>

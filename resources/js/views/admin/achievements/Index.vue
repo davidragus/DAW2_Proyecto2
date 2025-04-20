@@ -26,14 +26,14 @@
                                     type="button"
                                     icon="pi pi-filter-slash"
                                     label="Clear"
-                                    class="ml-1"
+                                    class="ml-1 filter-btn"
                                     outlined
                                     @click="initFilters()"
                                 />
                                 <Button
                                     type="button"
                                     icon="pi pi-refresh"
-                                    class="h-100 ml-1"
+                                    class="h-100 ml-1 filter-btn"
                                     outlined
                                     @click="getAchievements()"
                                 />
@@ -49,7 +49,7 @@
                             </template>
                             <template #end>
 								<Button v-if="can('achievement-create')" icon="pi pi-plus" label="Create achievement"
-									@click="$router.push('achievements/create')" class="float-end" />
+									@click="$router.push('achievements/create')" class="float-end" :style="{ backgroundColor: 'red', color: 'white', borderColor: 'red' }"/>
 							</template>
                         </Toolbar>
                     </template>

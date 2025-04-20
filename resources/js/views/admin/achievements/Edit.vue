@@ -81,7 +81,7 @@
                             </div>
 
                             <div class="mt-3 text-center">
-                                <button :disabled="isLoading" class="btn btn-primary">
+                                <button :disabled="isLoading" class="btn btn-primary" :style="{ backgroundColor: 'red', color: 'white', borderColor: 'red' }">
                                     <span v-if="isLoading">Processing...</span>
                                     <span v-else>Save Achievement</span>
                                 </button>

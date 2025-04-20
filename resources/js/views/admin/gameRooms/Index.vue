@@ -3,7 +3,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header bg-transparent ps-0 pe-0">
-                    <h5 class="float-start mb-0">Achievements</h5>
+                    <h5 class="float-start mb-0">Game rooms</h5>
                 </div>
                 <DataTable v-model:filters="filters" :value="gameRooms" paginator :rows="25" stripedRows
                     dataKey="id" size="small" :class="'custom-datatable'">
@@ -14,14 +14,14 @@
                                     <InputIcon class="pi pi-search"></InputIcon>
                                     <InputText v-model="filters['global'].value" placeholder="Search" />
                                 </IconField>
-                                <Button type="button" icon="pi pi-filter-slash" label="Clear" class="ml-1" outlined
+                                <Button type="button" icon="pi pi-filter-slash" label="Clear" class="ml-1 filter-btn" outlined
                                     @click="initFilters()" />
-                                <Button type="button" icon="pi pi-refresh" class="h-100 ml-1" outlined
+                                <Button type="button" icon="pi pi-refresh" class="h-100 ml-1 filter-btn" outlined
                                     @click="getAllGameRooms()" />
                             </template>
                             <template #end>
                                 <Button v-if="can('gameRooms-create')" icon="pi pi-plus" label="Create Game Room"
-                                    @click="$router.push('game-rooms/create')" class="float-end" />
+                                    @click="$router.push('game-rooms/create')" class="float-end" :style="{ backgroundColor: 'red', color: 'white', borderColor: 'red' }"/>
                             </template>
                         </Toolbar>
                     </template>

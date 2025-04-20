@@ -22,7 +22,7 @@
 
 								<!-- <Button type="button" icon="pi pi-filter-slash" label="Clear" class="ml-1" outlined
 									@click="initFilters()" /> -->
-								<Button type="button" icon="pi pi-refresh" class="h-100 ml-1" outlined
+								<Button type="button" icon="pi pi-refresh" class="h-100 ml-1 filter-btn" outlined
 									@click="getValidations()" />
 							</template>
 						</Toolbar>

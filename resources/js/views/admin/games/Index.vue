@@ -18,14 +18,14 @@
 									<InputText v-model="filters['global'].value" placeholder="Buscar" />
 								</IconField>
 
-								<Button type="button" icon="pi pi-filter-slash" label="Clear" class="ml-1" outlined
+								<Button type="button" icon="pi pi-filter-slash" label="Clear" class="ml-1 filter-btn" outlined
 									@click="initFilters()" />
-								<Button type="button" icon="pi pi-refresh" class="h-100 ml-1" outlined
+								<Button type="button" icon="pi pi-refresh" class="h-100 ml-1 filter-btn" outlined
 									@click="getValidations()" />
 							</template>
 							<template #end>
                                 <Button v-if="can('game-create')" icon="pi pi-plus" label="Create Game"
-                                    @click="$router.push('games/create')" class="float-end" />
+                                    @click="$router.push('games/create')" class="float-end" :style="{ backgroundColor: 'red', color: 'white', borderColor: 'red' }" />
                             </template>
 						</Toolbar>
 

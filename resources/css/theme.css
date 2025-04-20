@@ -1379,3 +1379,13 @@ body {
 	background-color: #fff !important;
 	color: red !important;
 }
+.filter-btn {
+	color: yellow !important;
+	border-color: yellow !important;
+}
+
+.filter-btn:hover {
+	background-color: yellow !important;
+	color: black !important; 
+	border-color: yellow !important;
+}
