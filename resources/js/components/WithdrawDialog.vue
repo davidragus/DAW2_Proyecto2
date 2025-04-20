@@ -2,7 +2,7 @@
 	<div>
 		<Dialog v-model:visible="visible" modal header="WITHDRAW"
 			:style="{ width: '400px', backgroundColor: '#212121', color: 'white', borderColor: '#3B3B3B' }"
-			@update:visible="onDialogClose" appendTo="self">
+			@update:visible="onDialogClose" v-bind="dialogProps">
 			<form class="withdraw-container p-4" @submit.prevent="withdraw">
 				<h3>Amount of chips to withdraw:</h3>
 				<div class="withdraw-amount">
@@ -46,7 +46,14 @@ import { useRoute, useRouter } from 'vue-router';
 
 const router = useRouter();
 const props = defineProps({
-	show: Boolean
+	show: Boolean,
+	isMobile: Boolean
+});
+
+const isMobile = ref(props.isMobile);
+
+const dialogProps = computed(() => {
+	return isMobile.value ? {} : { appendTo: 'self' };
 });
 
 const emit = defineEmits(['update:visible']);
