@@ -1,6 +1,6 @@
 <template>
-	<div id="mainContent" class="d-flex">
-		<MyAccountSidebar />
+	<div id="mainContent" class="d-flex ms-4" :class="isMobile ? 'flex-column mr-4' : ''">
+		<MyAccountSidebar :isMobile="isMobile" />
 		<div class="container">
 			<div class="main-content-validation">
 				<div v-if="user.validation_status === 'ACCEPTED'" class="status-card accepted">
@@ -71,14 +71,19 @@ const showModal = ref(false);
 const validationImages = ref([null, null, null]);
 const processing = ref(false);
 
-onMounted(() => {
-	getUser(authStore().user.id);
-	document.getElementById('mainContent').classList.add('ml-4');
-	if (window.innerWidth <= 768) {
-		document.getElementById('mainContent').style.paddingLeft = '0';
-	} else {
+const isMobile = ref(false);
+
+const checkMobile = () => {
+	isMobile.value = window.innerWidth <= 768;
+	if (!isMobile.value) {
 		document.getElementById('mainContent').style.paddingLeft = '230px';
 	}
+};
+
+onMounted(() => {
+	checkMobile();
+	getUser(authStore().user.id);
+	window.addEventListener('resize', checkMobile);
 });
 
 function onFileSelect(event, index) {
@@ -142,7 +147,7 @@ async function handleSubmit() {
 
 <style scoped>
 #mainContent {
-	margin-left: 20px;
+	padding: 0 0;
 }
 
 .main-content-validation {

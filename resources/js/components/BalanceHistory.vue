@@ -1,6 +1,6 @@
 <template>
-	<div id="mainContent" class="d-flex">
-		<MyAccountSidebar />
+	<div id="mainContent" class="d-flex ms-4" :class="isMobile ? 'flex-column mr-4' : ''">
+		<MyAccountSidebar :isMobile="isMobile" />
 		<div class="container py-3">
 			<DataView :value="balanceHistory" paginator :rows="20">
 				<template #header>
@@ -47,14 +47,19 @@ import useUsers from '@/composables/users';
 
 const { balanceHistory, getBalanceHistory } = useUsers();
 
-onMounted(() => {
-	getBalanceHistory(authStore().user.id);
-	document.getElementById('mainContent').classList.add('ml-4');
-	if (window.innerWidth <= 768) {
-		document.getElementById('mainContent').style.paddingLeft = '0';
-	} else {
+const isMobile = ref(false);
+
+const checkMobile = () => {
+	isMobile.value = window.innerWidth <= 768;
+	if (!isMobile.value) {
 		document.getElementById('mainContent').style.paddingLeft = '230px';
 	}
+};
+
+onMounted(() => {
+	checkMobile();
+	getBalanceHistory(authStore().user.id);
+	window.addEventListener('resize', checkMobile);
 });
 
 onBeforeUnmount(() => {
@@ -65,7 +70,7 @@ onBeforeUnmount(() => {
 <style scoped>
 #mainContent {
 	display: flex;
-	padding: 0 20px 0 20px;
+	padding: 0 0;
 	background-color: #2A2A2A;
 }
 
