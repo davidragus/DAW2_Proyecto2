@@ -45,33 +45,46 @@
 				<div class="col-9">
 					<legend>User details</legend>
 					<div class="row">
-						<div class="form-group col-4">
+						<div class="form-group col-3">
 							<label for="name">Name</label>
 							<input v-model="user.name" type="text" class="form-control" id="name">
-							<div class="text-danger mt-1">{{ errors.name }}</div>
+							<!-- <div class="text-danger mt-1">{{ errors.name }}</div> -->
 							<div class="text-danger mt-1">
-								<div v-for="message in validationErrors?.name">
-									{{ message }}
+								<div v-if="validationErrors.name">
+									{{ validationErrors.name }}
 								</div>
 							</div>
 						</div>
-						<div class="form-group col-4">
+						<div class="form-group col-3">
 							<label for="surname1">First surname</label>
 							<input v-model="user.surname1" type="text" class="form-control" id="surname1">
-							<div class="text-danger mt-1">{{ errors.surname1 }}</div>
+							<!-- <div class="text-danger mt-1">{{ errors.surname1 }}</div> -->
 							<div class="text-danger mt-1">
-								<div v-for="message in validationErrors?.surname1">
-									{{ message }}
+								<div v-if="validationErrors.surname1">
+									{{ validationErrors.surname1 }}
 								</div>
 							</div>
 						</div>
-						<div class="form-group col-4">
+						<div class="form-group col-3">
 							<label for="surname2">Last surname (optional)</label>
 							<input v-model="user.surname2" type="text" class="form-control" id="surname2">
-							<div class="text-danger mt-1">{{ errors.surname2 }}</div>
+							<!-- <div class="text-danger mt-1">{{ errors.surname2 }}</div> -->
 							<div class="text-danger mt-1">
-								<div v-for="message in validationErrors?.surname2">
-									{{ message }}
+								<div v-if="validationErrors.surname2">
+									{{ validationErrors.surname2 }}
+								</div>
+							</div>
+						</div>
+						<div class="form-group col-3">
+							<label for="country">Country</label>
+							<select v-model="user.country" class="form-select" id="country">
+								<option v-for="country in countries" :key="country.code" :value="country.code">{{
+									country.name }}
+								</option>
+							</select>
+							<div class="text-danger mt-1">
+								<div v-if="validationErrors.country">
+									{{ validationErrors.country }}
 								</div>
 							</div>
 						</div>
@@ -80,30 +93,30 @@
 						<div class="form-group col-3">
 							<label for="dni">National Identity Card Number</label>
 							<input v-model="user.dni" type="text" class="form-control" id="dni">
-							<div class="text-danger mt-1">{{ errors.dni }}</div>
+							<!-- <div class="text-danger mt-1">{{ errors.dni }}</div> -->
 							<div class="text-danger mt-1">
-								<div v-for="message in validationErrors?.dni">
-									{{ message }}
+								<div v-if="validationErrors.dni">
+									{{ validationErrors.dni }}
 								</div>
 							</div>
 						</div>
 						<div class="form-group col-3">
 							<label for="birthDate">Birth date</label>
 							<input v-model="user.birthdate" type="date" class="form-control" id="birthDate">
-							<div class="text-danger mt-1">{{ errors.birthdate }}</div>
+							<!-- <div class="text-danger mt-1">{{ errors.birthdate }}</div> -->
 							<div class="text-danger mt-1">
-								<div v-for="message in validationErrors?.birthdate">
-									{{ message }}
+								<div v-if="validationErrors.birthdate">
+									{{ validationErrors.birthdate }}
 								</div>
 							</div>
 						</div>
 						<div class="form-group col-3">
 							<label for="phone_number">Phone number</label>
 							<input v-model="user.phone_number" type="tel" class="form-control" id="phone_number">
-							<div class="text-danger mt-1">{{ errors.phone_number }}</div>
+							<!-- <div class="text-danger mt-1">{{ errors.phone_number }}</div> -->
 							<div class="text-danger mt-1">
-								<div v-for="message in validationErrors?.phone_number">
-									{{ message }}
+								<div v-if="validationErrors.phone_number">
+									{{ validationErrors.phone_number }}
 								</div>
 							</div>
 						</div>
@@ -114,10 +127,10 @@
 								<option value="F">Female</option>
 								<option value="N">Neutral</option>
 							</select>
-							<div class="text-danger mt-1">{{ errors.gender }}</div>
+							<!-- <div class="text-danger mt-1">{{ errors.gender }}</div> -->
 							<div class="text-danger mt-1">
-								<div v-for="message in validationErrors?.gender">
-									{{ message }}
+								<div v-if="validationErrors.gender">
+									{{ validationErrors.gender }}
 								</div>
 							</div>
 						</div>
@@ -127,31 +140,32 @@
 						<div class="form-group col-4">
 							<label for="username">Username</label>
 							<input v-model="user.username" type="text" class="form-control" id="username">
-							<div class="text-danger mt-1">{{ errors.username }}</div>
+							<!-- <div class="text-danger mt-1">{{ errors.username }}</div> -->
 							<div class="text-danger mt-1">
-								<div v-for="message in validationErrors?.username">
-									{{ message }}
+								<div v-if="validationErrors.username">
+									{{ validationErrors.username }}
 								</div>
 							</div>
 						</div>
 						<div class="form-group col-4">
 							<label for="email">Email</label>
 							<input v-model="user.email" type="email" class="form-control" id="email">
-							<div class="text-danger mt-1">{{ errors.email }}</div>
+							<!-- <div class="text-danger mt-1">{{ errors.email }}</div> -->
 							<div class="text-danger mt-1">
-								<div v-for="message in validationErrors?.email">
-									{{ message }}
+								<div v-if="validationErrors.email">
+									{{ validationErrors.email }}
 								</div>
 							</div>
 						</div>
 						<div class="form-group col-4">
-							<label for="roles">Roles</label>
-							<MultiSelect id="roles" v-model="user.role_id" display="chip" :options="roleList"
-								optionLabel="name" dataKey="id" placeholder="Seleciona los roles" appendTo="self"
-								class="w-100" />
+							<label for="gender">Role</label>
+							<select v-model="user.role_id" class="form-select" id="gender">
+								<option v-for="role in roleList" :key="role.id" :value="role.id">{{ role.name }}
+								</option>
+							</select>
 						</div>
 					</div>
-					<div class="row" v-if="!editMode">
+					<div class="row d-flex align-items-center" v-if="!editMode">
 						<div class="col-3">
 							<div class="form-check ps-1">
 								<input class="form-check-input m-0" v-model="user.automaticValidation" type="checkbox"
@@ -163,8 +177,19 @@
 							</div>
 						</div>
 						<div class="col-3" v-if="autoVerify">
-							<FileUpload @select="onSelectValidationImage" class="justify-content-start" mode="basic"
-								name="demo[]" accept="image/*" :maxFileSize="1000000" />
+							<FileUpload @select="onSelectValidationImage($event, 'front')" class="justify-content-start"
+								mode="basic" name="validationImages[]" accept="image/*" :maxFileSize="1000000"
+								chooseLabel="Front image" />
+						</div>
+						<div class=" col-3" v-if="autoVerify">
+							<FileUpload @select="onSelectValidationImage($event, 'back')" class="justify-content-start"
+								mode="basic" name="validationImages[]" accept="image/*" :maxFileSize="1000000"
+								chooseLabel="Back image" />
+						</div>
+						<div class="col-3" v-if="autoVerify">
+							<FileUpload @select="onSelectValidationImage($event, 'face')" class="justify-content-start"
+								mode="basic" name="validationImages[]" accept="image/*" :maxFileSize="1000000"
+								chooseLabel="Face image" />
 						</div>
 					</div>
 				</div>
@@ -173,7 +198,8 @@
 	</div>
 	<div class="row d-flex justify-content-end mt-5">
 		<div class="text-right col-2">
-			<button :disabled="isLoading" class="btn btn-primary w-100" @click="submitForm" :style="{ backgroundColor: 'red', color: 'white', borderColor: 'red' }">
+			<button :disabled="isLoading" class="btn btn-primary w-100" @click="submitForm"
+				:style="{ backgroundColor: 'red', color: 'white', borderColor: 'red' }">
 				<div v-show="isLoading" class=""></div>
 				<span v-if="isLoading">Processing...</span>
 				<span v-else>Save user</span>
@@ -186,70 +212,87 @@
 
 <script setup>
 import { onMounted, reactive, ref, watchEffect } from "vue";
+import * as yup from 'yup';
 import { useRoute } from "vue-router";
 import { usePrimeVue } from 'primevue/config';
 import useRoles from "@/composables/roles";
 import useUsers from "@/composables/users";
+import useCountries from "@/composables/countries";
 import { useToast } from 'primevue/usetoast';
 
 const $primevue = usePrimeVue();
 const toast = useToast();
 const { roleList, getRoleList } = useRoles();
+const { countries, getCountries } = useCountries();
 const { updateUser, storeUser, getUser, user: postData, createUserDB, deleteUserDB, changeUserPasswordDB, createUserProceduredDB, validationErrors, isLoading } = useUsers();
 
-import { useForm, useField, defineRule } from "vee-validate";
 import { required, min } from "@/validation/rules"
 import { FileUpload } from "primevue";
-defineRule('required', required)
-defineRule('min', min);
+import { get } from "lodash";
+
+const eightteenYearsAgo = new Date(new Date().setFullYear(new Date().getFullYear() - 18));
 
 // Define a validation schema
-const schema = {
-	name: 'required',
-	email: 'required',
-	surname1: 'required',
-	dni: 'required',
-	birthdate: 'required',
-	phone_number: 'required',
-	gender: 'required',
-	username: 'required'
-}
-
-// Create a form context with the validation schema
-const { validate, errors, resetForm } = useForm({ validationSchema: schema })
-// Define actual fields for validation
-const { value: name } = useField('name', null, { initialValue: null });
-const { value: email } = useField('email', null, { initialValue: null });
-const { value: surname1 } = useField('surname1', null, { initialValue: null });
-const { value: surname2 } = useField('surname2', null, { initialValue: null });
-const { value: dni } = useField('dni', null, { initialValue: null });
-const { value: phone_number } = useField('phone_number', null, { initialValue: null });
-const { value: birthdate } = useField('birthdate', null, { initialValue: null });
-const { value: gender } = useField('gender', null, { initialValue: null });
-const { value: role_id } = useField('role_id', null, { initialValue: null, label: 'role' });
-const { value: username } = useField('username', null, { initialValue: null, label: 'username' });
-const { value: automaticValidation } = useField('automaticValidation', null, { initialValue: false, label: 'automaticValidation' });
+const schema = yup.object({
+	username: yup.string().required('Username is required').max(255).min(9),
+	name: yup.string().required('Name is required').max(255),
+	surname1: yup.string().required('First surname is required').max(255),
+	surname2: yup.string().nullable().max(255),
+	birthdate: yup.date()
+		.required('Birthdate is required')
+		.typeError('Birthdate must be a valid date')
+		.max(eightteenYearsAgo, 'User must be at least 18 years old'),
+	email: yup
+		.string()
+		.required('Email is required')
+		.email('Email must be valid')
+		.max(255),
+	dni: yup
+		.string()
+		.required('DNI is required')
+		.matches(/^\d{8}[A-Za-z]$/, 'DNI must have 8 digits followed by a letter')
+		.max(9, 'DNI must be exactly 9 characters'),
+	gender: yup.string().required('Gender is required').oneOf(['N', 'M', 'F']),
+	phone_number: yup.string().required('Phone number is required').max(255),
+	// password: yup
+	// 	.string()
+	// 	.required('Password is required')
+	// 	.min(8, 'Password must be at least 8 characters'),
+	// password_confirmation: yup
+	// 	.string()
+	// 	.oneOf([yup.ref('password'), null], 'Passwords must match'),
+	country: yup.string().required('Country is required').max(255),
+	terms: yup.boolean().oneOf([true], 'You must accept the terms and conditions'),
+	validationImages: yup.array().of(
+		yup.object().shape({
+			type: yup.string().required(),
+			image: yup.mixed().required(),
+		})
+	)
+})
 
 const user = reactive({
-	name,
-	email,
-	surname1,
-	surname2,
-	role_id,
-	dni,
-	phone_number,
-	gender,
-	birthdate,
-	username,
-	automaticValidation,
+	name: '',
+	email: '',
+	surname1: '',
+	surname2: '',
+	country: '',
+	role_id: '',
+	dni: '',
+	phone_number: '',
+	gender: '',
+	birthdate: '',
+	username: '',
+	automaticValidation: '',
 	validationImages: [],
 	avatar: []
 })
 
 const route = useRoute()
-function submitForm() {
-	validate().then(form => {
-		if (form.valid) {
+const submitForm = () => {
+	validationErrors.value = {}; // Reset errors
+	schema.validate(user, { abortEarly: false })
+		.then(() => {
 			if (props.editMode) {
 				updateUser(user)
 			} else {
@@ -258,9 +301,28 @@ function submitForm() {
 				}
 				storeUser(user)
 			}
-		}
-	})
+		})
+		.catch((err) => {
+			err.inner.forEach((error) => {
+				validationErrors.value[error.path] = error.message;
+			});
+		});
 }
+
+// function submitForm() {
+// 	validate().then(form => {
+// 		if (form.valid) {
+// 			if (props.editMode) {
+// 				updateUser(user)
+// 			} else {
+// 				if (typeof user.role_id === 'object') {
+// 					user.role_id = user.role_id[0].id; //TODO: Refactor this conversion
+// 				}
+// 				storeUser(user)
+// 			}
+// 		}
+// 	})
+// }
 
 const props = defineProps({
 	editMode: {
@@ -270,6 +332,7 @@ const props = defineProps({
 });
 
 onMounted(() => {
+	getCountries()
 	getRoleList()
 	if (props.editMode) {
 		getUser(route.params.id)
@@ -282,6 +345,7 @@ watchEffect(() => {
 	user.email = postData.value.email
 	user.surname1 = postData.value.surname1
 	user.surname2 = postData.value.surname2
+	user.country = postData.value.country
 	user.role_id = postData.value.role_id
 	user.avatar = postData.value.avatar
 	user.dni = postData.value.dni
@@ -304,8 +368,29 @@ const toggleAutoVerify = () => {
 	autoVerify.value = !autoVerify.value;
 }
 
-const onSelectValidationImage = (event) => {
-	user.validationImages = event.files;
+const onSelectValidationImage = (event, type) => {
+	let index;
+
+	// Determinar el índice según el tipo de imagen
+	if (type === 'front') {
+		index = 0;
+	} else if (type === 'back') {
+		index = 1;
+	} else if (type === 'face') {
+		index = 2;
+	} else {
+		console.error('Invalid image type');
+		return;
+	}
+
+	// Reemplazar o agregar la imagen en el índice correspondiente
+	if (event.files && event.files[0]) {
+		user.validationImages[index] = {
+			type: event.files[0].type,
+			image: event.files[0]
+		};
+		// console.log(`Validation Images:`, JSON.stringify(user.validationImages, null, 2));
+	}
 };
 
 const onBeforeUpload = (event) => {
@@ -432,5 +517,10 @@ input[type="checkbox"] {
 
 .p-fileupload-basic {
 	justify-content: flex-start !important;
+}
+
+.p-fileupload-choose-button {
+	background-color: red !important;
+	border: none !important;
 }
 </style>

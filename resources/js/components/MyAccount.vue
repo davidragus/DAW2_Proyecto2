@@ -1,6 +1,6 @@
 <template>
-	<div id="mainContent" class="d-flex">
-		<MyAccountSidebar />
+	<div id="mainContent" class="d-flex ms-4" :class="isMobile ? 'flex-column mr-4' : ''">
+		<MyAccountSidebar :isMobile="isMobile" />
 		<div class="container">
 			<div class="row justify-content-center ">
 				<div class="col-11 text-center">
@@ -118,6 +118,15 @@ import Swal from 'sweetalert2';
 import * as yup from 'yup';
 import MyAccountSidebar from './MyAccountSidebar.vue';
 
+const isMobile = ref(false);
+
+const checkMobile = () => {
+	isMobile.value = window.innerWidth <= 768;
+	if (!isMobile.value) {
+		document.getElementById('mainContent').style.paddingLeft = '230px';
+	}
+};
+
 const auth = authStore();
 const logedUser = computed(() => auth.user);
 const userCopy = ref({ ...logedUser.value });
@@ -192,18 +201,15 @@ const submitForm = async () => {
 };
 
 onMounted(() => {
+	checkMobile();
 	getCountries();
-	document.getElementById('mainContent').classList.add('ml-4');
-	if (window.innerWidth <= 768) {
-		document.getElementById('mainContent').style.paddingLeft = '0';
-	} else {
-		document.getElementById('mainContent').style.paddingLeft = '230px';
-	}
+	window.addEventListener('resize', checkMobile);
 });
 
 onUnmounted(() => {
 	document.getElementById('mainContent').classList.remove('ml-4');
 });
+
 const src = ref(null);
 const file = ref(null);
 
@@ -319,7 +325,7 @@ const submitChangePasswordForm = async () => {
 #mainContent {
 	display: flex;
 	background-color: #2A2A2A;
-	padding: 0 20px 0 20px;
+	padding: 0 0;
 }
 
 .user-icon {

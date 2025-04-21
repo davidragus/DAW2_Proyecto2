@@ -51,6 +51,7 @@ class UserController extends Controller
 		$user->name = $request->name;
 		$user->surname1 = $request->surname1;
 		$user->surname2 = $request->surname2;
+		$user->country_code = $request->country;
 		$user->dni = $request->dni;
 		$user->birthdate = $request->birthdate;
 		$user->phone_number = $request->phone_number;
@@ -69,7 +70,20 @@ class UserController extends Controller
 			}
 			if ($request->automaticValidation && $request->hasFile('validationImages')) {
 				$validation = PendingValidation::create(['user_id' => $user->id, 'status' => 'ACCEPTED']);
-				$validation->addMediaFromRequest('validationImages')->toMediaCollection('pending_validations');
+				foreach ($request->file('validationImages') as $index => $image) {
+					// Asignar un nombre descriptivo a cada imagen
+					$imageName = match ($index) {
+						0 => 'dni_front',
+						1 => 'dni_back',
+						2 => 'face_image',
+						default => 'unknown_image',
+					};
+
+					// Guardar la imagen en la colección 'pending_validations'
+					$validation->addMedia($image)
+						->usingFileName($imageName . '.' . $image->getClientOriginalExtension())
+						->toMediaCollection('pending_validations');
+				}
 			}
 			return new UserResource($user);
 		}
@@ -100,12 +114,15 @@ class UserController extends Controller
 		$role = Role::find($request->role_id);
 
 		$user->name = $request->name;
-		$user->email = $request->email;
 		$user->surname1 = $request->surname1;
 		$user->surname2 = $request->surname2;
-		$user->dni = $request->dni;
 		$user->country_code = $request->country;
+		$user->dni = $request->dni;
+		$user->birthdate = $request->birthdate;
 		$user->phone_number = $request->phone_number;
+		$user->gender = $request->gender;
+		$user->email = $request->email;
+		$user->username = $request->username;
 
 		if (!empty($request->password)) {
 			$user->password = Hash::make($request->password) ?? $user->password;

@@ -31,6 +31,7 @@ Route::post('game/callBingo/{gameRoomId}/{playerId}', [GameController::class, 'c
 Route::post('game/updatePlayerStatus/{gameRoomId}/{playerId}', [GameController::class, 'updatePlayerStatus']);
 Route::get('users/getGameHistory/{id}', [UserController::class, 'getGameHistory']);
 Route::get('users/getBalanceHistory/{id}', [UserController::class, 'getBalanceHistory']);
+Route::apiResource('users', UserController::class);
 
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
@@ -38,7 +39,6 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 	Route::get('getMessages', [\App\Http\Controllers\Api\LiveChatController::class, 'getMessages']);
 	Route::post('sendMessage', [\App\Http\Controllers\Api\LiveChatController::class, 'sendMessage']);
 
-	Route::apiResource('users', UserController::class);
 	// Route::get('users', [UserController::class, 'index']);
 	// Route::get('users/{user}', [UserController::class, 'show']);
 	// Route::post('users', [UserController::class, 'store']);

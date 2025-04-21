@@ -370,7 +370,7 @@ export default [
 					},
 					{
 						name: 'games.edit',
-						path: 'games/edit/:id',
+						path: 'edit/:id',
 						component: () => import('../views/admin/games/Edit.vue'),
 						meta: { breadCrumb: 'Edit game' }
 					},
