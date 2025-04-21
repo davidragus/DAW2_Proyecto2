@@ -182,45 +182,33 @@ watch(thumbnail, () => {
 </script>
 
 <style scoped>
+/* mismo CSS que en la opción A */
 .dropzone-container {
-    padding: 0rem;
-    background: #f7fafc;
-    border: 1px solid #e2e8f0;
+  position: relative;
+  padding: 1rem;
+  background: #313131;
+  border: 2px dashed #414141;
+  border-radius: 8px;
+  cursor: pointer;
 }
-
-.hidden-input {
-    opacity: 0;
-    overflow: hidden;
-    position: absolute;
-    width: 1px;
-    height: 1px;
-}
-
-.file-label {
-    font-size: 20px;
-    display: block;
-    cursor: pointer;
-}
-
-.preview-container {
-    display: flex;
-    margin-top: 2rem;
-}
-
+.hidden-input { display: none; }
+.file-label { display: block; color: #bbb; }
 .preview-card {
-    display: flex;
-    border: 1px solid #a2a2a2;
-    padding: 5px;
-    margin-left: 5px;
-    object-fit: cover;
+  position: relative;
+  display: inline-block;
 }
-
 .preview-img {
-    height: 100%;
-    width: 100%;
-    object-fit: cover;
-    border-radius: 5px;
-    border: 1px solid #a2a2a2;
-    background-color: #a2a2a2;
+  max-width: 100%;
+  max-height: 150px;
+  border-radius: 4px;
+}
+.remove-btn {
+  position: absolute;
+  top: -8px; right: -8px;
+  background: rgba(0,0,0,0.6);
+  color: white; border: none;
+  font-size: 1.2rem; line-height: 1;
+  border-radius: 50%; width: 24px; height: 24px;
+  cursor: pointer;
 }
 </style>

@@ -55,6 +55,17 @@
                             <div class="text-danger mt-1">{{ errors.image }}</div>
                         </div>
                     </div>
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <h6 class="mb-3">Game Icon</h6>
+                            <DropZone
+                                v-model="game.icon"
+                                :style="{ backgroundColor: '#313131', color: 'white', borderColor: '#414141' }"
+                                @onDrop="onDropIcon"
+                            />
+                            <div class="text-danger mt-1">{{ errors.icon }}</div>
+                        </div>
+                    </div>
                 </div>
             </div>
 

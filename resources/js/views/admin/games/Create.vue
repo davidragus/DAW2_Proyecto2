@@ -55,6 +55,17 @@
                             <div class="text-danger mt-1">{{ errors.image }}</div>
                         </div>
                     </div>
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <h6 class="mb-3">Game Icon</h6>
+                            <DropZone
+                                v-model="game.icon"
+                                :style="{ backgroundColor: '#313131', color: 'white', borderColor: '#414141' }"
+                                @onDrop="onDropIcon"
+                            />
+                            <div class="text-danger mt-1">{{ errors.icon }}</div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -88,6 +99,12 @@ const schema = yup.object({
         .test("fileType", "Only image files are allowed", (value) => {
             return value && value.type.startsWith("image/");
         }),
+    icon: yup
+        .mixed()
+        .required("Icon is required")
+        .test("fileType", "Only SVG files are allowed", (value) => {
+            return value && value.type === "image/svg+xml";
+        })
 });
 
 const errors = ref({});
@@ -110,6 +127,9 @@ const submitForm = async () => {
 
 const onDrop = (file) => {
     game.image = file;
+};
+const onDropIcon = (fileicon) => {
+    game.icon = fileicon;
 };
 </script>
 

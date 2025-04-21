@@ -36,8 +36,9 @@ export default function useGames() {
             const formData = new FormData();
             formData.append("name", game.value.name);
             formData.append("route_path", game.value.route_path);
-            formData.append("image", game.value.image);
             formData.append("active", game.value.active ? 1 : 0);
+            formData.append("image", game.value.image);
+            formData.append("icon", game.value.icon);
             await axios.post(
                 `/api/games`,
                 formData,
@@ -70,8 +71,9 @@ export default function useGames() {
             const formData = new FormData();
             formData.append("name", game.value.name);
             formData.append("route_path", game.value.route_path);
-            formData.append("image", game.value.image);
             formData.append("active", game.value.active ? 1 : 0);
+            formData.append("image", game.value.image);
+            formData.append("icon", game.value.icon);
 
             await axios.post(
                 `/api/games/${id}`,formData
