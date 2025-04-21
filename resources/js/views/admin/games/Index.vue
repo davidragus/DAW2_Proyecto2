@@ -21,7 +21,7 @@
 								<Button type="button" icon="pi pi-filter-slash" label="Clear" class="ml-1 filter-btn" outlined
 									@click="initFilters()" />
 								<Button type="button" icon="pi pi-refresh" class="h-100 ml-1 filter-btn" outlined
-									@click="getValidations()" />
+									@click="getAllGames()" />
 							</template>
 							<template #end>
                                 <Button v-if="can('game-create')" icon="pi pi-plus" label="Create Game"
