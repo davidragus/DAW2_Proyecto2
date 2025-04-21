@@ -15,7 +15,7 @@
 			</li>
 		</ul>
 		<div class="w-100">
-			<LocaleSwitcher></LocaleSwitcher>
+			<LocaleSwitcher :isMobile="isMobile"></LocaleSwitcher>
 			<button v-if="authStore().user?.name" class="bottom-buton live-chat" :class="{ 'd-none': !visible }"
 				@click="openDrawer">
 				<img src="/images/chat-bot_dark.png" alt="england" class="icon">

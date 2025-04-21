@@ -4,7 +4,8 @@
 		<p class="color-white">{{ valueLocale }}</p>
 	</button>
 	<Dialog v-model:visible="showModal" header="Select Language" :modal="true"
-		:style="{ width: '400px', backgroundColor: '#212121', color: 'white', borderColor: '#3B3B3B' }">
+		:style="{ width: '400px', backgroundColor: '#212121', color: 'white', borderColor: '#3B3B3B' }"
+		v-bind="dialogProps">
 		<div class="languages-container">
 			<button v-for="(value, key) in locales" :key="key"
 				class="language-item d-flex flex-column justify-content-center align-items-center"
