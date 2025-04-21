@@ -1,14 +1,61 @@
 <template>
 	<nav class="navbar py-0">
-		<div class="d-flex align-items-center">
+		<div class="d-flex align-items-center" :class="{ 'w-100': isMobile }">
 			<SideBarButton v-if="!isMobile" @toggle-sidebar="$emit('toggle-sidebar')" />
 			<SideBarButtonMobile v-else @toggle-sidebar-mobile="$emit('toggle-sidebar-mobile')" />
 			<div class="vertical-separator"></div>
 			<router-link to="/" class="logo-link">
 				<WebsiteLogo />
 			</router-link>
+			<div v-if="isMobile" class="ms-auto">
+				<div v-if="authStore().user?.name">
+					<Avatar v-if="authStore().user.avatar" :image="authStore().user.avatar" size="large" shape="circle"
+						@click="openDrawer" />
+					<Avatar v-if="!authStore().user.avatar" :label="authStore().user.name.substring(0, 1)" size="large"
+						shape="circle" @click="openDrawer" />
+				</div>
+				<div v-else>
+					<LoginAndRegister :isMobile="isMobile" />
+				</div>
+				<Drawer @hide="closeDrawer" v-if="showDrawer" v-model:visible="userSettings" position="right" header=" "
+					class="w-75" :pt="{
+						root: (options) => ({
+							style: {
+								'--p-drawer-background': '#212121',
+								'--p-drawer-color': '#fff',
+								'--p-drawer-border-color': '#212121',
+							}
+						})
+					}" appendTo="self">
+					<div class="d-flex flex-column align-items-center">
+						<div class="d-flex align-items-center mb-4">
+							<img src="/images/chips2.png" alt="icon of chips" class="icon-24 me-2">
+							<span class="text-white me-3 chips-number">{{ authStore().user.chips }}</span>
+						</div>
+						<CashierDialog :show="showCashierDialog" @update:show="showCashierDialog = $event"
+							:isMobile="isMobile">
+						</CashierDialog>
+						<WithdrawDialog :show="showWithdrawDialog" @update:visible="showWithdrawDialog = $event"
+							:isMobile="isMobile">
+						</WithdrawDialog>
+						<ul class="w-100 mt-3">
+							<li class="settings-list"><router-link @click="showDrawer = false"
+									v-if="authStore().user.roles.some(user => user.name === 'admin')" to="/admin"
+									class="dropdown-item">Admin panel</router-link></li>
+							<li class="settings-list"><router-link @click="showDrawer = false" to="/my-account"
+									class="dropdown-item">My
+									account</router-link></li>
+							<li class="settings-list"><a href="#" class="dropdown-item" @click="openCashierDialog">Add
+									chips</a></li>
+							<li class="settings-list"><a href="#" class="dropdown-item"
+									@click="openWithdrawDialog">Withdraw</a></li>
+							<li class="settings-list"><a href="#" class="dropdown-item" @click="logout">Logout</a></li>
+						</ul>
+					</div>
+				</Drawer>
+			</div>
 		</div>
-		<div class="d-flex align-items-center ms-auto">
+		<div v-if="!isMobile" class="d-flex align-items-center ms-auto">
 			<div v-if="!authStore().user?.name">
 				<LoginAndRegister />
 			</div>
@@ -57,10 +104,15 @@ import { authStore } from "../store/auth";
 import MyAccount from './MyAccount.vue';
 import CashierDialog from '../components/CashierDialog.vue';
 import WithdrawDialog from '../components/WithdrawDialog.vue';
+import Drawer from 'primevue/drawer';
+import Button from './Button.vue';
 
 defineProps({ isMobile: Boolean });
 
 const { user } = authStore();
+
+const showDrawer = ref(false);
+const userSettings = ref(false);
 
 const dropdownVisible = ref(false);
 const loginContainer = ref(null);
@@ -70,6 +122,19 @@ const showWithdrawDialog = ref(false);
 const chipsNumber = ref(
 	authStore().user.chips
 );
+
+const openDrawer = () => {
+	userSettings.value = true;
+	showDrawer.value = true;
+}
+
+// Se debe de usar un temporizador para cambiar el valor de showDrawer. De lo contrario, dará un error al entrar al panel de admin.
+const closeDrawer = () => {
+	userSettings.value = false;
+	setTimeout(() => {
+		showDrawer.value = false;
+	}, 300);
+}
 
 function toggleDropdown() {
 	dropdownVisible.value = !dropdownVisible.value;
@@ -126,6 +191,7 @@ nav {
 	border-right: 1px solid #353535;
 	margin-right: 30px;
 }
+
 
 .login-container {
 	display: flex;
@@ -202,6 +268,17 @@ img {
 	border-radius: 50%;
 	/* Hace que el contenedor del avatar sea redondo */
 	overflow: hidden;
+}
+
+ul {
+	border-top: 1px solid #353535;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.settings-list {
+	border-bottom: 1px solid #353535;
 }
 
 @media (max-width: 768px) {

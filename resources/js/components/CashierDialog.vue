@@ -4,7 +4,7 @@
 			@click="visible = true">CASHIER</Button>
 		<Dialog v-model:visible="visible" modal header="ADD CHIPS"
 			:style="{ width: '400px', backgroundColor: '#212121', color: 'white', borderColor: '#3B3B3B' }"
-			@update:visible="onDialogClose" appendTo="self">
+			@update:visible="onDialogClose" v-bind="dialogProps">
 			<form class="cashier-container p-4" @submit.prevent="submitForm">
 				<h3>Pick your deposit:</h3>
 				<div class="deposit-options">
@@ -50,7 +50,14 @@ import { useRoute, useRouter } from 'vue-router';
 import * as yup from 'yup';
 
 const props = defineProps({
-	show: Boolean
+	show: Boolean,
+	isMobile: Boolean
+});
+
+const isMobile = ref(props.isMobile);
+
+const dialogProps = computed(() => {
+	return isMobile.value ? {} : { appendTo: 'self' };
 });
 
 const visible = ref(false);
