@@ -20,10 +20,10 @@
 
 import { ref, onBeforeMount } from "vue";
 import { useRoute } from "vue-router";
-import useGames from "@/composables/games";
+import useGameRooms from "@/composables/gameRooms";
 
 const route = useRoute();
-const { getGameRooms, gameRooms } = useGames();
+const { getGameRooms, gameRooms } = useGameRooms();
 
 onBeforeMount(async () => {
 	await getGameRooms(route.params.route);
