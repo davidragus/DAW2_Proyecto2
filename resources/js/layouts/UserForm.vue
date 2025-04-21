@@ -6,7 +6,7 @@
 
 		<div class="col-12 card">
 			<div class="row">
-				<div class="col-3">
+				<div class="col-12 sm:col-6 xl:col-3">
 					<FileUpload name="avatar" accept="image/*" :maxFileSize="1500000" @select="onSelectedAvatar"
 						pt:content:class="fu-content" pt:buttonbar:class="fu-header" pt:root:class="fu" class="fu">
 
@@ -42,10 +42,10 @@
 						</template>
 					</FileUpload>
 				</div>
-				<div class="col-9">
+				<div class="col-12 sm:col-6 xl:col-9">
 					<legend>User details</legend>
 					<div class="row">
-						<div class="form-group col-3">
+						<div class="form-group col-6 xl:col-3">
 							<label for="name">Name</label>
 							<input v-model="user.name" type="text" class="form-control" id="name">
 							<!-- <div class="text-danger mt-1">{{ errors.name }}</div> -->
@@ -55,7 +55,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="form-group col-3">
+						<div class="form-group col-6 xl:col-3">
 							<label for="surname1">First surname</label>
 							<input v-model="user.surname1" type="text" class="form-control" id="surname1">
 							<!-- <div class="text-danger mt-1">{{ errors.surname1 }}</div> -->
@@ -65,7 +65,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="form-group col-3">
+						<div class="form-group col-6 xl:col-3">
 							<label for="surname2">Last surname (optional)</label>
 							<input v-model="user.surname2" type="text" class="form-control" id="surname2">
 							<!-- <div class="text-danger mt-1">{{ errors.surname2 }}</div> -->
@@ -75,7 +75,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="form-group col-3">
+						<div class="form-group col-6 xl:col-3">
 							<label for="country">Country</label>
 							<select v-model="user.country" class="form-select" id="country">
 								<option v-for="country in countries" :key="country.code" :value="country.code">{{
@@ -90,8 +90,8 @@
 						</div>
 					</div>
 					<div class="row">
-						<div class="form-group col-3">
-							<label for="dni">National Identity Card Number</label>
+						<div class="form-group col-6 xl:col-3">
+							<label for="dni">Identity Card Number</label>
 							<input v-model="user.dni" type="text" class="form-control" id="dni">
 							<!-- <div class="text-danger mt-1">{{ errors.dni }}</div> -->
 							<div class="text-danger mt-1">
@@ -100,7 +100,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="form-group col-3">
+						<div class="form-group col-6 xl:col-3">
 							<label for="birthDate">Birth date</label>
 							<input v-model="user.birthdate" type="date" class="form-control" id="birthDate">
 							<!-- <div class="text-danger mt-1">{{ errors.birthdate }}</div> -->
@@ -110,7 +110,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="form-group col-3">
+						<div class="form-group col-6 xl:col-3">
 							<label for="phone_number">Phone number</label>
 							<input v-model="user.phone_number" type="tel" class="form-control" id="phone_number">
 							<!-- <div class="text-danger mt-1">{{ errors.phone_number }}</div> -->
@@ -120,7 +120,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="form-group col-3">
+						<div class="form-group col-6 xl:col-3">
 							<label for="gender">Gender</label>
 							<select v-model="user.gender" class="form-select" id="gender">
 								<option value="M">Male</option>
@@ -166,7 +166,7 @@
 						</div>
 					</div>
 					<div class="row d-flex align-items-center" v-if="!editMode">
-						<div class="col-3">
+						<div class="col-12 xl:col-3" :class="width < 1024 ? 'd-flex justify-content-center' : ''">
 							<div class="form-check ps-1">
 								<input class="form-check-input m-0" v-model="user.automaticValidation" type="checkbox"
 									value="" id="autoValidate" @change="toggleAutoVerify">
@@ -176,17 +176,20 @@
 								</label>
 							</div>
 						</div>
-						<div class="col-3" v-if="autoVerify">
+						<div class="col-12 xl:col-3" :class="width < 1024 ? 'd-flex justify-content-center' : ''"
+							v-if="autoVerify">
 							<FileUpload @select="onSelectValidationImage($event, 'front')" class="justify-content-start"
 								mode="basic" name="validationImages[]" accept="image/*" :maxFileSize="1000000"
 								chooseLabel="Front image" />
 						</div>
-						<div class=" col-3" v-if="autoVerify">
+						<div class="col-12 xl:col-3" :class="width < 1024 ? 'd-flex justify-content-center' : ''"
+							v-if="autoVerify">
 							<FileUpload @select="onSelectValidationImage($event, 'back')" class="justify-content-start"
 								mode="basic" name="validationImages[]" accept="image/*" :maxFileSize="1000000"
 								chooseLabel="Back image" />
 						</div>
-						<div class="col-3" v-if="autoVerify">
+						<div class="col-12 xl:col-3" :class="width < 1024 ? 'd-flex justify-content-center' : ''"
+							v-if="autoVerify">
 							<FileUpload @select="onSelectValidationImage($event, 'face')" class="justify-content-start"
 								mode="basic" name="validationImages[]" accept="image/*" :maxFileSize="1000000"
 								chooseLabel="Face image" />
@@ -197,7 +200,7 @@
 		</div>
 	</div>
 	<div class="row d-flex justify-content-end mt-5">
-		<div class="text-right col-2">
+		<div class="text-right col-6 md:col-4 xl:col-2">
 			<button :disabled="isLoading" class="btn btn-primary w-100" @click="submitForm"
 				:style="{ backgroundColor: 'red', color: 'white', borderColor: 'red' }">
 				<div v-show="isLoading" class=""></div>
@@ -219,6 +222,9 @@ import useRoles from "@/composables/roles";
 import useUsers from "@/composables/users";
 import useCountries from "@/composables/countries";
 import { useToast } from 'primevue/usetoast';
+import { useWindowSize } from '@vueuse/core'
+
+const { width, height } = useWindowSize()
 
 const $primevue = usePrimeVue();
 const toast = useToast();
@@ -475,7 +481,7 @@ const formatSize = (bytes) => {
 
 </script>
 
-<style>
+<style scoped>
 .fu-content {
 	padding: 0px !important;
 	border: 0px !important;
@@ -520,7 +526,7 @@ input[type="checkbox"] {
 }
 
 .p-fileupload-choose-button {
-	background-color: red !important;
+	background: red !important;
 	border: none !important;
 }
 </style>
