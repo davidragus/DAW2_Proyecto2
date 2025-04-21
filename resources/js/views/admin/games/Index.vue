@@ -37,6 +37,7 @@
 					<!-- <Column field="dni" header="Identity Card Number" sortable></Column> -->
 					<Column field="name" header="Name" sortable></Column>
 					<Column field="route_path" header="Route" sortable></Column>
+					<Column field="active" header="Game Active" sortable></Column>
 					<Column field="created_at" header="Created at" sortable></Column>
 					<Column field="updated_at" header="Updated at" sortable></Column>
 

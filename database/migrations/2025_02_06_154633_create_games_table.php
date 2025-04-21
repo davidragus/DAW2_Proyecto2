@@ -14,6 +14,7 @@ return new class extends Migration {
 			$table->id();
 			$table->string('name');
 			$table->string('route_path');
+			$table->boolean('active')->default(false);
 			$table->timestamps();
 		});
 	}

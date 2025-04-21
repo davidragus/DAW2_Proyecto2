@@ -1,26 +1,14 @@
 <template>
 	<nav id="sideBar" class="d-flex flex-column justify-content-between align-items-center">
 		<ul class="mt-5 w-75">
-			<li><a href="" class="d-block container-fluid">icono<span :class="{ 'd-none': !visible }">HOME</span></a>
+			<li><RouterLink :to="{ name: 'home' }" class="d-block container-fluid">icono<span :class="{ 'd-none': !visible }">HOME</span></RouterLink>
 			</li>
 			<hr>
-			<li>
-				<a href="" class="d-flex container-fluid align-items-center">
-					<img src="/images/iRoulette.svg" alt="" class="icon color-dark">
-					<span :class="{ 'd-none': !visible }">ROULETTE</span>
-				</a>
-			</li>
-			<li @mouseover="optionHover('bingo')" @mouseleave="optionHoverLeave('bingo')">
-				<a href="" class="d-flex container-fluid align-items-center">
-					<iBingo :activeHover="hoverBingo" class="icon"></iBingo>
-					<span class="icon-text" :class="{ 'd-none': !visible }">BINGO</span>
-				</a>
-			</li>
-			<li>
-				<a href="" class="d-flex container-fluid align-items-center">
-					<iBlackJack class="icon"></iBlackJack>
-					<span :class="{ 'd-none': !visible }">BLACKJACK</span>
-				</a>
+			<li v-for="game in games" :key="game.name">
+				<RouterLink v-if="game.active" :to="`/games/${game.route_path}`" class="d-flex container-fluid align-items-center">
+					<img :src="game.icon" alt="" class="icon" />
+					<span class="icon-text" :class="{ 'd-none': !visible }">{{ game.name }}</span>
+				</RouterLink>
 			</li>
 		</ul>
 		<div class="w-100">
@@ -50,7 +38,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import LocaleSwitcher from './LocaleSwitcher.vue';
 import iRoulette from './iRoulette.vue';
 import iBlackJack from './iBlackJack.vue';
@@ -59,6 +47,15 @@ import LiveChat from './LiveChat.vue';
 import { authStore } from "../store/auth";
 import Drawer from 'primevue/drawer';
 import Button from 'primevue/button';
+import useGames from "../composables/games";
+import { get } from 'lodash';
+import { RouterLink } from 'vue-router';
+
+const { games, getAllGames } = useGames();
+
+onMounted(() => {
+	getAllGames();
+});
 
 const { user } = authStore();
 

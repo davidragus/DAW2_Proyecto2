@@ -69,6 +69,7 @@ class GameController extends Controller
 			$game = Game::create($request->all());
 
 			$game->addMedia($request->file('image'))->toMediaCollection('games');
+			$game->addMedia($request->file('icon'))->toMediaCollection('games_icons');
 
 			return new GameResource($game);
 		} catch (Exception $ex) {
@@ -90,6 +91,11 @@ class GameController extends Controller
 				if ($request->hasFile('image')) {
 					$game->clearMediaCollection('games');
 					$game->addMedia($request->file('image'))->toMediaCollection('games');
+				}
+
+				if ($request->hasFile('icon')) {
+					$game->clearMediaCollection('games_icons');
+					$game->addMedia($request->file('icon'))->toMediaCollection('games_icons');
 				}
 
 				return new GameResource($game);
