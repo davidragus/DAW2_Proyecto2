@@ -69,7 +69,20 @@ class UserController extends Controller
 			}
 			if ($request->automaticValidation && $request->hasFile('validationImages')) {
 				$validation = PendingValidation::create(['user_id' => $user->id, 'status' => 'ACCEPTED']);
-				$validation->addMediaFromRequest('validationImages')->toMediaCollection('pending_validations');
+				foreach ($request->file('validationImages') as $index => $image) {
+					// Asignar un nombre descriptivo a cada imagen
+					$imageName = match ($index) {
+						0 => 'dni_front',
+						1 => 'dni_back',
+						2 => 'face_image',
+						default => 'unknown_image',
+					};
+
+					// Guardar la imagen en la colección 'pending_validations'
+					$validation->addMedia($image)
+						->usingFileName($imageName . '.' . $image->getClientOriginalExtension())
+						->toMediaCollection('pending_validations');
+				}
 			}
 			return new UserResource($user);
 		}

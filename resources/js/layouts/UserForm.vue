@@ -151,7 +151,7 @@
 								class="w-100" />
 						</div>
 					</div>
-					<div class="row" v-if="!editMode">
+					<div class="row d-flex align-items-center" v-if="!editMode">
 						<div class="col-3">
 							<div class="form-check ps-1">
 								<input class="form-check-input m-0" v-model="user.automaticValidation" type="checkbox"
@@ -163,8 +163,19 @@
 							</div>
 						</div>
 						<div class="col-3" v-if="autoVerify">
-							<FileUpload @select="onSelectValidationImage" class="justify-content-start" mode="basic"
-								name="demo[]" accept="image/*" :maxFileSize="1000000" />
+							<FileUpload @select="onSelectValidationImage($event, 'front')" class="justify-content-start"
+								mode="basic" name="validationImages[]" accept="image/*" :maxFileSize="1000000"
+								chooseLabel="Front image" />
+						</div>
+						<div class=" col-3" v-if="autoVerify">
+							<FileUpload @select="onSelectValidationImage($event, 'back')" class="justify-content-start"
+								mode="basic" name="validationImages[]" accept="image/*" :maxFileSize="1000000"
+								chooseLabel="Back image" />
+						</div>
+						<div class="col-3" v-if="autoVerify">
+							<FileUpload @select="onSelectValidationImage($event, 'face')" class="justify-content-start"
+								mode="basic" name="validationImages[]" accept="image/*" :maxFileSize="1000000"
+								chooseLabel="Face image" />
 						</div>
 					</div>
 				</div>
@@ -173,7 +184,8 @@
 	</div>
 	<div class="row d-flex justify-content-end mt-5">
 		<div class="text-right col-2">
-			<button :disabled="isLoading" class="btn btn-primary w-100" @click="submitForm" :style="{ backgroundColor: 'red', color: 'white', borderColor: 'red' }">
+			<button :disabled="isLoading" class="btn btn-primary w-100" @click="submitForm"
+				:style="{ backgroundColor: 'red', color: 'white', borderColor: 'red' }">
 				<div v-show="isLoading" class=""></div>
 				<span v-if="isLoading">Processing...</span>
 				<span v-else>Save user</span>
@@ -304,8 +316,26 @@ const toggleAutoVerify = () => {
 	autoVerify.value = !autoVerify.value;
 }
 
-const onSelectValidationImage = (event) => {
-	user.validationImages = event.files;
+const onSelectValidationImage = (event, type) => {
+	let index;
+
+	// Determinar el índice según el tipo de imagen
+	if (type === 'front') {
+		index = 0;
+	} else if (type === 'back') {
+		index = 1;
+	} else if (type === 'face') {
+		index = 2;
+	} else {
+		console.error('Invalid image type');
+		return;
+	}
+
+	// Reemplazar o agregar la imagen en el índice correspondiente
+	if (event.files && event.files[0]) {
+		user.validationImages[index] = event.files[0];
+		// console.log(`Validation Images:`, JSON.stringify(user.validationImages, null, 2));
+	}
 };
 
 const onBeforeUpload = (event) => {
@@ -432,5 +462,10 @@ input[type="checkbox"] {
 
 .p-fileupload-basic {
 	justify-content: flex-start !important;
+}
+
+.p-fileupload-choose-button {
+	background-color: red !important;
+	border: none !important;
 }
 </style>
