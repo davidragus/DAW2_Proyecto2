@@ -16,6 +16,7 @@ class GamesSeeder extends Seeder
 		$newGame = Game::create([
 			'name' => 'Bingo',
 			'route_path' => 'bingo',
+			'active' => true,
 		]);
 		$filePath = public_path('images/bingoGame.webp');
 		if (file_exists($filePath)) {

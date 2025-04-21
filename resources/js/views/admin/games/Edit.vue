@@ -32,6 +32,12 @@
                                 />
                                 <div class="text-danger mt-1">{{ errors.route_path }}</div>
                             </div>
+
+                            <!-- Game Active -->
+                            <div class="mb-3 d-flex align-items-start flex-column">
+                                <label for="game-active" class="form-label">Game Active</label>
+                                <ToggleSwitch v-model="game.active" />
+                            </div>
                         </div>
                     </div>
                 </div>

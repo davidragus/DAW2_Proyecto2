@@ -37,6 +37,7 @@ export default function useGames() {
             formData.append("name", game.value.name);
             formData.append("route_path", game.value.route_path);
             formData.append("image", game.value.image);
+            formData.append("active", game.value.active ? 1 : 0);
             await axios.post(
                 `/api/games`,
                 formData,
@@ -62,37 +63,6 @@ export default function useGames() {
         }
     }
 
-    const updateGameRoom = async (id) => {
-        try {
-            isLoading.value = true;
-
-            await axios.put(`/api/game-rooms/${id}`, {
-                game_id: gameRoom.value.game_id,
-                name: gameRoom.value.name,
-                max_users: gameRoom.value.max_players,
-                status: gameRoom.value.status,
-            }, {
-                headers: {
-                    "Content-Type": "application/json",
-                    Accept: "application/json"
-                },
-            });
-            isLoading.value = false;
-            swal.fire(
-                "Success!",
-                "Game room updated successfully.",
-                "success"
-            );
-            router.push({ name: "game-rooms" });
-        } catch (error) {
-            isLoading.value = false;
-            if (error.response && error.response.data.errors) {
-                validationErrors.value = error.response.data.errors;
-            }
-            throw error;
-        }
-    }
-
     const updateGame = async (id) => {
         try {
             isLoading.value = true;
@@ -101,6 +71,7 @@ export default function useGames() {
             formData.append("name", game.value.name);
             formData.append("route_path", game.value.route_path);
             formData.append("image", game.value.image);
+            formData.append("active", game.value.active ? 1 : 0);
 
             await axios.post(
                 `/api/games/${id}`,formData
