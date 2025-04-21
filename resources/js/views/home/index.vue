@@ -61,6 +61,22 @@
 						</button>
 					</div>
 				</div>
+				
+				<transition-group name="slide-fade" tag="div" class="row d-flex justify-content-around mt-3 games-row">
+					<component v-for="game in pagedGames" :key="game.id" :is="game.active ? RouterLink : 'div'"
+						class="col-2 game-card"
+						v-bind="game.active ? { to: { name: 'auth.gamerooms', params: { route: game.route_path } } } : {}">
+						<div class="game-wrapper">
+							<img :src="game.image" :alt="game.name" class="game-image"
+								:class="{ 'grayscale': !game.active }" />
+							<p class="game-title">{{ game.name.toUpperCase() }}</p>
+							<div class="bottom-game-line"></div>
+							<div v-if="!game.active" class="coming-soon-overlay">COMING SOON</div>
+						</div>
+					</component>
+
+					<div v-for="n in emptySlots" :key="`empty-${n}`" class="col-2 game-card"></div>
+				</transition-group>
 			</div>
 		</div>
 	</main>
