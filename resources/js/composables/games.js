@@ -137,8 +137,6 @@ export default function useGames() {
 	return {
 		game,
 		games,
-		gameRooms,
 		getAllGames,
-		getGameRooms
 	};
 }
