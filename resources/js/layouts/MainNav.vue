@@ -1,6 +1,7 @@
 <template>
 	<MainHeader :isMobile="isMobile" @toggle-sidebar="toggleSideBar" @toggle-sidebar-mobile="toggleSideBarMobile" />
-	<MainSideBar :isMobile="isMobile" :visible="isToggled" />
+	<MainSideBar :isMobile="isMobile" :visible="isToggled" :showBar="showBar"
+		@toggle-sidebar-mobile="toggleSideBarMobile" />
 </template>
 
 <script setup>
@@ -32,19 +33,10 @@ function toggleSideBar() {
 	}
 }
 
+const showBar = ref(false);
+
 function toggleSideBarMobile() {
-	const sideBar = document.getElementById('sideBar');
-	const overlay = document.getElementById('overlaySideBar');
-	if (sideBar) {
-		if (isToggled.value) {
-			overlay.classList.remove('d-none');
-			sideBar.classList.add('show-mobile');
-		} else {
-			overlay.classList.add('d-none');
-			sideBar.classList.remove('show-mobile');
-		}
-		isToggled.value = !isToggled.value;
-	}
+	showBar.value = !showBar.value;
 }
 
 const isMobile = ref(false);
@@ -54,26 +46,26 @@ function checkMobile() {
 	const mainContent = document.getElementById('mainContent');
 	const mainFooter = document.getElementById('mainFooter');
 	const sideBar = document.getElementById('sideBar');
-	if (sideBar.classList.contains('d-none')) {
-		sideBar.classList.remove('d-none');
-	}
+	// if (sideBar.classList.contains('d-none')) {
+	// 	sideBar.classList.remove('d-none');
+	// }
 	if (mainContent && mainFooter) {
 		if (isMobile.value) {
 			mainContent.style.setProperty('padding-left', '0px');
 			mainFooter.style.setProperty('padding-left', '0px');
-			if (sideBar) sideBar.style.setProperty('width', '0px');
-			if (sideBar) sideBar.classList.add('d-none');
+			// if (sideBar) sideBar.style.setProperty('width', '0px');
+			// if (sideBar) sideBar.classList.add('d-none');
 			isToggled.value = false;
 		} else {
 			isToggled.value = true;
 			if (isToggled.value) {
 				mainContent.style.setProperty('padding-left', '230px');
 				mainFooter.style.setProperty('padding-left', '230px');
-				if (sideBar) sideBar.style.setProperty('width', '230px');
+				// if (sideBar) sideBar.style.setProperty('width', '230px');
 			} else {
 				mainContent.style.setProperty('padding-left', '115px');
 				mainFooter.style.setProperty('padding-left', '115px');
-				if (sideBar) sideBar.style.setProperty('width', '115px');
+				// if (sideBar) sideBar.style.setProperty('width', '115px');
 			}
 		}
 	}
