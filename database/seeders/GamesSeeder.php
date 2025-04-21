@@ -12,7 +12,8 @@ class GamesSeeder extends Seeder
 	 * Run the database seeds.
 	 */
 	public function run(): void
-	{
+	{	
+		
 		$newGame = Game::create([
 			'name' => 'Bingo',
 			'route_path' => 'bingo',
