@@ -23,7 +23,7 @@
 			</button>
 			<div class="appendToClass"></div>
 			<Drawer @hide="closeDrawer" v-if="showDrawer" v-model:visible="chatVisible" position="right"
-				header="Live Chat" class="w-25" :pt="{
+				header="Live Chat" class="w-6 lg:w-4" :pt="{
 					root: (options) => ({
 						style: {
 							'--p-drawer-background': '#212121',
@@ -41,6 +41,7 @@
 	<nav v-else>
 		<Drawer @hide="closeSideBar" v-if="showSideBar" v-model:visible="sideBarVisible" class="w-50" :pt="{
 			root: (options) => ({
+				class: ['chat-drawer'],
 				style: {
 					'--p-drawer-background': '#212121',
 					'--p-drawer-color': '#fff',

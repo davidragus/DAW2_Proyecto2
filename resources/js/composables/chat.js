@@ -25,10 +25,7 @@ export default function useChat() {
 		if (isEmpty(message.message)) return;
 
 		isLoading.value = true;
-		axios.post('/api/sendMessage', { message })
-			.then(response => {
-				messages.value.unshift(response.data.data);
-			});
+		axios.post('/api/sendMessage', { message });
 		message.message = '';
 		isLoading.value = false;
 	}
