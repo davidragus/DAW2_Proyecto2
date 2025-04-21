@@ -13,6 +13,9 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 use Illuminate\Http\Request;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
 
 class UserController extends Controller
 {
@@ -59,34 +62,87 @@ class UserController extends Controller
 		$user->email = $request->email;
 		$user->username = $request->username;
 
-		$user->password = Hash::make('test1234');
+		$password = $this->generateRandomPassword(8);
+		$user->password = Hash::make($password);
 
-		if ($user->save()) {
-			if ($request->hasFile('avatar')) {
-				$user->addMediaFromRequest('avatar')->toMediaCollection('user_avatar');
-			}
-			if ($role) {
-				$user->assignRole($role);
-			}
-			if ($request->automaticValidation && $request->hasFile('validationImages')) {
-				$validation = PendingValidation::create(['user_id' => $user->id, 'status' => 'ACCEPTED']);
-				foreach ($request->file('validationImages') as $index => $image) {
-					// Asignar un nombre descriptivo a cada imagen
-					$imageName = match ($index) {
-						0 => 'dni_front',
-						1 => 'dni_back',
-						2 => 'face_image',
-						default => 'unknown_image',
-					};
-
-					// Guardar la imagen en la colección 'pending_validations'
-					$validation->addMedia($image)
-						->usingFileName($imageName . '.' . $image->getClientOriginalExtension())
-						->toMediaCollection('pending_validations');
+		if ($this->sendMailWithPass($user->email, $password)) {
+			if ($user->save()) {
+				if ($request->hasFile('avatar')) {
+					$user->addMediaFromRequest('avatar')->toMediaCollection('user_avatar');
 				}
+				if ($role) {
+					$user->assignRole($role);
+				}
+				if ($request->automaticValidation && $request->hasFile('validationImages')) {
+					$validation = PendingValidation::create(['user_id' => $user->id, 'status' => 'ACCEPTED']);
+					foreach ($request->file('validationImages') as $index => $image) {
+						// Asignar un nombre descriptivo a cada imagen
+						$imageName = match ($index) {
+							0 => 'dni_front',
+							1 => 'dni_back',
+							2 => 'face_image',
+							default => 'unknown_image',
+						};
+
+						// Guardar la imagen en la colección 'pending_validations'
+						$validation->addMedia($image)
+							->usingFileName($imageName . '.' . $image->getClientOriginalExtension())
+							->toMediaCollection('pending_validations');
+					}
+				}
+				return new UserResource($user);
 			}
-			return new UserResource($user);
+		} else {
+			return response()->json(['message' => 'Error sending email'], 500);
 		}
+	}
+
+	public function sendMailWithPass($email, $password)
+	{
+		$mail = new PHPMailer(true);
+
+		$subject = 'Welcome to Royal Flush Casino!';
+		$body = 'Hello, welcome to Royal Flush Casino! Your password is: <b>' . $password . '</b>. Please change it after logging in.';
+
+		try {
+			$mail->SMTPDebug = 0;
+			$mail->isSMTP();
+			$mail->Host = env('MAIL_HOST');
+			$mail->SMTPAuth = true;
+			$mail->Username = env('MAIL_USERNAME');
+			$mail->Password = env('MAIL_PASSWORD');
+			$mail->SMTPSecure = env('MAIL_ENCRYPTION');
+			$mail->Port = env('MAIL_PORT');
+
+			$mail->setFrom(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+			$mail->addAddress($email);
+
+			$mail->isHTML(true);
+
+			$mail->Subject = $subject;
+			$mail->Body = $body;
+
+			if ($mail->send()) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (Exception $e) {
+			return false;
+		}
+	}
+
+	public function generateRandomPassword($length = 8)
+	{
+		$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+		$charactersLength = strlen($characters);
+		$randomString = '';
+
+		for ($i = 0; $i < $length; $i++) {
+			$randomString .= $characters[rand(0, $charactersLength - 1)];
+		}
+
+		return $randomString;
 	}
 
 	/**
