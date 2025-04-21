@@ -51,6 +51,7 @@ class UserController extends Controller
 		$user->name = $request->name;
 		$user->surname1 = $request->surname1;
 		$user->surname2 = $request->surname2;
+		$user->country_code = $request->country;
 		$user->dni = $request->dni;
 		$user->birthdate = $request->birthdate;
 		$user->phone_number = $request->phone_number;
@@ -113,12 +114,15 @@ class UserController extends Controller
 		$role = Role::find($request->role_id);
 
 		$user->name = $request->name;
-		$user->email = $request->email;
 		$user->surname1 = $request->surname1;
 		$user->surname2 = $request->surname2;
-		$user->dni = $request->dni;
 		$user->country_code = $request->country;
+		$user->dni = $request->dni;
+		$user->birthdate = $request->birthdate;
 		$user->phone_number = $request->phone_number;
+		$user->gender = $request->gender;
+		$user->email = $request->email;
+		$user->username = $request->username;
 
 		if (!empty($request->password)) {
 			$user->password = Hash::make($request->password) ?? $user->password;
