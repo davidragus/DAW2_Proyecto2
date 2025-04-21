@@ -282,6 +282,8 @@ export default function useBingo() {
 					if (response.data.winners.line) {
 						canCallLine.value = false;
 						canCallBingo.value = true;
+					} else {
+						canCallLine.value = true;
 					}
 					if (response.data.winners.bingo) {
 						canCallBingo.value = false;

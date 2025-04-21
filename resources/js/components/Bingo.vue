@@ -127,7 +127,7 @@ const drawNumber = (number) => {
 			if (numberHistory.value.length >= 6) {
 				numberHistory.value.shift();
 			}
-			numberHistory.value.push(currentBall.value);
+			if (numberHistory.value[numberHistory.value.length - 1] != currentBall.value) numberHistory.value.push(currentBall.value);
 			currentBall.value = null;
 		}, 500);
 	}, 3000);
@@ -139,7 +139,6 @@ const language = computed(() => `${locale.value.toLowerCase()}-${locale.value.to
 const { speak, isSupported } = useSpeechSynthesis(textToSpeak, { lang: language.value, rate: 0.7 });
 
 const speakBall = (number) => {
-	// console.log(language.value);
 	if (!isSupported.value) {
 		console.warn("Speech synthesis not supported");
 		return;
@@ -235,7 +234,7 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
 	changeLeader();
-	window.Echo.leave('bingo');
+	window.Echo.leave('bingo-' + route.params.id);
 });
 
 window.onbeforeunload = function () {
