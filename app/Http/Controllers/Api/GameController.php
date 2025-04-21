@@ -50,6 +50,83 @@ class GameController extends Controller
 		return GameResource::collection($games);
 	}
 
+	public function show($id)
+	{
+		$game = Game::find($id);
+
+		if ($game) {
+			return new GameResource($game);
+		} else {
+			return response()->json([
+				'message' => 'Game not found',
+			], 404);
+		}
+	}
+
+	public function store(Request $request)
+	{
+		try {
+			$game = Game::create($request->all());
+
+			$game->addMedia($request->file('image'))->toMediaCollection('games');
+
+			return new GameResource($game);
+		} catch (Exception $ex) {
+			return response()->json([
+				'message' => 'An unexpected error has occurred',
+				'error' => $ex->getMessage(),
+			], 500);
+		}
+	}
+
+	public function update(Request $request, $id)
+	{
+		try {
+			$game = Game::find($id);
+
+			if ($game) {
+				$game->update($request->all());
+
+				if ($request->hasFile('image')) {
+					$game->clearMediaCollection('games');
+					$game->addMedia($request->file('image'))->toMediaCollection('games');
+				}
+
+				return new GameResource($game);
+			} else {
+				return response()->json([
+					'message' => 'Game not found',
+				], 404);
+			}
+		} catch (Exception $ex) {
+			return response()->json([
+				'message' => 'An unexpected error has occurred',
+			], 500);
+		}
+	}
+
+	public function destroy($id)
+	{
+		try {
+			$game = Game::find($id);
+
+			if ($game) {
+				$game->delete();
+				return response()->json([
+					'message' => 'Game deleted successfully',
+				], 200);
+			} else {
+				return response()->json([
+					'message' => 'Game not found',
+				], 404);
+			}
+		} catch (Exception $ex) {
+			return response()->json([
+				'message' => 'An unexpected error has occurred',
+			], 500);
+		}
+	}
+
 	public function getGameRoom($id)
 	{
 		try {

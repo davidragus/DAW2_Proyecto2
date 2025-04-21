@@ -29,7 +29,7 @@
                                     class="form-select"
                                 >
                                     <option value="">Select a game</option>
-                                    <option v-for="game in games.data" :key="game.id" :value="game.id">
+                                    <option v-for="game in games" :key="game.id" :value="game.id">
                                         {{ game.name }}
                                     </option>
                                 </select>
@@ -73,7 +73,7 @@
 
             <!-- Submit Button -->
             <div class="text-center mt-4">
-                <button :disabled="isLoading" class="btn btn-primary px-4">
+                <button :disabled="isLoading" class="btn btn-primary px-4" :style="{ backgroundColor: 'red', color: 'white', borderColor: 'red' }">
                     <span v-if="isLoading">Processing...</span>
                     <span v-else>Create Game Room</span>
                 </button>

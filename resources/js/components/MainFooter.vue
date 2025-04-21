@@ -35,7 +35,7 @@
 			</ul>
 			<ul>
 				<li class="li-title"><strong>Royal Flush Casino</strong></li>
-				<li><a href=""><img src="/images/logo.svg" alt="" id="logo-footer"></a></li>
+				<li><router-link to="/"><img src="/images/logo.svg" alt="" id="logo-footer"></router-link></li>
 			</ul>
 		</div>
 		<div class="ps-5 pb-3">

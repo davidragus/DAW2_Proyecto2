@@ -363,9 +363,9 @@ export default [
 						meta: { breadCrumb: 'Games' }
 					},
 					{
-						name: 'games.show',
-						path: 'show/:id',
-						component: () => import('../views/admin/games/Show.vue'),
+						name: 'games.create',
+						path: 'create',
+						component: () => import('../views/admin/games/Create.vue'),
 						meta: { breadCrumb: 'Show game' }
 					},
 					{

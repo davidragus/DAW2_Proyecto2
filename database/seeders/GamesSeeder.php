@@ -13,9 +13,15 @@ class GamesSeeder extends Seeder
 	 */
 	public function run(): void
 	{
-		Game::create([
+		$newGame = Game::create([
 			'name' => 'Bingo',
 			'route_path' => 'bingo',
 		]);
+		$filePath = public_path('images/bingoGame.webp');
+		if (file_exists($filePath)) {
+			$newGame->addMedia($filePath)->preservingOriginal()->toMediaCollection('games');
+		} else {
+			throw new Exception("File not found: $filePath");
+		}
 	}
 }

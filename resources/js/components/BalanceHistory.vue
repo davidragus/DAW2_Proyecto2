@@ -80,6 +80,12 @@ onBeforeUnmount(() => {
 	border-bottom: 1px solid #313131;
 }
 
+@media (max-width: 768px) {
+	.history-row {
+		justify-content: center;
+	}
+}
+
 .history-date {
 	color: #8a8a8a;
 }

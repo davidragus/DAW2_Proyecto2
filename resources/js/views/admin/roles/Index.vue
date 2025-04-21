@@ -1,182 +1,108 @@
 <template>
-    <div class="row justify-content-center my-2">
-        <div class="col-md-12">
-            <div class="card border-0">
-                <div class="card-header bg-transparent">
-                    <h5 class="float-start">Roles</h5>
-                    <router-link v-if="can('role-list')" :to="{ name: 'roles.create' }" class="btn btn-primary btn-sm float-end">
-                        Create Role
-                    </router-link>
+    <div class="grid">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-transparent ps-0 pe-0">
+                    <h5 class="float-start mb-0">Roles</h5>
                 </div>
-                <div class="card-body shadow-sm">
-                    <div class="mb-4">
-                        <input v-model="search_global" type="text" placeholder="Search..."
-                               class="form-control w-25">
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th class="px-6 py-3 bg-gray-50 text-left">
-                                    <input v-model="search_id" type="text"
-                                           class="inline-block mt-1 form-control"
-                                           placeholder="Filter by ID">
-                                </th>
-                                <th class="px-6 py-3 bg-gray-50 text-left">
-                                    <input v-model="search_title" type="text"
-                                           class="inline-block mt-1 form-control"
-                                           placeholder="Filter by Title">
-                                </th>
-                                <th class="px-6 py-3 text-start"></th>
-                                <th class="px-6 py-3 text-start"></th>
-                            </tr>
-                            <tr>
-                                <th class="px-6 py-3 text-start">
-                                    <div class="flex flex-row"
-                                         @click="updateOrdering('id')">
-                                        <div class="font-medium text-uppercase"
-                                             :class="{ 'font-bold text-blue-600': orderColumn === 'id' }">
-                                            ID
-                                        </div>
-                                        <div class="select-none">
-                                <span :class="{
-                                  'text-blue-600': orderDirection === 'asc' && orderColumn === 'id',
-                                  'hidden': orderDirection !== '' && orderDirection !== 'asc' && orderColumn === 'id',
-                                }">&uarr;</span>
-                                            <span :class="{
-                                  'text-blue-600': orderDirection === 'desc' && orderColumn === 'id',
-                                  'hidden': orderDirection !== '' && orderDirection !== 'desc' && orderColumn === 'id',
-                                }">&darr;</span>
-                                        </div>
-                                    </div>
-                                </th>
-                                <th class="px-6 py-3 text-left">
-                                    <div class="flex flex-row"
-                                         @click="updateOrdering('name')">
-                                        <div class="font-medium text-uppercase"
-                                             :class="{ 'font-bold text-blue-600': orderColumn === 'name' }">
-                                            Title
-                                        </div>
-                                        <div class="select-none">
-                                <span :class="{
-                                  'text-blue-600': orderDirection === 'asc' && orderColumn === 'name',
-                                  'hidden': orderDirection !== '' && orderDirection !== 'asc' && orderColumn === 'name',
-                                }">&uarr;</span>
-                                            <span :class="{
-                                  'text-blue-600': orderDirection === 'desc' && orderColumn === 'name',
-                                  'hidden': orderDirection !== '' && orderDirection !== 'desc' && orderColumn === 'name',
-                                }">&darr;</span>
-                                        </div>
-                                    </div>
-                                </th>
-                                <th class="px-6 py-3 bg-gray-50 text-left">
-                                    <div class="flex flex-row items-center justify-between cursor-pointer"
-                                         @click="updateOrdering('created_at')">
-                                        <div class="leading-4 font-medium text-gray-500 uppercase tracking-wider"
-                                             :class="{ 'font-bold text-blue-600': orderColumn === 'created_at' }">
-                                            Created at
-                                        </div>
-                                        <div class="select-none">
-                                <span :class="{
-                                  'text-blue-600': orderDirection === 'asc' && orderColumn === 'created_at',
-                                  'hidden': orderDirection !== '' && orderDirection !== 'asc' && orderColumn === 'created_at',
-                                }">&uarr;</span>
-                                            <span :class="{
-                                  'text-blue-600': orderDirection === 'desc' && orderColumn === 'created_at',
-                                  'hidden': orderDirection !== '' && orderDirection !== 'desc' && orderColumn === 'created_at',
-                                }">&darr;</span>
-                                        </div>
-                                    </div>
-                                </th>
-                                <th class="px-6 py-3 bg-gray-50 text-left">
-                                    Actions
-                                </th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr v-for="post in roles.data" :key="post.id">
-                                <td class="px-6 py-4 text-sm">
-                                    {{ post.id }}
-                                </td>
-                                <td class="px-6 py-4 text-sm">
-                                    {{ post.name }}
-                                </td>
-                                <td class="px-6 py-4 text-sm">
-                                    {{ post.created_at }}
-                                </td>
-                                <td class="px-6 py-4 text-sm">
-                                    <router-link v-if="can('role-edit')"
-                                                 :to="{ name: 'roles.edit', params: { id: post.id } }" class="badge bg-primary">Edit
-                                    </router-link>
-                                    <a href="#" v-if="can('role-delete')" @click.prevent="deleteRole(post.id)"
-                                       class="ms-2 badge bg-danger">Delete</a>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="card-footer">
-                </div>
+
+                <DataTable
+                    :value="roles.data"
+                    paginator
+                    :rows="25"
+                    stripedRows
+                    dataKey="id"
+                    size="small"
+                    v-model:filters="filters"
+                    :globalFilterFields="['id', 'name', 'created_at']"
+                    sortField="created_at"
+                    :sortOrder="-1"
+                >
+                    <template #header>
+                        <Toolbar pt:root:class="toolbar-table">
+                            <template #start>
+                                <IconField>
+                                    <InputIcon class="pi pi-search" />
+                                    <InputText v-model="filters['global'].value" placeholder="Buscar" />
+                                </IconField>
+                                <Button
+                                    type="button"
+                                    icon="pi pi-filter-slash"
+                                    label="Clear"
+                                    class="ml-1 filter-btn"
+                                    outlined
+                                    @click="initFilters"
+                                />
+                                <Button
+                                    type="button"
+                                    icon="pi pi-refresh"
+                                    class="h-100 ml-1 filter-btn"
+                                    outlined
+                                    @click="getRoles"
+                                />
+                            </template>
+                            <template #end>
+                                <Button
+                                    v-if="can('role-list')"
+                                    icon="pi pi-plus"
+                                    label="Create Role"
+                                    @click="$router.push({ name: 'roles.create' })"
+                                    class="float-end"
+                                    :style="{ backgroundColor: 'red', color: 'white', borderColor: 'red' }"
+                                />
+                            </template>
+                        </Toolbar>
+                    </template>
+
+                    <template #empty>No roles found.</template>
+
+                    <Column field="id" header="ID" sortable />
+                    <Column field="name" header="Title" sortable />
+                    <Column field="created_at" header="Created at" sortable />
+
+                    <Column class="pe-0 me-0 icon-column-2">
+                        <template #body="slotProps">
+                            <router-link
+                                v-if="can('role-edit')"
+                                :to="{ name: 'roles.edit', params: { id: slotProps.data.id } }"
+                            >
+                                <Button icon="pi pi-pencil" severity="info" size="small" class="mr-1" />
+                            </router-link>
+                            <Button
+                                v-if="can('role-delete')"
+                                icon="pi pi-trash"
+                                severity="danger"
+                                @click.prevent="deleteRole(slotProps.data.id)"
+                                size="small"
+                            />
+                        </template>
+                    </Column>
+                </DataTable>
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-    import {ref, onMounted, watch} from "vue";
-    import useRoles from "../../../composables/roles";
-    import {useAbility} from '@casl/vue';
+import { ref, onMounted } from "vue";
+import useRoles from "../../../composables/roles";
+import { useAbility } from "@casl/vue";
+import { FilterMatchMode } from "@primevue/core/api";
 
-    const search_id = ref('')
-    const search_title = ref('')
-    const search_global = ref('')
-    const orderColumn = ref('created_at')
-    const orderDirection = ref('desc')
-    const {roles, getRoles, deleteRole} = useRoles()
-    const {can} = useAbility()
-    onMounted(() => {
-        getRoles()
-    })
-    const updateOrdering = (column) => {
-        orderColumn.value = column;
-        orderDirection.value = (orderDirection.value === 'asc') ? 'desc' : 'asc';
-        getRoles(
-            1,
-            search_id.value,
-            search_title.value,
-            search_global.value,
-            orderColumn.value,
-            orderDirection.value
-        );
-    }
-    watch(search_id, (current, previous) => {
-        getRoles(
-            1,
-            current,
-            search_title.value,
-            search_global.value
-        )
-    })
-    watch(search_title, (current, previous) => {
-        getRoles(
-            1,
-            search_id.value,
-            current,
-            search_global.value
-        )
-    })
-    watch(search_global, _.debounce((current, previous) => {
-        getRoles(
-            1,
-            search_id.value,
-            search_title.value,
-            current
-        )
-    }, 200))
+const { roles, getRoles, deleteRole } = useRoles();
+const { can } = useAbility();
 
+const filters = ref({
+    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+});
+
+const initFilters = () => {
+    filters.value = {
+        global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    };
+};
+
+onMounted(() => {
+    getRoles();
+});
 </script>
-
-<style scoped>
-
-</style>

@@ -1,6 +1,6 @@
 <template>
     <div class="container mt-5">
-        <h2 class="text-white text-center mb-4">Edit Game</h2>
+        <h2 class="text-white text-center mb-4">Create Game</h2>
         <form @submit.prevent="submitForm">
             <div class="row">
                 <!-- Left Column -->
@@ -52,11 +52,11 @@
                 </div>
             </div>
 
-            <!-- Submit Button -->
+            <!-- Save Button -->
             <div class="text-center mt-4">
                 <button :disabled="isLoading" class="btn btn-primary px-4" :style="{ backgroundColor: 'red', color: 'white', borderColor: 'red' }">
                     <span v-if="isLoading">Processing...</span>
-                    <span v-else>Edit Game</span>
+                    <span v-else>Create Game</span>
                 </button>
             </div>
         </form>
@@ -64,52 +64,47 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { ref } from "vue";
+import { useRouter } from "vue-router";
 import * as yup from "yup";
 import useGames from "@/composables/games";
 import DropZone from "@/components/DropZone.vue";
 
-const route = useRoute();
 const router = useRouter();
-const { game, updateGame, getGame, isLoading } = useGames();
+const { game, createGame, validationErrors, isLoading } = useGames();
 
-const errors = ref({});
-
-// Yup validation schema
 const schema = yup.object({
     name: yup.string().required("Name is required"),
     route_path: yup.string().required("Route path is required"),
     image: yup
         .mixed()
         .required("Image is required")
+        .test("fileType", "Only image files are allowed", (value) => {
+            return value && value.type.startsWith("image/");
+        }),
 });
 
-// Carga inicial
-onMounted(() => {
-    getGame(route.params.id);
-});
-
+const errors = ref({});
 const submitForm = async () => {
     try {
         await schema.validate(game.value, { abortEarly: false });
-        errors.value = {};
-        await updateGame(game.value.id);
+        await createGame();
         router.push({ name: "games.index" });
     } catch (error) {
-        if (error.inner) {
-            const formattedErrors = {};
-            error.inner.forEach(err => {
-                formattedErrors[err.path] = err.message;
+        if (error.name === "ValidationError") {
+            errors.value = {};
+            error.inner.forEach((e) => {
+                errors.value[e.path] = e.message;
             });
-            errors.value = formattedErrors;
+        } else {
+            console.error("Error creating game:", error);
         }
     }
 };
 
 // Imagen con DropZone
 const onDrop = (file) => {
-    game.value.image = file;
+    game.image = file;
 };
 </script>
 

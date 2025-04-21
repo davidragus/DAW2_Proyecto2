@@ -7,7 +7,7 @@
 				</div>
 				<!-- v-model:filters="filters" Esto va en el datatable -->
 				<!-- :globalFilterFields="['id', 'alias', 'name', 'surname1', 'surname2', 'email', 'created_at', 'type.name']" -->
-				<DataTable :value="games.data" paginator :rows="25" stripedRows dataKey="id" size="small" v-model:filters="filters"
+				<DataTable :value="games" paginator :rows="25" stripedRows dataKey="id" size="small" v-model:filters="filters"
 				:globalFilterFields="['id', 'alias', 'name', 'surname1', 'surname2', 'email', 'created_at', 'type.name']">
 
 					<template #header>
@@ -18,11 +18,15 @@
 									<InputText v-model="filters['global'].value" placeholder="Buscar" />
 								</IconField>
 
-								<Button type="button" icon="pi pi-filter-slash" label="Clear" class="ml-1" outlined
+								<Button type="button" icon="pi pi-filter-slash" label="Clear" class="ml-1 filter-btn" outlined
 									@click="initFilters()" />
-								<Button type="button" icon="pi pi-refresh" class="h-100 ml-1" outlined
-									@click="getValidations()" />
+								<Button type="button" icon="pi pi-refresh" class="h-100 ml-1 filter-btn" outlined
+									@click="getAllGames()" />
 							</template>
+							<template #end>
+                                <Button v-if="can('game-create')" icon="pi pi-plus" label="Create Game"
+                                    @click="$router.push('games/create')" class="float-end" :style="{ backgroundColor: 'red', color: 'white', borderColor: 'red' }" />
+                            </template>
 						</Toolbar>
 
 					</template>
@@ -34,6 +38,7 @@
 					<Column field="name" header="Name" sortable></Column>
 					<Column field="route_path" header="Route" sortable></Column>
 					<Column field="created_at" header="Created at" sortable></Column>
+					<Column field="updated_at" header="Updated at" sortable></Column>
 
 					<Column class="pe-0 me-0 icon-column-2">
 						<template #body="slotProps">
@@ -42,13 +47,13 @@
 								:to="{ name: 'games.show', params: { id: slotProps.data.id } }">
 								<Button icon="pi pi-eye" severity="info" size="small" class="mr-1" />
 							</router-link>
-							<!-- <router-link v-if="can('validation-show')"
-								:to="{ name: 'users.edit', params: { id: slotProps.data.id } }">
+							<router-link v-if="can('validation-show')"
+								:to="{ name: 'games.edit', params: { id: slotProps.data.id } }">
 								<Button icon="pi pi-pencil" severity="info" size="small" class="mr-1" />
-							</router-link> -->
+							</router-link>
 
-							<!-- <Button icon="pi pi-trash" severity="danger" v-if="can('user-delete')"
-								@click.prevent="deleteUser(slotProps.data.id, slotProps.index)" size="small" /> -->
+							<Button icon="pi pi-trash" severity="danger" v-if="can('user-delete')"
+								@click.prevent="deleteGame(slotProps.data.id, slotProps.index)" size="small" />
 
 						</template>
 					</Column>
@@ -68,7 +73,7 @@ import { useAbility } from '@casl/vue'
 import { FilterMatchMode, FilterService } from "@primevue/core/api";
 
 
-const { games, getAllGames } = useGames();
+const { games, getAllGames, deleteGame } = useGames();
 const { can } = useAbility()
 
 const filters = ref({
