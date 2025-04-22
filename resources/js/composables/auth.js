@@ -50,6 +50,7 @@ export default function useAuth() {
 		day: '',
 		month: '',
 		year: '',
+		birthdate: '',
 		country: '',
 		validated: false,
 		terms: false,
