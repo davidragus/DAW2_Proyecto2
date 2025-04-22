@@ -18,7 +18,7 @@
 
 <script setup>
 
-import { ref, onBeforeMount } from "vue";
+import { ref, onBeforeMount,watch } from "vue";
 import { useRoute } from "vue-router";
 import useGameRooms from "@/composables/gameRooms";
 
@@ -27,6 +27,10 @@ const { getGameRooms, gameRooms } = useGameRooms();
 
 onBeforeMount(async () => {
 	await getGameRooms(route.params.route);
+});
+
+watch(() => route.params.route, async (newRoute) => {
+	await getGameRooms(newRoute);
 });
 
 </script>

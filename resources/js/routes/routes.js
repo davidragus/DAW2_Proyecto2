@@ -165,7 +165,7 @@ export default [
 						beforeEnter: [requireLogin, requireValidation],
 					},
 					{
-						path: ':route/:id',
+						path: 'bingo/:id',
 						name: 'auth.bingo.gameroom',
 						component: () => import('../components/Bingo.vue'),
 						beforeEnter: [requireLogin, requireValidation],

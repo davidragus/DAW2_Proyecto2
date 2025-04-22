@@ -8,11 +8,13 @@
 			<div class="container h-100 d-flex align-items-center">
 				<div class="row w-100 d-flex justify-content-center align-items-end">
 					<div class="col-12 col-md-6 d-flex flex-column justify-content-center align-items-start">
-						<h1 class="banner-title">NEW ROULETTE GAME !</h1>
-						<p class="banner-text">You can now play roulette at Royal Flush Casino</p>
-						<Button class="banner-button" buttonColor="yellow" buttonStyle="filled">
-							Click here to be a winner!!
-						</Button>
+						<h1 class="banner-title">NEW BINGO GAME !</h1>
+						<p class="banner-text">You can now play bingo at Royal Flush Casino</p>
+						<RouterLink class="banner-button" :to="{ name: 'auth.gamerooms', params: { route: 'bingo' } }">
+							<Button class="banner-button" buttonColor="yellow" buttonStyle="filled">
+								Click here to be a winner!!
+							</Button>
+						</RouterLink>
 					</div>
 				</div>
 			</div>
@@ -61,7 +63,7 @@
 						</button>
 					</div>
 				</div>
-				
+
 				<transition-group name="slide-fade" tag="div" class="row d-flex justify-content-around mt-3 games-row">
 					<component v-for="game in pagedGames" :key="game.id" :is="game.active ? RouterLink : 'div'"
 						class="col-2 game-card"
@@ -157,7 +159,7 @@ const showSticky = (toastValue) => {
 
 .banner-background {
 	height: 300px;
-	background-image: url('/images/banner.jpg');
+	background-image: url('/images/BannerHome.png');
 	background-size: cover;
 	background-position: center;
 	position: relative;
