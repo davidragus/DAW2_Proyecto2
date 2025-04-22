@@ -481,4 +481,9 @@ const updateStatus = () => {
 	background-color: red;
 	border-color: red;
 }
+
+.btn:hover {
+	background-color: rgb(219, 0, 0) !important;
+	border-color: rgb(219, 0, 0) !important;
+}
 </style>
