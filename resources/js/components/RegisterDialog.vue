@@ -69,16 +69,18 @@
 					<p v-if="validationErrors.gender" class="text-danger mt-1">{{ validationErrors.gender }}</p>
 
 					<div class="d-flex mb-3">
-						<input v-model="registerForm.day" type="text" class="form-control me-1"
-							placeholder="Day (dd)" />
-						<input v-model="registerForm.month" type="text" class="form-control mx-1"
-							placeholder="Month (mm)" />
-						<input v-model="registerForm.year" type="text" class="form-control ms-1"
-							placeholder="Year (yyyy)" />
+						<input v-model="registerForm.day" type="text" @change="updateBirthdate"
+							class="form-control me-1" placeholder="Day (dd)" />
+						<input v-model="registerForm.month" type="text" @change="updateBirthdate"
+							class="form-control mx-1" placeholder="Month (mm)" />
+						<input v-model="registerForm.year" type="text" @change="updateBirthdate"
+							class="form-control ms-1" placeholder="Year (yyyy)" />
 					</div>
-					<p v-if="validationErrors.day || validationErrors.month || validationErrors.year"
-						class="text-danger mt-1">
-						{{ validationErrors.day || validationErrors.month || validationErrors.year }}
+					<!-- <p v-if="validationErrors.day || validationErrors.month || validationErrors.year"
+						class="text-danger mt-1"> -->
+					<p v-if="validationErrors.birthdate" class="text-danger mt-1">
+						{{ validationErrors.birthdate }}
+						<!-- {{ validationErrors.day || validationErrors.month || validationErrors.year }} -->
 					</p>
 
 					<input v-model="registerForm.phone_number" type="text" class="form-control mb-3"
@@ -178,6 +180,10 @@ const hidePassword = () => {
 	passwordFieldType.value = 'password';
 };
 
+const updateBirthdate = () => {
+	registerForm.birthdate = new Date(`${registerForm.year}/${registerForm.month}/${registerForm.day}`);
+}
+
 const onSelectValidationImage = (event, type) => {
 	let index;
 
@@ -195,16 +201,25 @@ const onSelectValidationImage = (event, type) => {
 
 	// Reemplazar o agregar la imagen en el índice correspondiente
 	if (event.files && event.files[0]) {
-		registerForm.validationImages[index] = event.files[0];
+		registerForm.validationImages[index] = {
+			type: event.files[0].type,
+			image: event.files[0]
+		};
 		// console.log(`Validation Images:`, JSON.stringify(registerForm.validationImages, null, 2));
 	}
 };
+
+const eightteenYearsAgo = new Date(new Date().setFullYear(new Date().getFullYear() - 18));
 
 const schema = yup.object({
 	username: yup.string().required('Username is required').max(255).min(9),
 	name: yup.string().required('Name is required').max(255),
 	surname1: yup.string().required('First surname is required').max(255),
 	surname2: yup.string().nullable().max(255),
+	birthdate: yup.date()
+		.required('Birthdate is required')
+		.typeError('Birthdate must be a valid date')
+		.max(eightteenYearsAgo, 'User must be at least 18 years old'),
 	email: yup
 		.string()
 		.required('Email is required')
@@ -237,15 +252,15 @@ const schema = yup.object({
 
 function submitRegisterYup() {
 	validationErrors.value = {}; // Reset errors
-	console.log("entra en submitRegisterYup")
+	// console.log("entra en submitRegisterYup")
 	schema.validate(registerForm, { abortEarly: false })
 		.then(() => {
-			console.log("entra en submitRegister")
+			// console.log("entra en submitRegister")
 			submitRegister();
 		})
 		.catch((err) => {
 			err.inner.forEach((error) => {
-				console.log("entra en error", error);
+				// console.log("entra en error", error);
 				validationErrors.value[error.path] = error.message;
 			});
 		});
