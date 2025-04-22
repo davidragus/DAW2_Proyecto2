@@ -2,15 +2,18 @@
 	<nav v-if="!isMobile" id="sideBar" class="d-flex flex-column justify-content-between align-items-center">
 		<ul class="mt-5 w-75">
 			<li>
-				<RouterLink :to="{ name: 'home' }" class="d-block container-fluid"><i class="pi pi-home"
-						style="font-size: 1.5rem"></i><span :class="{ 'd-none': !visible }">HOME</span></RouterLink>
+				<RouterLink :to="{ name: 'home' }" class="d-flex align-items-center container-fluid"><i
+						class="pi pi-home" style="font-size: 1.5rem"></i><span class="icon-text ms-2"
+						:class="{ 'd-none': !visible }">HOME</span>
+				</RouterLink>
 			</li>
 			<hr>
 			<li v-for="game in games" :key="game.name">
 				<RouterLink v-if="game.active" :to="`/games/${game.route_path}`"
 					class="d-flex container-fluid align-items-center">
 					<img :src="game.icon" alt="" class="icon" />
-					<span class="icon-text" :class="{ 'd-none': !visible }">{{ game.name }}</span>
+					<span class="icon-text ms-2 mb-2" :class="{ 'd-none': !visible }">{{ game.name.toUpperCase()
+					}}</span>
 				</RouterLink>
 			</li>
 		</ul>
