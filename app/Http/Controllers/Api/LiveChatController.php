@@ -24,6 +24,7 @@ class LiveChatController extends Controller
 
 		if ($message->save()) {
 			broadcast(new SendMessage(new ChatMessageResource($message)));
+			return response()->json(['data' => $message], 201);
 		}
 	}
 }
