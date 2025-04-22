@@ -1,11 +1,11 @@
 <template>
-	<button id="lang-container" class="bottom-buton" @click="showModal = true">
+	<div id="appendDiv"></div>
+	<button id="lang-container" class="bottom-buton" @click="openModal">
 		<img :src="flagImage" alt="england" class="icon">
 		<p class="color-white">{{ valueLocale }}</p>
 	</button>
-	<Dialog v-model:visible="showModal" header="Select Language" :modal="true"
-		:style="{ width: '400px', backgroundColor: '#212121', color: 'white', borderColor: '#3B3B3B' }"
-		v-bind="dialogProps">
+	<Dialog @hide="closeModal" v-if="showModal" v-model:visible="modalVisible" header="Select Language" :modal="true"
+		:style="{ width: '400px', backgroundColor: '#212121', color: 'white', borderColor: '#3B3B3B', 'z-index': 1000 }">
 		<div class="languages-container">
 			<button v-for="(value, key) in locales" :key="key"
 				class="language-item d-flex flex-column justify-content-center align-items-center"
@@ -27,18 +27,15 @@ const props = defineProps({
 	isMobile: Boolean
 });
 
-const isMobile = ref(props.isMobile);
-
-const dialogProps = computed(() => {
-	return isMobile.value ? {} : { appendTo: 'self' };
-});
-
 const i18n = useI18n({ useScope: "global" });
 const locale = computed(() => langStore().locale);
 
 let valueLocale = ref((locale.value.toUpperCase()));
 const locales = computed(() => langStore().locales);
+
+const modalVisible = ref(false);
 const showModal = ref(false);
+
 function setLocale(newLocale) {
 	if (i18n.locale !== newLocale) {
 		langStore().setLocale(newLocale);
@@ -46,6 +43,19 @@ function setLocale(newLocale) {
 		showModal.value = false;
 	}
 }
+
+const openModal = () => {
+	modalVisible.value = true;
+	showModal.value = true;
+}
+
+const closeModal = () => {
+	modalVisible.value = false;
+	setTimeout(() => {
+		showModal.value = false;
+	}, 300);
+}
+
 const flagImage = computed(() => {
 	return `/images/${locale.value}.webp`;
 });
