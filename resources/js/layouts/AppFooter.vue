@@ -5,13 +5,13 @@ import { computed } from 'vue';
 const { layoutConfig } = useLayout();
 
 const logoUrl = computed(() => {
-    return `layout/images/${layoutConfig.darkTheme.value ? 'logo-white' : 'logo-dark'}.svg`;
+	return `layout/images/${layoutConfig.darkTheme.value ? 'logo-white' : 'logo-dark'}.svg`;
 });
 </script>
 
 <template>
-    <div class="layout-footer">
-        <span class="font-medium ml-2 text-white">Ejemplo DAW2</span>
-    </div>
+	<div class="layout-footer">
+		<span class="font-medium ml-2 text-white">Royal Flush Casino Admin Panel</span>
+	</div>
 </template>
 <style lang="scss" scoped></style>
