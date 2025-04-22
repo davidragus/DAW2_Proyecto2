@@ -4,7 +4,8 @@
 		<p class="color-white">{{ valueLocale }}</p>
 	</button>
 	<Dialog v-model:visible="showModal" header="Select Language" :modal="true"
-		:style="{ width: '400px', backgroundColor: '#212121', color: 'white', borderColor: '#3B3B3B' }" appendTo="self">
+		:style="{ width: '400px', backgroundColor: '#212121', color: 'white', borderColor: '#3B3B3B' }"
+		v-bind="dialogProps">
 		<div class="languages-container">
 			<button v-for="(value, key) in locales" :key="key"
 				class="language-item d-flex flex-column justify-content-center align-items-center"
@@ -21,6 +22,16 @@
 import { ref, computed } from "vue";
 import { langStore } from "@/store/lang";
 import { useI18n } from "vue-i18n";
+
+const props = defineProps({
+	isMobile: Boolean
+});
+
+const isMobile = ref(props.isMobile);
+
+const dialogProps = computed(() => {
+	return isMobile.value ? {} : { appendTo: 'self' };
+});
 
 const i18n = useI18n({ useScope: "global" });
 const locale = computed(() => langStore().locale);

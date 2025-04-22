@@ -15,6 +15,8 @@ return new class extends Migration {
 			$table->unsignedBigInteger('game_room_id');
 			$table->json('game_data')->nullable();
 			$table->timestamps();
+
+			$table->foreign('game_room_id')->references('id')->on('game_rooms')->onDelete('cascade');
 		});
 	}
 

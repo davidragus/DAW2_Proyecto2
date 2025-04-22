@@ -24,18 +24,22 @@
 						<h6>Front image DNI</h6>
 						<!-- Imagen frontal del DNI -->
 						<FileUpload mode="basic" name="dni_front" accept="image/*" chooseLabel="Upload DNI Front"
-							@select="onSelectValidationImage($event, 'front')" class="w-100" :style="{ backgroundColor: 'yellow', borderColor: 'yellow', color: 'black' }" />
+							@select="onSelectValidationImage($event, 'front')" class="w-100"
+							:style="{ backgroundColor: 'yellow', borderColor: 'yellow', color: 'black' }" />
 
 						<h6>Back image DNI</h6>
 						<!-- Imagen trasera del DNI -->
 						<FileUpload mode="basic" name="dni_back" accept="image/*" chooseLabel="Upload DNI Back"
-							@select="onSelectValidationImage($event, 'back')" class="w-100" :style="{ backgroundColor: 'yellow', borderColor: 'yellow', color: 'black'}" />
+							@select="onSelectValidationImage($event, 'back')" class="w-100"
+							:style="{ backgroundColor: 'yellow', borderColor: 'yellow', color: 'black' }" />
 
 						<h6>Face picture</h6>
 						<!-- Imagen del rostro -->
 						<FileUpload mode="basic" name="face_image" accept="image/*" chooseLabel="Upload Face Image"
-							@select="onSelectValidationImage($event, 'face')" class="w-100" :style="{ backgroundColor: 'yellow', borderColor: 'yellow', color: 'black' }" />
-						<p v-if="validationErrors.validationImages" class="text-danger mt-1">{{ validationErrors.validationImages }}</p>
+							@select="onSelectValidationImage($event, 'face')" class="w-100"
+							:style="{ backgroundColor: 'yellow', borderColor: 'yellow', color: 'black' }" />
+						<p v-if="validationErrors.validationImages" class="text-danger mt-1">{{
+							validationErrors.validationImages }}</p>
 					</div>
 					<div class="border rounded name-container">
 						<input v-model="registerForm.name" type="text"
@@ -192,7 +196,7 @@ const onSelectValidationImage = (event, type) => {
 	// Reemplazar o agregar la imagen en el índice correspondiente
 	if (event.files && event.files[0]) {
 		registerForm.validationImages[index] = event.files[0];
-		console.log(`Validation Images:`, JSON.stringify(registerForm.validationImages, null, 2));
+		// console.log(`Validation Images:`, JSON.stringify(registerForm.validationImages, null, 2));
 	}
 };
 
@@ -223,11 +227,11 @@ const schema = yup.object({
 	country: yup.string().required('Country is required').max(255),
 	terms: yup.boolean().oneOf([true], 'You must accept the terms and conditions'),
 	validationImages: yup.array().of(
-			yup.object().shape({
-				type: yup.string().required(),
-				image: yup.mixed().required(),
-			})
-		)
+		yup.object().shape({
+			type: yup.string().required(),
+			image: yup.mixed().required(),
+		})
+	)
 		.test('len', 'El array debe contener exactamente 3 objetos', (val) => val && val.length === 3)
 });
 

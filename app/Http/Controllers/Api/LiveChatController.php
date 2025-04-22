@@ -23,9 +23,7 @@ class LiveChatController extends Controller
 		$message->message = $request->message['message'];
 
 		if ($message->save()) {
-			broadcast(new SendMessage(new ChatMessageResource($message)))->toOthers();
-
-			return new ChatMessageResource($message);
+			broadcast(new SendMessage(new ChatMessageResource($message)));
 		}
 	}
 }

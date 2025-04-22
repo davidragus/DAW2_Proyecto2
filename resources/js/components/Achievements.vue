@@ -1,25 +1,23 @@
 <template>
-	<div id="mainContent" class="d-flex">
-		<MyAccountSidebar />
+	<div id="mainContent" class="d-flex ms-4" :class="isMobile ? 'flex-column mr-4' : ''">
+		<MyAccountSidebar :isMobile="isMobile" />
 		<div class="container">
-	<div class="d-flex flex-wrap gap-3">
-		<!-- Logros obtenidos -->
-		<div v-for="achievement in userAchievements" :key="achievement.id"
-			class="achievement-card text-center">
-			<img :src="achievement.image" class="achievement-img" :alt="achievement.name"
-				@click="openAchievementDialog(achievement)" />
-			<h6 class="text-white mt-2">{{ achievement.name }}</h6>
-		</div>
+			<div class="d-flex flex-wrap gap-3">
+				<!-- Logros obtenidos -->
+				<div v-for="achievement in userAchievements" :key="achievement.id" class="achievement-card text-center">
+					<img :src="achievement.image" class="achievement-img" :alt="achievement.name"
+						@click="openAchievementDialog(achievement)" />
+					<h6 class="text-white mt-2">{{ achievement.name }}</h6>
+				</div>
 
-		<!-- Logros no obtenidos -->
-		<div v-for="achievement in achievements" :key="achievement.id"
-			class="achievement-card text-center">
-			<img :src="achievement.image" class="achievement-img" style="filter: grayscale(100%);"
-				:alt="achievement.name" @click="openAchievementDialog(achievement)" />
-			<h6 class="text-white mt-2">{{ achievement.name }}</h6>
+				<!-- Logros no obtenidos -->
+				<div v-for="achievement in achievements" :key="achievement.id" class="achievement-card text-center">
+					<img :src="achievement.image" class="achievement-img" style="filter: grayscale(100%);"
+						:alt="achievement.name" @click="openAchievementDialog(achievement)" />
+					<h6 class="text-white mt-2">{{ achievement.name }}</h6>
+				</div>
+			</div>
 		</div>
-	</div>
-</div>
 
 
 		<!-- Modal para mostrar detalles del logro -->
@@ -54,6 +52,15 @@ import MyAccountSidebar from './MyAccountSidebar.vue';
 const achievements = ref([]);
 const userAchievements = ref([]);
 const selectedAchievement = ref(null);
+
+const isMobile = ref(false);
+
+const checkMobile = () => {
+	isMobile.value = window.innerWidth <= 768;
+	if (!isMobile.value) {
+		document.getElementById('mainContent').style.paddingLeft = '230px';
+	}
+};
 
 // Función para obtener logros desde la API
 const fetchAchievements = async () => {
@@ -96,14 +103,10 @@ const closeAchievementDialog = () => {
 
 // Configuración de estilos al montar y desmontar el componente
 onMounted(() => {
+	checkMobile();
 	fetchUserAchievements(authStore().user.id);
 	fetchAchievements();
-	document.getElementById('mainContent').classList.add('ml-4');
-	if (window.innerWidth <= 768) {
-		document.getElementById('mainContent').style.paddingLeft = '0';
-	} else {
-		document.getElementById('mainContent').style.paddingLeft = '230px';
-	}
+	window.addEventListener('resize', checkMobile);
 });
 
 onBeforeUnmount(() => {
@@ -114,7 +117,7 @@ onBeforeUnmount(() => {
 <style scoped>
 #mainContent {
 	display: flex;
-	padding: 0 20px 0 20px;
+	padding: 0 0;
 	background-color: #2A2A2A;
 }
 
