@@ -24,7 +24,7 @@
 					<input type="text" id="expiration_date" placeholder="Expiration date" class="form-control"
 						v-model="expirationDate" @input="formatExpirationDate" required />
 					<span v-if="errors.expirationDate" class="error-text">{{ errors.expirationDate }}</span>
-					<input type="text" placeholder="CVV" class="form-control" v-model="cvv" required />
+					<input type="text" placeholder="CVC" class="form-control" v-model="cvv" required />
 					<span v-if="errors.cvv" class="error-text">{{ errors.cvv }}</span>
 				</div>
 				<p class="d-flex justify-content-center username-text">{{ userFullName }}</p>
@@ -113,7 +113,8 @@ const deposit = async () => {
 		try {
 			// console.log(expirationDate.value);
 			let expiration_date_split = expirationDate.value.split('/');
-			let expiration_date_formatted = expiration_date_split[1] + '/' + expiration_date_split[0] + '/01';
+			let date = new Date();
+			date.setFullYear(2000 + parseInt(expiration_date_split[1]), parseInt(expiration_date_split[0]) - 1, 1)
 			const response = await axios.post('/api/transactions', {
 				user_id: user.id,
 				type: 'DEPOSIT',
@@ -121,7 +122,7 @@ const deposit = async () => {
 				chips: chipsNumber.value,
 				card_number: cardNumber.value,
 				cvv: cvv.value,
-				expiration_date: expiration_date_formatted
+				expiration_date: date.toISOString().split('T')[0]
 			});
 			// console.log('Transaction successful:', response.data);
 			// console.log(`${user.chips} - ${chipsNumber.value}`);
@@ -143,7 +144,6 @@ const deposit = async () => {
 			cardNumber.value = '';
 			expirationDate.value = '';
 			expiration_date_split = '';
-			expiration_date_formatted = '';
 			cvv.value = '';
 			confirmName.value = false;
 			//router.go();
@@ -169,9 +169,9 @@ const formatExpirationDate = (event) => {
 
 const schema = yup.object({
 	customDeposit: yup.number().required('Custom deposit is required').min(10, 'Minimum deposit is 10€').max(10000, 'Maximum deposit is 10000€'),
-	cardNumber: yup.string().required('Card number is required').max(255),
-	expirationDate: yup.string().required('Expiration date is required').max(255),
-	cvv: yup.string().required('CVV is required').max(255),
+	cardNumber: yup.string().required('Card number is required').max(16, 'Card number must be 16 digits').matches(/^\d{16}$/, 'Card number must be 16 digits'),
+	expirationDate: yup.string().required('Expiration date is required').max(5, 'Expiration date must be in MM/YY format').matches(/^(0[1-9]|1[0-2])\/\d{2}$/, 'Expiration date must be in MM/YY format'),
+	cvv: yup.string().required('CVC is required').max(3, 'CVC must be 3 digits').matches(/^\d{3}$/, 'CVC must be 3 digits'),
 	confirmName: yup.boolean().required('You must confirm that the full name of the owner of the card is the same as the full name of the account.')
 });
 const errors = ref({});

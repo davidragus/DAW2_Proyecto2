@@ -235,7 +235,7 @@ class GameController extends Controller
 			$playersReady = GameRoomsPlayer::where('game_room_id', $gameRoomId)->where('is_ready', 1)->count();
 			$gameRoom = GameRoom::find($gameRoomId);
 
-			if ($playersReady >= 1 && $gameRoom->status == 'WAITING') {
+			if ($playersReady >= 2 && $gameRoom->status == 'WAITING') {
 				$gameRoom->status = 'IN_PROGRESS';
 				$gameRoom->save();
 				$this->sendCountdown($gameRoomId);
@@ -253,7 +253,7 @@ class GameController extends Controller
 
 	public function sendCountdown($gameRoomId)
 	{
-		broadcast(new SendCountdown($gameRoomId, 30));
+		broadcast(new SendCountdown($gameRoomId, 15));
 	}
 
 	public function startGame($gameRoomId)

@@ -79,9 +79,9 @@ watch(visible, (newVal) => {
 
 const schema = yup.object().shape({
 	chips: yup.number().required('Amount of chips is required').max(authStore().user.chips, 'You cannot withdraw more chips than you have').min(100, 'You cannot withdraw less than 100 chips'),
-	cardNumber: yup.string().required('Card number is required'),
-	expirationDate: yup.string().required('Expiration date is required'),
-	cvc: yup.string().required('CVC is required'),
+	cardNumber: yup.string().required('Card number is required').max(16, 'Card number must be 16 digits').matches(/^\d{16}$/, 'Card number must be 16 digits'),
+	expirationDate: yup.string().required('Expiration date is required').max(5, 'Expiration date must be in MM/YY format').matches(/^(0[1-9]|1[0-2])\/\d{2}$/, 'Expiration date must be in MM/YY format'),
+	cvc: yup.string().required('CVV is required').max(3, 'CVV must be 3 digits').matches(/^\d{3}$/, 'CVV must be 3 digits'),
 	confirmName: yup.boolean().oneOf([true], 'You must confirm the name')
 });
 
@@ -99,9 +99,9 @@ const withdraw = async () => {
 			confirmName.value
 		) {
 			try {
-				console.log(expirationDate.value);
 				let expiration_date_split = expirationDate.value.split('/');
-				let expiration_date_formatted = expiration_date_split[1] + '/' + expiration_date_split[0] + '/01';
+				let date = new Date();
+				date.setFullYear(2000 + parseInt(expiration_date_split[1]), parseInt(expiration_date_split[0]) - 1, 1)
 				const response = await axios.post('/api/transactions', {
 					user_id: user.id,
 					type: 'WITHDRAWAL',
@@ -109,7 +109,7 @@ const withdraw = async () => {
 					chips: chips.value,
 					card_number: cardNumber.value,
 					cvv: cvc.value,
-					expiration_date: expiration_date_formatted
+					expiration_date: date.toISOString().split('T')[0]
 				});
 				console.log('Transaction successful:', response.data);
 				const responseUser = await axios.put(`/api/users/updateChips/${user.id}`, {

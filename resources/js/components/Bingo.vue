@@ -229,6 +229,7 @@ onMounted(() => {
 
 			restoreDataAfterGame();
 			updateUserChips();
+			canBuyCards.value = true;
 		})
 });
 
