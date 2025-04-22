@@ -15,19 +15,24 @@
 					<template #header>
 						<Toolbar pt:root:class="toolbar-table">
 							<template #start>
-								<IconField>
-									<InputIcon class="pi pi-search"> </InputIcon>
-									<InputText v-model="filters['global'].value" placeholder="Buscar" />
-								</IconField>
+								<div class="flex flex-column sm:flex-row gap-2 w-full sm:w-auto">
+									<IconField class="w-full sm:w-20rem">
+										<InputIcon class="pi pi-search" />
+										<InputText v-model="filters['global'].value" placeholder="Buscar"
+											class="w-full" />
+									</IconField>
 
-								<Button type="button" icon="pi pi-filter-slash" label="Clear" class="ml-1 filter-btn" outlined
-									@click="initFilters()" />
-								<Button type="button" icon="pi pi-refresh" class="h-100 ml-1 filter-btn" outlined
-									@click="getUsers()" />
+									<Button type="button" icon="pi pi-filter-slash" label="Clear" class="filter-btn"
+										outlined @click="initFilters" />
+									<Button type="button" icon="pi pi-refresh" class="filter-btn" outlined
+										@click="getRoles" />
+								</div>
 							</template>
+
 							<template #end>
 								<Button v-if="can('user-create')" icon="pi pi-plus" label="Create user"
-									@click="$router.push('users/create')" class="float-end" :style="{ backgroundColor: 'red', color: 'white', borderColor: 'red' }" />
+									@click="$router.push('users/create')" class="float-end"
+									:style="{ backgroundColor: 'red', color: 'white', borderColor: 'red' }" />
 							</template>
 						</Toolbar>
 
@@ -109,8 +114,8 @@ onMounted(() => {
 
 </script>
 <style scoped>
-.custom-datatable div > table > tbody > tr > td {
-    background-color: #313131;
-    color: #fff;
+.custom-datatable div>table>tbody>tr>td {
+	background-color: #313131;
+	color: #fff;
 }
 </style>

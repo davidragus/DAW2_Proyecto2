@@ -3,53 +3,34 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header bg-transparent ps-0 pe-0">
-                    <h5 class="float-start mb-0">Roles</h5>
+                    <h5 class="mb-3">Roles</h5>
                 </div>
 
-                <DataTable
-                    :value="roles.data"
-                    paginator
-                    :rows="25"
-                    stripedRows
-                    dataKey="id"
-                    size="small"
-                    v-model:filters="filters"
-                    :globalFilterFields="['id', 'name', 'created_at']"
-                    sortField="created_at"
-                    :sortOrder="-1"
-                >
+                <DataTable :value="roles.data" paginator :rows="25" stripedRows dataKey="id" size="small"
+                    v-model:filters="filters" :globalFilterFields="['id', 'name', 'created_at']" sortField="created_at"
+                    :sortOrder="-1">
                     <template #header>
                         <Toolbar pt:root:class="toolbar-table">
                             <template #start>
-                                <IconField>
-                                    <InputIcon class="pi pi-search" />
-                                    <InputText v-model="filters['global'].value" placeholder="Buscar" />
-                                </IconField>
-                                <Button
-                                    type="button"
-                                    icon="pi pi-filter-slash"
-                                    label="Clear"
-                                    class="ml-1 filter-btn"
-                                    outlined
-                                    @click="initFilters"
-                                />
-                                <Button
-                                    type="button"
-                                    icon="pi pi-refresh"
-                                    class="h-100 ml-1 filter-btn"
-                                    outlined
-                                    @click="getRoles"
-                                />
+                                <div class="flex flex-column sm:flex-row gap-2 w-full sm:w-auto">
+                                    <IconField class="w-full sm:w-20rem">
+                                        <InputIcon class="pi pi-search" />
+                                        <InputText v-model="filters['global'].value" placeholder="Buscar"
+                                            class="w-full" />
+                                    </IconField>
+
+                                    <Button type="button" icon="pi pi-filter-slash" label="Clear" class="filter-btn"
+                                        outlined @click="initFilters" />
+                                    <Button type="button" icon="pi pi-refresh" class="filter-btn" outlined
+                                        @click="getRoles" />
+                                </div>
                             </template>
+
+
                             <template #end>
-                                <Button
-                                    v-if="can('role-list')"
-                                    icon="pi pi-plus"
-                                    label="Create Role"
-                                    @click="$router.push({ name: 'roles.create' })"
-                                    class="float-end"
-                                    :style="{ backgroundColor: 'red', color: 'white', borderColor: 'red' }"
-                                />
+                                <Button v-if="can('role-list')" icon="pi pi-plus" label="Create Role"
+                                    @click="$router.push({ name: 'roles.create' })" class="w-full sm:w-auto"
+                                    :style="{ backgroundColor: 'red', color: 'white', borderColor: 'red' }" />
                             </template>
                         </Toolbar>
                     </template>
@@ -62,19 +43,14 @@
 
                     <Column class="pe-0 me-0 icon-column-2">
                         <template #body="slotProps">
-                            <router-link
-                                v-if="can('role-edit')"
-                                :to="{ name: 'roles.edit', params: { id: slotProps.data.id } }"
-                            >
-                                <Button icon="pi pi-pencil" severity="info" size="small" class="mr-1" />
-                            </router-link>
-                            <Button
-                                v-if="can('role-delete')"
-                                icon="pi pi-trash"
-                                severity="danger"
-                                @click.prevent="deleteRole(slotProps.data.id)"
-                                size="small"
-                            />
+                            <div class="flex flex-wrap gap-2">
+                                <router-link v-if="can('role-edit')"
+                                    :to="{ name: 'roles.edit', params: { id: slotProps.data.id } }">
+                                    <Button icon="pi pi-pencil" severity="info" size="small" />
+                                </router-link>
+                                <Button v-if="can('role-delete')" icon="pi pi-trash" severity="danger"
+                                    @click.prevent="deleteRole(slotProps.data.id)" size="small" />
+                            </div>
                         </template>
                     </Column>
                 </DataTable>
@@ -106,3 +82,9 @@ onMounted(() => {
     getRoles();
 });
 </script>
+
+<style scoped>
+.filter-btn {
+    height: 2.5rem;
+}
+</style>
