@@ -3,54 +3,32 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header bg-transparent ps-0 pe-0">
-                    <h5 class="float-start mb-0">Achievements</h5>
+                    <h5 class="mb-3">Achievements</h5>
                 </div>
-                <DataTable
-                    v-model:filters="filters"
-                    :value="achievements.data"
-                    paginator
-                    :rows="25"
-                    stripedRows
-                    dataKey="id"
-                    size="small"
-                    :class="'custom-datatable'"
-                >
+                <DataTable v-model:filters="filters" :value="achievements.data" paginator :rows="25" stripedRows
+                    dataKey="id" size="small" class="custom-datatable">
                     <template #header>
                         <Toolbar pt:root:class="toolbar-table">
                             <template #start>
-                                <IconField>
-                                    <InputIcon class="pi pi-search"></InputIcon>
-                                    <InputText v-model="filters['global'].value" placeholder="Search" />
-                                </IconField>
-                                <Button
-                                    type="button"
-                                    icon="pi pi-filter-slash"
-                                    label="Clear"
-                                    class="ml-1 filter-btn"
-                                    outlined
-                                    @click="initFilters()"
-                                />
-                                <Button
-                                    type="button"
-                                    icon="pi pi-refresh"
-                                    class="h-100 ml-1 filter-btn"
-                                    outlined
-                                    @click="getAchievements()"
-                                />
+                                <div class="flex flex-column sm:flex-row gap-2 w-full sm:w-auto">
+                                    <IconField class="w-full sm:w-20rem">
+                                        <InputIcon class="pi pi-search" />
+                                        <InputText v-model="filters['global'].value" placeholder="Search"
+                                            class="w-full" />
+                                    </IconField>
+
+                                    <Button type="button" icon="pi pi-filter-slash" label="Clear" class="filter-btn"
+                                        outlined @click="initFilters()" />
+                                    <Button type="button" icon="pi pi-refresh" class="filter-btn" outlined
+                                        @click="getAllAchievements()" />
+                                </div>
                             </template>
-                            <template>
-                                <Button
-                                    v-if="can('achievement-create')"
-                                    icon="pi pi-plus"
-                                    label="Create Achievement"
-                                    @click="$router.push('achievements/create')"
-                                    class="float-end"
-                                />
-                            </template>
+
                             <template #end>
-								<Button v-if="can('achievement-create')" icon="pi pi-plus" label="Create achievement"
-									@click="$router.push('achievements/create')" class="float-end" :style="{ backgroundColor: 'red', color: 'white', borderColor: 'red' }"/>
-							</template>
+                                <Button v-if="can('achievement-create')" icon="pi pi-plus" label="Create Achievement"
+                                    @click="$router.push('achievements/create')" class="w-full sm:w-auto"
+                                    :style="{ backgroundColor: 'red', color: 'white', borderColor: 'red' }" />
+                            </template>
                         </Toolbar>
                     </template>
 
@@ -64,21 +42,17 @@
                     <Column field="reward_amount" header="Reward" sortable></Column>
                     <Column field="created_at" header="Created At" sortable></Column>
 
-                    <Column class="pe-0 me-0 icon-column-2">
+                    <Column header="Actions" class="sm:flex-row">
                         <template #body="slotProps">
-                            <router-link
-                                v-if="can('achievement-edit')"
-                                :to="{ name: 'achievements.edit', params: { id: slotProps.data.id } }"
-                            >
-                                <Button icon="pi pi-pencil" severity="info" size="small" class="mr-1" />
-                            </router-link>
-                            <Button
-                                icon="pi pi-trash"
-                                severity="danger"
-                                v-if="can('achievement-delete')"
-                                @click.prevent="deleteAchievement(slotProps.data.id, slotProps.index)"
-                                size="small"
-                            />
+                            <div class="flex flex-wrap gap-2">
+                                <router-link v-if="can('achievement-edit')"
+                                    :to="{ name: 'achievements.edit', params: { id: slotProps.data.id } }">
+                                    <Button icon="pi pi-pencil" severity="info" size="small" />
+                                </router-link>
+                                <Button icon="pi pi-trash" severity="danger" v-if="can('achievement-delete')"
+                                    @click.prevent="deleteAchievement(slotProps.data.id, slotProps.index)"
+                                    size="small" />
+                            </div>
                         </template>
                     </Column>
                 </DataTable>
@@ -91,7 +65,7 @@
 import { ref, onMounted } from "vue";
 import useAchievements from "../../../composables/achievements";
 import { useAbility } from "@casl/vue";
-import { FilterMatchMode, FilterService } from "@primevue/core/api";
+import { FilterMatchMode } from "@primevue/core/api";
 
 const { achievements, getAllAchievements, deleteAchievement } = useAchievements();
 const { can } = useAbility();
@@ -108,13 +82,16 @@ const initFilters = () => {
 
 onMounted(() => {
     getAllAchievements();
-
 });
 </script>
 
 <style scoped>
-.custom-datatable div > table > tbody > tr > td {
+.custom-datatable div>table>tbody>tr>td {
     background-color: #313131;
     color: #fff;
+}
+
+.filter-btn {
+    height: 2.5rem;
 }
 </style>
