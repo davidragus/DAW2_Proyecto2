@@ -31,15 +31,15 @@
 				</div>
 				<div class="col-auto">
 					<Button v-if="canBuyCards && bingoCards.length < 10" label="Buy bingo cards"
-						@click="generateBingoCards" severity="danger" class="btn btn-primary" />
+						@click="generateBingoCards" severity="danger" class="btn border-round-3xl btn-primary" />
 					<Button v-if="canChangeStatus" @click="updateStatus" :icon="isReady ? 'pi pi-times' : 'pi pi-check'"
-						:label="isReady ? 'Not ready' : 'Ready'" :severity="isReady ? 'danger' : 'success'"
-						class="btn ms-2" />
+						:label="isReady ? 'Not ready' : 'Ready'" class="btn border-round-3xl ms-2" />
 					<Button v-if="canCallLine" icon="pi pi-megaphone" label="Call line" :disabled="wrongLineCalls >= 3"
-						@click="callLine(route.params.id, authStore().user.id)" class="btn ms-2" severity="danger" />
+						@click="callLine(route.params.id, authStore().user.id)" class="btn border-round-3xl ms-2"
+						severity="danger" />
 					<Button v-if="canCallBingo" icon="pi pi-megaphone" label="Call bingo"
 						:disabled="wrongBingoCalls >= 3" @click="callBingo(route.params.id, authStore().user.id)"
-						class="btn ms-2" severity="danger" />
+						class="btn border-round-3xl ms-2" severity="danger" />
 				</div>
 			</div>
 		</div>
@@ -295,7 +295,7 @@ const updatePlayersStatus = async () => {
 }
 
 const countReadyPlayers = computed(() => {
-	return users.value.reduce((accumulator, user) => accumulator + user.isReady ? 1 : 0, 0);
+	return users.value.reduce((accumulator, user) => accumulator + (user.isReady ? 1 : 0), 0);
 })
 
 const generateBingoCards = async () => {
@@ -475,5 +475,10 @@ const updateStatus = () => {
 		overflow-x: auto;
 		-webkit-overflow-scrolling: touch;
 	}
+}
+
+.btn {
+	background-color: red;
+	border-color: red;
 }
 </style>
