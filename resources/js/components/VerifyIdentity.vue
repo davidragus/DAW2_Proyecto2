@@ -14,7 +14,7 @@
 				<div v-else-if="user.validation_status === 'DENIED'" class="status-card denied">
 					<h2>Validation Denied</h2>
 					<p>Your identity verification was denied. Please submit the required documents again.</p>
-					<PrimeButton class="w-100 mt-3" label="Submit New Validation" @click="showModal = true" />
+					<PrimeButton class="w-100 mt-3" label="Submit New Validation" @click="showModal = true" :style="{backgroundColor: 'red', color: 'white' , borderColor: 'red'}"/>
 				</div>
 			</div>
 
@@ -27,25 +27,25 @@
 						<div class="form-group">
 							<h6>Front image DNI</h6>
 							<FileUpload mode="basic" name="image1" accept="image/*" chooseLabel="Upload Image 1"
-								@select="onFileSelect($event, 0)" class="w-100" />
+								@select="onFileSelect($event, 0)" class="w-100" :style="{backgroundColor: 'yellow', color: 'black' , borderColor: 'yellow'}"/>
 							<p v-if="validationErrors[0]" class="text-danger mt-1">{{ validationErrors[0] }}</p>
 						</div>
 
 						<div class="form-group">
 							<h6>Back image DNI</h6>
 							<FileUpload mode="basic" name="image2" accept="image/*" chooseLabel="Upload Image 2"
-								@select="onFileSelect($event, 1)" class="w-100 mt-3" />
+								@select="onFileSelect($event, 1)" class="w-100 mt-3" :style="{backgroundColor: 'yellow', color: 'black' , borderColor: 'yellow'}"/>
 							<p v-if="validationErrors[1]" class="text-danger mt-1">{{ validationErrors[1] }}</p>
 						</div>
 
 						<div class="form-group">
 							<h6>Face image</h6>
 							<FileUpload mode="basic" name="image3" accept="image/*" chooseLabel="Upload Image 3"
-								@select="onFileSelect($event, 2)" class="w-100 mt-3" />
+								@select="onFileSelect($event, 2)" class="w-100 mt-3" :style="{backgroundColor: 'yellow', color: 'black' , borderColor: 'yellow'}"/>
 							<p v-if="validationErrors[2]" class="text-danger mt-1">{{ validationErrors[2] }}</p>
 						</div>
-						<div class="d-flex justify-content-between mt-3">
-							<PrimeButton type="submit" label="Submit" class="w-100 p-button-success" />
+						<div class="d-flex justify-content-between mt-3 gap-1">
+							<PrimeButton type="submit" label="Submit" class="w-100 p-button-success mt-2" :style="{backgroundColor: 'red', color: 'white' , borderColor: 'red'}"/>
 							<PrimeButton type="button" label="Cancel" class="w-100 p-button-secondary mt-2"
 								@click="showModal = false" />
 						</div>
