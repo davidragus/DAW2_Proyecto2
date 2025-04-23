@@ -201,10 +201,7 @@ const onSelectValidationImage = (event, type) => {
 
 	// Reemplazar o agregar la imagen en el índice correspondiente
 	if (event.files && event.files[0]) {
-		registerForm.validationImages[index] = {
-			type: event.files[0].type,
-			image: event.files[0]
-		};
+		registerForm.validationImages[index] = event.files[0];
 		// console.log(`Validation Images:`, JSON.stringify(registerForm.validationImages, null, 2));
 	}
 };
@@ -242,10 +239,7 @@ const schema = yup.object({
 	country: yup.string().required('Country is required').max(255),
 	terms: yup.boolean().oneOf([true], 'You must accept the terms and conditions'),
 	validationImages: yup.array().of(
-		yup.object().shape({
-			type: yup.string().required(),
-			image: yup.mixed().required(),
-		})
+		yup.mixed().required()
 	)
 		.test('len', 'El array debe contener exactamente 3 objetos', (val) => val && val.length === 3)
 });

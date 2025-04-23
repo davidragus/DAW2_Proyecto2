@@ -81,6 +81,8 @@ export default function useUsers() {
 			}
 		}
 
+		console.log(serializedUser);
+
 		axios.post('/api/users', serializedUser,
 			{
 				headers: {
