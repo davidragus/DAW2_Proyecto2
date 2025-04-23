@@ -25,7 +25,7 @@
 									<Button type="button" icon="pi pi-filter-slash" label="Clear" class="filter-btn"
 										outlined @click="initFilters" />
 									<Button type="button" icon="pi pi-refresh" class="filter-btn" outlined
-										@click="getRoles" />
+										@click="getUsers" />
 								</div>
 							</template>
 
