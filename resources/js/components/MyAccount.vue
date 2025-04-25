@@ -111,7 +111,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import { authStore } from "../store/auth";
 import useCountries from '@/composables/countries';
 import Swal from 'sweetalert2';
@@ -206,7 +206,7 @@ onMounted(() => {
 	window.addEventListener('resize', checkMobile);
 });
 
-onUnmounted(() => {
+onBeforeUnmount(() => {
 	document.getElementById('mainContent').classList.remove('ml-4');
 });
 
