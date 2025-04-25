@@ -178,7 +178,8 @@ const updateUser = async () => {
 			showConfirmButton: false,
 			timer: 1500,
 			background: '#2A2A2A',
-			color: '#ffffff'
+			color: '#ffffff',
+			confirmButtonColor: '#ff0000'
 		});
 		auth.user = { ...userCopy.value };
 	} catch (error) {
@@ -188,7 +189,8 @@ const updateUser = async () => {
 			title: 'Failed to update user',
 			text: error.response?.data?.message || 'An error occurred',
 			background: '#2A2A2A',
-			color: '#ffffff'
+			color: '#ffffff',
+			confirmButtonColor: '#ff0000'
 		});
 	}
 };
@@ -242,7 +244,8 @@ async function uploadImage() {
 			showConfirmButton: false,
 			timer: 1500,
 			background: '#2A2A2A',
-			color: '#ffffff'
+			color: '#ffffff',
+			confirmButtonColor: '#ff0000'
 		});
 	} catch (error) {
 		console.error('Error uploading image:', error);
@@ -251,7 +254,8 @@ async function uploadImage() {
 			title: 'Failed to upload image',
 			text: error.response?.data?.message || 'An error occurred',
 			background: '#2A2A2A',
-			color: '#ffffff'
+			color: '#ffffff',
+			confirmButtonColor: '#ff0000'
 		});
 	}
 }
@@ -293,7 +297,8 @@ const changeUserPassword = async () => {
 			showConfirmButton: false,
 			timer: 1500,
 			background: '#2A2A2A',
-			color: '#ffffff'
+			color: '#ffffff',
+			confirmButtonColor: '#ff0000'
 		});
 		changePassword.value = {
 			current_password: '',
@@ -308,7 +313,8 @@ const changeUserPassword = async () => {
 			title: 'Failed to change password',
 			text: error.response?.data?.message || 'An error occurred',
 			background: '#2A2A2A',
-			color: '#ffffff'
+			color: '#ffffff',
+			confirmButtonColor: '#ff0000'
 		});
 	}
 };

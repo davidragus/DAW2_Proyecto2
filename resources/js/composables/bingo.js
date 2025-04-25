@@ -142,7 +142,8 @@ export default function useBingo() {
 					title: "Error",
 					text: `${error.response.data.message}`,
 					background: '#2A2A2A',
-					color: '#ffffff'
+					color: '#ffffff',
+					confirmButtonColor: '#ff0000'
 				});
 			});
 		const gameRoom = response.data.data;
@@ -232,7 +233,8 @@ export default function useBingo() {
 				title: "Success",
 				text: `You have a line!`,
 				background: '#2A2A2A',
-				color: '#ffffff'
+				color: '#ffffff',
+				confirmButtonColor: '#ff0000'
 			});
 		} else {
 			wrongLineCalls.value++;
@@ -242,7 +244,8 @@ export default function useBingo() {
 				title: "You don't have a line!",
 				text: errorMessage,
 				background: '#2A2A2A',
-				color: '#ffffff'
+				color: '#ffffff',
+				confirmButtonColor: '#ff0000'
 			});
 		}
 	};
@@ -255,7 +258,8 @@ export default function useBingo() {
 				title: "Success",
 				text: `You won the bingo!`,
 				background: '#2A2A2A',
-				color: '#ffffff'
+				color: '#ffffff',
+				confirmButtonColor: '#ff0000'
 			});
 		} else {
 			wrongBingoCalls.value++;
@@ -265,7 +269,8 @@ export default function useBingo() {
 				title: "You don't have bingo!",
 				text: errorMessage,
 				background: '#2A2A2A',
-				color: '#ffffff'
+				color: '#ffffff',
+				confirmButtonColor: '#ff0000'
 			});
 		}
 	};

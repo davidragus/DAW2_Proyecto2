@@ -94,7 +94,10 @@ export default function useUsers() {
 				router.push({ name: 'users.index' })
 				swal({
 					icon: 'success',
-					title: 'User saved successfully'
+					title: 'User saved successfully',
+					background: '#2A2A2A',
+					color: '#ffffff',
+					confirmButtonColor: '#ff0000'
 				})
 			})
 			.catch(error => {
@@ -133,7 +136,10 @@ export default function useUsers() {
 			.then(response => {
 				swal({
 					icon: 'success',
-					title: 'User updated successfully'
+					title: 'User updated successfully',
+					background: '#2A2A2A',
+					color: '#ffffff',
+					confirmButtonColor: '#ff0000'
 				})
 			})
 			.catch(error => {
@@ -164,13 +170,19 @@ export default function useUsers() {
 
 							swal({
 								icon: 'success',
-								title: 'User deleted successfully'
+								title: 'User deleted successfully',
+								background: '#2A2A2A',
+								color: '#ffffff',
+								confirmButtonColor: '#ff0000'
 							})
 						})
 						.catch(error => {
 							swal({
 								icon: 'error',
-								title: 'Something went wrong'
+								title: 'Something went wrong',
+								background: '#2A2A2A',
+								color: '#ffffff',
+								confirmButtonColor: '#ff0000'
 							})
 						})
 				}
@@ -200,8 +212,9 @@ export default function useUsers() {
 				title: "Validation submitted successfully!",
 				showConfirmButton: false,
 				timer: 1500,
-				background: "#2A2A2A",
-				color: "#ffffff",
+				background: '#2A2A2A',
+				color: '#ffffff',
+				confirmButtonColor: '#ff0000'
 			});
 
 			// Actualizar los datos del usuario
@@ -217,8 +230,9 @@ export default function useUsers() {
 					icon: "error",
 					title: "Something went wrong",
 					text: error,
-					background: "#2A2A2A",
-					color: "#ffffff",
+					background: '#2A2A2A',
+					color: '#ffffff',
+					confirmButtonColor: '#ff0000'
 				});
 			}
 			throw error; // Relanzar el error para manejarlo en el componente si es necesario
