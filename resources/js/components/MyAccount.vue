@@ -2,7 +2,7 @@
 	<div id="mainContent" class="d-flex ms-4" :class="isMobile ? 'flex-column mr-4' : ''">
 		<MyAccountSidebar :isMobile="isMobile" />
 		<div class="container">
-			<div class="row justify-content-center ">
+			<div class="row justify-content-center mx-0">
 				<div class="col-11 text-center">
 					<div class="d-flex justify-content-center align-items-center flex-column gap-4">
 						<Avatar v-if="authStore().user.avatar" :image="authStore().user.avatar" size="xlarge"
