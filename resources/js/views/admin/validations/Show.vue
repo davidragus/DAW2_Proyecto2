@@ -116,7 +116,10 @@ const checkApprovePermission = (id) => {
 	} else {
 		swal({
 			icon: 'error',
-			title: 'You don\'t have permission to perform this action'
+			title: 'You don\'t have permission to perform this action',
+			background: '#2A2A2A',
+			color: '#ffffff',
+			confirmButtonColor: '#ff0000'
 		});
 	}
 }
@@ -128,7 +131,10 @@ const checkDeclinePermission = (id) => {
 	} else {
 		swal({
 			icon: 'error',
-			title: 'You don\'t have permission to perform this action'
+			title: 'You don\'t have permission to perform this action',
+			background: '#2A2A2A',
+			color: '#ffffff',
+			confirmButtonColor: '#ff0000'
 		});
 	}
 }

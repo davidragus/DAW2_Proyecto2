@@ -42,18 +42,20 @@ export default function useValidations() {
 					icon: 'success',
 					title: response.data.message,
 					background: '#2A2A2A',
-					color: '#ffffff'
+					color: '#ffffff',
+					confirmButtonColor: '#ff0000'
 				})
-				.then(() => {
-					validation.value.status = response.data.data.status;
-				})
+					.then(() => {
+						validation.value.status = response.data.data.status;
+					})
 			})
 			.catch(error => {
 				swal({
 					icon: 'success',
 					title: error.data.message,
 					background: '#2A2A2A',
-					color: '#ffffff'
+					color: '#ffffff',
+					confirmButtonColor: '#ff0000'
 				})
 			})
 			.finally(() => isLoading.value = false);
@@ -66,18 +68,20 @@ export default function useValidations() {
 					icon: 'success',
 					title: response.data.message,
 					background: '#2A2A2A',
-					color: '#ffffff'
+					color: '#ffffff',
+					confirmButtonColor: '#ff0000'
 				})
-				.then(() => {
-					validation.value.status = response.data.data.status;
-				})
+					.then(() => {
+						validation.value.status = response.data.data.status;
+					})
 			})
 			.catch(error => {
 				swal({
 					icon: 'success',
 					title: error.data.message,
 					background: '#2A2A2A',
-					color: '#ffffff'
+					color: '#ffffff',
+					confirmButtonColor: '#ff0000'
 				})
 			})
 			.finally(() => isLoading.value = false);
@@ -102,13 +106,19 @@ export default function useValidations() {
 
 							swal({
 								icon: 'success',
-								title: 'User deleted successfully'
+								title: 'User deleted successfully',
+								background: '#2A2A2A',
+								color: '#ffffff',
+								confirmButtonColor: '#ff0000'
 							})
 						})
 						.catch(error => {
 							swal({
 								icon: 'error',
-								title: 'Something went wrong'
+								title: 'Something went wrong',
+								background: '#2A2A2A',
+								color: '#ffffff',
+								confirmButtonColor: '#ff0000'
 							})
 						})
 				}

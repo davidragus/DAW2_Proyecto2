@@ -78,7 +78,8 @@ export default function useAuth() {
 					showConfirmButton: false,
 					timer: 1500,
 					background: '#2A2A2A',
-					color: '#ffffff'
+					color: '#ffffff',
+					confirmButtonColor: '#ff0000'
 				})
 				await router.push({ name: 'admin.index' })
 			})
@@ -123,7 +124,8 @@ export default function useAuth() {
 					showConfirmButton: false,
 					timer: 1500,
 					background: '#2A2A2A',
-					color: '#ffffff'
+					color: '#ffffff',
+					confirmButtonColor: '#ff0000'
 				})
 				// await router.push({ name: 'auth.login' })
 			})

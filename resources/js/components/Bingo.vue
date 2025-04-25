@@ -308,7 +308,8 @@ const generateBingoCards = async () => {
 					title: "Error",
 					text: `You can only have 10 bingo cards at a time.`,
 					background: '#2A2A2A',
-					color: '#ffffff'
+					color: '#ffffff',
+					confirmButtonColor: '#ff0000'
 				});
 			} else {
 				const newBingoCards = Array.from(
@@ -332,7 +333,8 @@ const generateBingoCards = async () => {
 				title: "Error",
 				text: `You don't have enough chips to buy ${bingoCardsAmount.value} bingo cards.`,
 				background: '#2A2A2A',
-				color: '#ffffff'
+				color: '#ffffff',
+				confirmButtonColor: '#ff0000'
 			});
 		}
 	} else {
@@ -341,7 +343,8 @@ const generateBingoCards = async () => {
 			title: "Error",
 			text: `You cannot join the game because it has already started.`,
 			background: '#2A2A2A',
-			color: '#ffffff'
+			color: '#ffffff',
+			confirmButtonColor: '#ff0000'
 		});
 	}
 };

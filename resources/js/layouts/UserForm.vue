@@ -180,19 +180,22 @@
 							v-if="autoVerify">
 							<FileUpload @select="onSelectValidationImage($event, 'front')" class="justify-content-start"
 								mode="basic" name="validationImages[]" accept="image/*" :maxFileSize="1000000"
-								chooseLabel="Front image" />
+								chooseLabel="Front image"
+								:style="{ backgroundColor: 'red', color: 'white', borderColor: 'red' }" />
 						</div>
 						<div class="col-12 xl:col-3" :class="width < 1024 ? 'd-flex justify-content-center' : ''"
 							v-if="autoVerify">
 							<FileUpload @select="onSelectValidationImage($event, 'back')" class="justify-content-start"
 								mode="basic" name="validationImages[]" accept="image/*" :maxFileSize="1000000"
-								chooseLabel="Back image" />
+								chooseLabel="Back image"
+								:style="{ backgroundColor: 'red', color: 'white', borderColor: 'red' }" />
 						</div>
 						<div class="col-12 xl:col-3" :class="width < 1024 ? 'd-flex justify-content-center' : ''"
 							v-if="autoVerify">
 							<FileUpload @select="onSelectValidationImage($event, 'face')" class="justify-content-start"
 								mode="basic" name="validationImages[]" accept="image/*" :maxFileSize="1000000"
-								chooseLabel="Face image" />
+								chooseLabel="Face image"
+								:style="{ backgroundColor: 'red', color: 'white', borderColor: 'red' }" />
 						</div>
 					</div>
 				</div>
